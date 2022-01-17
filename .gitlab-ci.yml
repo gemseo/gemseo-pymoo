@@ -1,0 +1,147 @@
+default:
+  image: registry.gitlab.com/gemseo/dev/gemseo/multi-python
+
+# Stages executed sequentially until a job fails.
+stages:
+  - check
+  - tests
+
+variables:
+  TEST_ALL_ENVS:
+    value: "false"
+    description: "Whether to run the tox tests for all python versions and all platforms."
+
+# Base job template.
+.base:
+  interruptible: true
+  dependencies: []
+
+  script:
+    # Run a tox env named after a job name.
+    - tox -e $TOX_ENV_NAME
+
+# Specific settings for linux jobs.
+.linux:
+  tags:
+    - gemseo-docker
+  variables:
+    # Caches on the CI runner host.
+    PIP_CACHE_DIR: "/opt/gitlab-runner-cache/pip"
+
+
+# Specific settings for windows jobs.
+.windows:
+  tags:
+    - gemseo-windows-server-2012
+  variables:
+    # Caches on the CI runner host.
+    PIP_CACHE_DIR: "C:\\pip"
+
+# Jobs for the check stage.
+style:
+  extends:
+    - .base
+    - .linux
+  stage: check
+  variables:
+    PRE_COMMIT_HOME: "$CI_PROJECT_DIR/.cache/pre-commit"
+    # Pass the cache locations through the tox env.
+    TOX_TESTENV_PASSENV: PIP_CACHE_DIR PRE_COMMIT_HOME
+    TOX_ENV_NAME: style
+  cache:
+    # The extends key does not work for lists.
+    # - !reference [.base, cache]
+    # - key:
+    #     files:
+    #       - requirements/style.txt
+    #     prefix: $CI_JOB_NAME
+    #   paths:
+    #     - .tox/$CI_JOB_NAME
+    - key:
+        files:
+          - .pre-commit-config.yaml
+        prefix: pre-commit-cache
+      paths:
+        - .cache/pre-commit
+
+# pylint:
+#   extends:
+#     - .base
+#     - .linux
+#   stage: check
+#   allow_failure: true
+#   cache:
+#     key:
+#       files:
+#         - requirements/pylint.txt
+#     # Always create the cache.
+#     when: always
+
+# Tests stage.
+
+# Base tests job, common to all the tests jobs.
+.tests:
+  extends: .base
+  stage: tests
+  variables:
+    # Use coverage and generate reports,
+    # via env variables because passing extra command line options to tox within the current file is cumbersome.
+    PYTEST_ADDOPTS: --cov --cov-report=xml --junitxml=report.xml
+    TOX_TESTENV_PASSENV: PYTEST_ADDOPTS
+  # cache:
+  #   - !reference [.base, cache]
+  #   - key:
+  #       # Define the cache affinity such that it is tied to the content of the tests env.
+  #       files:
+  #         # The packages installed in an env are loosely defined in those requirements files
+  #         #   (not strictly because these files only define the unpinned direct dependencies).
+  #         - requirements/gemseo.in
+  #       # Some packages will change when the python version changes, hence the tox env name.
+  #       prefix: $CI_JOB_NAME
+  #     paths:
+  #       - .tox/$CI_JOB_NAME
+  artifacts:
+    # Send the artifacts even on job failure.
+    when: always
+    reports:
+      junit: report.xml
+      cobertura: coverage.xml
+
+# Common settings for windows tests jobs.
+.tests-windows:
+  extends:
+    - .tests
+    - .windows
+  after_script:
+    # Workaround coverage files path issues, see https://gitlab.com/gitlab-org/gitlab/-/issues/217664
+    - (Get-Content coverage.xml) -replace 'filename=".*/site-packages', 'filename="src' |  Out-File "coverage.xml"
+
+# Common settings for linux (linux) jobs.
+.tests-linux:
+  extends:
+    - .tests
+    - .linux
+  after_script:
+    # Workaround coverage files path issues, see https://gitlab.com/gitlab-org/gitlab/-/issues/217664
+    - sed "s|filename=\".*/site-packages|filename=\"src|" -i coverage.xml
+
+# Jobs for the tests stage.
+
+.base-tests:
+  parallel:
+    matrix:
+      - TOX_ENV_NAME:
+        - py36
+        - py37
+        - py38
+        - py39
+
+linux:
+  extends:
+    - .base-tests
+    - .tests-linux
+
+windows:
+  extends:
+    - .base-tests
+    - .tests-windows

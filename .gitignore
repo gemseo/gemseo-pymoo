@@ -1,1 +1,16 @@
+/.tox
+*.pyc
 
+/.project
+/.pydevproject
+/.settings
+/.idea
+/.vim*
+/.vscode
+/tags
+
+/htmlcov
+
+/coverage.xml
+/.coverage*
+/.pytest_cache

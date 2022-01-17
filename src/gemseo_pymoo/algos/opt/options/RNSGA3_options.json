@@ -1,0 +1,63 @@
+{
+    "name": "RNSGA3_options",
+    "required":["max_iter","ref_points"],
+    "properties": {
+		"normalize_design_space": {
+			"type": "boolean"
+		},
+		"xtol_rel": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "xtol_abs": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "ftol_rel": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "ftol_abs": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "max_iter":{
+            "type": "integer",
+            "minimum": 1
+        },
+        "n_obj":{
+            "type": "integer",
+            "minimum": 1
+        },
+        "mu": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "n_pareto_points": {
+            "type": ["null","integer"],
+            "minimum": 1
+        },
+        "crossover": {},
+        "sampling": {},
+        "mutation": {},
+        "selection": {},
+        "ref_points": {
+            "type":  "array"
+        },
+        "seed": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "pop_per_ref_point":{
+            "type": ["null","integer"],
+            "minimum": 1
+        },
+        "pop_size":{
+            "type": ["null","integer"],
+            "minimum": 1
+        }
+    },
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "additionalProperties": false,
+    "type": "object"
+}

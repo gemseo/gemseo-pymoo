@@ -1,0 +1,86 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+    exclude: LICENSES/headers
+  - id: check-yaml
+    # meta.yaml has jinja2 templates
+    # !reference is specific to gitlab
+    exclude: (meta.yaml|.gitlab-ci.yml)
+  - id: check-added-large-files
+  - id: check-json
+  - id: check-toml
+  - id: destroyed-symlinks
+  - id: check-symlinks
+
+- repo: https://github.com/pre-commit/pygrep-hooks
+  rev: v1.9.0
+  hooks:
+    - id: rst-backticks
+    - id: rst-directive-colons
+    - id: rst-inline-touching-normal
+
+- repo: https://github.com/asottile/reorder_python_imports
+  rev: v2.6.0
+  hooks:
+  - id: reorder-python-imports
+
+- repo: https://github.com/myint/docformatter
+  rev: v1.4
+  hooks:
+    - id: docformatter
+      args: [
+        --in-place,
+        --wrap-summaries,
+        "88",
+        --wrap-descriptions,
+        "88",
+      ]
+
+- repo: https://github.com/asottile/pyupgrade
+  rev: v2.26.0
+  hooks:
+  - id: pyupgrade
+    args: [--py36-plus]
+
+- repo: https://github.com/psf/black
+  rev: 21.7b0
+  hooks:
+  - id: black
+
+- repo: https://github.com/PyCQA/flake8
+  rev: 3.9.2
+  hooks:
+  - id: flake8
+    additional_dependencies:
+      - flake8-bugbear==21.3.2
+      # 1.6.0 has a bug
+      # https://gitlab.com/pycqa/flake8-docstrings/-/issues/51
+      - flake8-docstrings==1.5.0
+      - flake8-logging-format==0.6.0
+      - flake8-print==4.0.0
+      - pep8-naming==0.11.1
+
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: v2.18.0
+  hooks:
+    - id: commitizen
+      stages: [commit-msg]
+
+- repo: local
+  hooks:
+    - id: extract_req_in_from_setup_cfg
+      name: extract test requirements
+      language: python
+      pass_filenames: false
+      files: ^setup\.cfg$
+      entry: >
+        ./tools/extract_req_in_from_setup_cfg.py
+        --extras-require-key test
+        requirements/test.in
