@@ -1,5 +1,7 @@
 A GEMSEO wrapper for pymoo optimization algorithms.
 
+See: https://pymoo.org/index.html
+
 Documentation
 -------------
 
