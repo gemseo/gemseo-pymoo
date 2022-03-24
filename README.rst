@@ -29,3 +29,4 @@ Contributors
 ------------
 
 - Francois Gallard
+- Antoine Dechaume

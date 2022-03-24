@@ -19,6 +19,9 @@ GEMSEO-pymoo depends on software with compatible licenses that are listed below.
 `Python <http://python.org/>`_
     Python Software License
 
+`pymoo <https://pymoo.org/>`_
+    Apache-2.0
+
 Internal Dependencies
 ---------------------
 
