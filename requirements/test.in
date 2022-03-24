@@ -1,4 +1,3 @@
-packaging <21
 pytest
 pytest-cov
 pytest-xdist

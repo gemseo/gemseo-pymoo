@@ -16,6 +16,7 @@
 #    INITIAL AUTHORS - initial API and implementation and/or initial
 #                           documentation
 #        :author: Matthias De Lozzo
+from __future__ import annotations
 
 import numpy as np
 from gemseo.algos.opt.opt_factory import OptimizersFactory

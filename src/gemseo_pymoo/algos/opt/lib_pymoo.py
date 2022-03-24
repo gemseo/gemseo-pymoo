@@ -17,6 +17,7 @@
 #                           documentation
 #        :author: Francois Gallard
 """pymoo optimization library wrapper."""
+from __future__ import annotations
 
 import logging
 from typing import Any

@@ -30,6 +30,11 @@ repos:
   rev: v2.6.0
   hooks:
   - id: reorder-python-imports
+    args: [
+      --py37-plus,
+      --add-import,
+      "from __future__ import annotations"
+    ]
 
 - repo: https://github.com/myint/docformatter
   rev: v1.4
@@ -47,7 +52,7 @@ repos:
   rev: v2.26.0
   hooks:
   - id: pyupgrade
-    args: [--py36-plus]
+    args: [--py37-plus]
 
 - repo: https://github.com/psf/black
   rev: 21.7b0
@@ -72,6 +77,31 @@ repos:
   hooks:
     - id: commitizen
       stages: [commit-msg]
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.1.10
+  hooks:
+    - id: insert-license
+      name: insert LGPL license
+      exclude: ^doc_src
+      files: \.py$
+      args:
+        - --license-filepath
+        - LICENSES/headers/LGPL-3.0.txt
+    - id: insert-license
+      name: insert BSD license
+      files: ^doc_src/(examples|tutorials).*\.py$
+      args:
+        - --license-filepath
+        - LICENSES/headers/BSD-0-Clause.txt
+    - id: insert-license
+      name: insert CC BY-SA license
+      files: (\.rst|\.rst\.txt)$
+      args:
+        - --license-filepath
+        - LICENSES/headers/CC-BY-SA-4.0.txt
+        - --comment-style
+        - ..|   |
 
 - repo: local
   hooks:
