@@ -1,0 +1,50 @@
+{
+    "name": "Compromise_options",
+    "properties": {
+        "scalar_name": {
+            "type": "string"
+        },
+        "weights": {
+            "oneOf": [
+                {"$ref": "#/$defs/array_of_numbers"},
+                {
+                    "type": "array",
+                    "items": {"$ref": "#/$defs/array_of_numbers"}
+                }
+            ]
+        },
+        "theta": {
+			"type": "number",
+			"minimum": 0.0
+        },
+        "beta": {
+			"type": "number",
+			"minimum": 0.0
+        },
+        "rho": {
+			"type": "number",
+			"minimum": 0.0
+        },
+        "plot_extra": {
+            "type": "boolean"
+        },
+        "plot_legend": {
+            "type": "boolean"
+        },
+        "plot_arrow": {
+            "type": "boolean"
+        }
+    },
+    "$defs": {
+        "array_of_numbers": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minItems": 2
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object"
+}

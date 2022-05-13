@@ -13,5 +13,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-"""Tests for the Pymoo's optimization algorithms."""
+#
+# Contributors:
+#    INITIAL AUTHORS - initial API and implementation and/or initial
+#                           documentation
+#        :author: Gabriel Max DE MENDONÇA ABRANTES
+"""Post-processing and analysis for Pymoo library."""
 from __future__ import annotations
