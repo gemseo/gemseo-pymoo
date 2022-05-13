@@ -28,5 +28,8 @@ What is the license?
 Contributors
 ------------
 
-- Francois Gallard
+- Gabriel Max DE MENDONCA ABRANTES
+- Francois GALLARD
 - Antoine Dechaume
+- Lluis ARMENGOL GARCIA
+- Luca SARTORI

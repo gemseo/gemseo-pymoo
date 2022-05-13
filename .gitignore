@@ -1,3 +1,4 @@
+/build
 /.tox
 *.pyc
 /src/gemseo_pymoo.egg-info

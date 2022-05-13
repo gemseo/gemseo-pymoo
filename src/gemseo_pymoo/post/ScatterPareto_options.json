@@ -1,0 +1,44 @@
+{
+    "name": "ScatterPareto_options",
+    "properties": {
+        "points": {
+            "oneOf": [
+                {"$ref": "#/$defs/array_of_numbers"},
+                {
+                    "type": "array",
+                    "items": {"$ref": "#/$defs/array_of_numbers"}
+                }
+            ]
+        },
+        "point_labels": {
+            "oneOf": [
+                {"type": "string"},
+                {
+                    "type": "array",
+                    "items": {"type": "string"}
+                }
+            ]
+        },
+        "plot_extra": {
+            "type": "boolean"
+        },
+        "plot_legend": {
+            "type": "boolean"
+        },
+        "plot_arrow": {
+            "type": "boolean"
+        }
+    },
+    "$defs": {
+        "array_of_numbers": {
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minItems": 2
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object"
+}

@@ -1,0 +1,112 @@
+{
+    "name": "PYMOO_RNSGA3_options",
+    "required": ["max_iter", "ref_points"],
+    "properties": {
+		"normalize_design_space": {
+			"type": "boolean"
+		},
+		"xtol_rel": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "xtol_abs": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "ftol_rel": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "ftol_abs": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "stop_crit_n_x": {
+            "type": "integer",
+            "minimum": 2
+        },
+        "max_iter": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "max_gen": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "n_obj": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "mu": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "crossover": {"$ref": "#/$defs/options_operator"},
+        "sampling": {"$ref": "#/$defs/options_operator"},
+        "mutation": {"$ref": "#/$defs/options_operator"},
+        "selection": {"$ref": "#/$defs/options_operator"},
+        "ref_points": {
+            "type":  "array"
+        },
+        "seed": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "pop_per_ref_point": {
+            "type": ["null","integer"],
+            "minimum": 1
+        },
+        "pop_size": {
+            "type": ["null","integer"],
+            "minimum": 1
+        },
+        "eliminate_duplicates": {
+            "type": "boolean"
+        },
+        "n_offsprings": {
+            "type": ["null", "integer"]
+        },
+        "n_processes": {
+            "type": "integer"
+        },
+        "display": {},
+        "verbose": {"type": "boolean"}
+    },
+    "$defs": {
+        "single_var_type_operator": {
+            "oneOf": [
+                {"type": "null"},
+                {"type": "string"},
+                {
+                    "type": "array",
+                    "items": [{"type": "string"}],
+                    "additionalItems": {"type": ["array", "object"]}
+                },
+                {
+                    "type": "object",
+                    "properties": {"custom": {}},
+                    "required":  ["custom"]
+                }
+            ]
+        },
+        "mixed_var_type_operator": {
+            "type": "object",
+            "properties": {
+                "int": {"$ref": "#/$defs/single_var_type_operator"},
+                "integer": {"$ref": "#/$defs/single_var_type_operator"},
+                "float": {"$ref": "#/$defs/single_var_type_operator"}
+            },
+            "oneOf": [
+                {"required": ["int", "float"]},
+                {"required": ["integer", "float"]}
+            ]
+        },
+        "options_operator": {"anyOf": [
+            {"$ref": "#/$defs/single_var_type_operator"},
+            {"$ref": "#/$defs/mixed_var_type_operator"}
+        ]}
+    },
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "additionalProperties": false,
+    "type": "object"
+}
