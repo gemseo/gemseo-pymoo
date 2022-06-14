@@ -24,13 +24,13 @@
 """Tests for the Pymoo library wrapper."""
 from __future__ import annotations
 
+import logging
 from contextlib import nullcontext as does_not_raise
 from typing import Any
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.api import configure_logger
 from gemseo.core.grammars.errors import InvalidDataException
 from gemseo.problems.analytical.binh_korn import BinhKorn
 from gemseo.problems.analytical.power_2 import Power2
@@ -47,8 +47,6 @@ from numpy.testing import assert_allclose
 from pymoo.core.problem import Problem
 from pymoo.factory import get_mutation
 from pymoo.factory import get_sampling
-
-configure_logger()
 
 tolerances = dict(ftol_rel=0.0, ftol_abs=0.0, xtol_rel=0.0, xtol_abs=0.0)
 integer_options = dict(normalize_design_space=False, stop_crit_n_x=99)
@@ -139,6 +137,21 @@ def pow2_ineq_int() -> OptimizationProblem:
 
 
 @pytest.fixture
+def mo_knapsack() -> MultiObjectiveKnapsack:
+    """Create a :class:`.MultiObjectiveKnapsack` optimization problem.
+
+    Returns:
+        A MultiObjectiveKnapsack instance.
+    """
+    return MultiObjectiveKnapsack(
+        array([55.0, 10.0, 47.0, 5.0, 4.0, 50.0, 8.0, 61.0, 85.0, 87.0]),
+        array([95.0, 4.0, 60.0, 32.0, 23.0, 72.0, 80.0, 62.0, 65.0, 46.0]),
+        capacity_weight=269.0,
+        capacity_items=10,
+    )
+
+
+@pytest.fixture
 def simple_mip_problem() -> OptimizationProblem:
     """Create a very simple MIP problem for test purposes.
 
@@ -198,7 +211,7 @@ def test_operators_jason_schema(opt_factory, algo_name):
     lib = opt_factory.create(algo_name)
     opt_grammar = lib.init_options_grammar(algo_name)
     try:
-        opt_grammar.load_data(options, raise_exception=True)
+        opt_grammar.validate(options, raise_exception=True)
     except InvalidDataException as exception:
         pytest.fail(exception)
 
@@ -383,7 +396,7 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_options, algo_name):
         dict(algo_name="PYMOO_NSGA2"),
         dict(algo_name="PYMOO_NSGA3", ref_dirs_name="das-dennis", n_partitions=10),
         dict(algo_name="PYMOO_UNSGA3", ref_dirs_name="das-dennis", n_partitions=10),
-        dict(algo_name="PYMOO_RNSGA3", mu=0.5, ref_points_=array([[10.0], [1.0]])),
+        dict(algo_name="PYMOO_RNSGA3", mu=0.5, ref_points_=array([[1.0], [1.0]])),
     ],
 )
 @pytest.mark.parametrize(
@@ -423,26 +436,19 @@ def test_mo(opt_factory, options, problem_class, min_norm_x, min_norm_threshold,
     assert res.pareto.min_norm < min_norm_threshold
 
 
-def test_mo_integer(opt_factory):
+def test_mo_integer(opt_factory, mo_knapsack):
     """Test the optimization of a multi-objective problems with integer variables.
 
     This test allows Pymoo to handle the termination criterion.
 
     Args:
         opt_factory: Fixture returning an optimizer factory.
+        mo_knapsack: Fixture returning the problem to be optimized.
     """
-    values = array([55.0, 10.0, 47.0, 5.0, 4.0, 50.0, 8.0, 61.0, 85.0, 87.0])
-    weights = array([95.0, 4.0, 60.0, 32.0, 23.0, 72.0, 80.0, 62.0, 65.0, 46.0])
-    problem = MultiObjectiveKnapsack(
-        values,
-        weights,
-        capacity_weight=269.0,
-        capacity_items=10,
-    )
-
     options = dict(
         max_iter=800,
         pop_size=100,
+        stop_crit_n_hv=10,
         **tolerances,
         **integer_operators,
         **integer_options,
@@ -455,7 +461,7 @@ def test_mo_integer(opt_factory):
     # Manually change the maximum number of generations allowed for Pymoo.
     lib.pymoo_n_gen = 20
 
-    res = lib.execute(problem, algo_name=algo_name, **options)
+    res = lib.execute(mo_knapsack, algo_name=algo_name, **options)
 
     # Known solution (one of the anchor points).
     anchor_x = array([0, 1, 1, 1, 0, 0, 0, 1, 1, 1])
@@ -612,3 +618,26 @@ def test_empty_database(opt_factory):
 
     # Check if dictionary does not contain any pareto related attribute.
     assert "pareto" not in str(res.to_dict().keys())
+
+
+def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
+    """Test the hypervolume stop criterion with an unfeasible problem.
+
+    Args:
+        opt_factory: Fixture returning an optimizer factory.
+        mo_knapsack: Fixture returning the problem to be optimized.
+        caplog: Fixture to access and control log capturing.
+    """
+    caplog.set_level(logging.DEBUG)
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    # Set the knapsack problem to be unfeasible.
+    mo_knapsack.capacity_items = -1
+
+    options = dict(max_gen=6, pop_size=2, **integer_operators, **integer_options)
+    opt_factory.execute(mo_knapsack, algo_name="PYMOO_NSGA2", **options)
+
+    assert "Current hypervolume set to 0!" in caplog.text
+    assert "Hypervolume stopping criterion is ignored!" in caplog.text

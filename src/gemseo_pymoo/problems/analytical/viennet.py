@@ -75,9 +75,9 @@ class Viennet(OptimizationProblem):
         design_space.add_variable("y", size=1, l_b=l_b, u_b=u_b)
 
         if initial_guess is None:
-            design_space.set_current_x(zeros(2))
+            design_space.set_current_value(zeros(2))
         else:
-            design_space.set_current_x(initial_guess)
+            design_space.set_current_value(initial_guess)
 
         super().__init__(design_space)
 

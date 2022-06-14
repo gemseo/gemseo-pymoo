@@ -26,16 +26,13 @@ from pathlib import Path
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.api import configure_logger
 from gemseo.post.post_factory import PostFactory
 from gemseo.problems.analytical.power_2 import Power2
+from gemseo.utils.testing import image_comparison
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
-from matplotlib.testing.decorators import image_comparison
 from numpy import array
-
-configure_logger()
 
 
 @pytest.fixture
@@ -122,7 +119,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
         ("HighTradeOff", "", {"plot_extra": False}, ["high_tradeoff_viennet_no_extra"]),
     ],
 )
-@image_comparison(None, extensions=["png"])
+@image_comparison(None, extensions=["png"], style="default")
 def test_post(
     post_factory,
     problem_3obj,

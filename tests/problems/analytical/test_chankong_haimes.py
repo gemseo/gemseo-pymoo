@@ -22,12 +22,9 @@
 from __future__ import annotations
 
 import pytest
-from gemseo.api import configure_logger
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from numpy import array
 from numpy.testing import assert_allclose
-
-configure_logger()
 
 
 @pytest.fixture

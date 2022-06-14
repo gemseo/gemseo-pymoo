@@ -186,9 +186,9 @@ class Knapsack(OptimizationProblem):
             "x", size=n_items, l_b=0, u_b=items_ub, var_type=DesignVariableType.INTEGER
         )
         if initial_guess is None:
-            design_space.set_current_x(zeros(n_items))
+            design_space.set_current_value(zeros(n_items))
         elif len(initial_guess) == n_items:
-            design_space.set_current_x(zeros(n_items))
+            design_space.set_current_value(zeros(n_items))
         else:
             raise ValueError(f"initial_guess must have {n_items} elements!")
 

@@ -30,3 +30,7 @@ class DesignSpaceExploredException(TerminationCriterion):
 
 class MaxGenerationsReached(TerminationCriterion):
     """Exception raised when the maximum number of generations is reached."""
+
+
+class HyperVolumeToleranceReached(TerminationCriterion):
+    """Exception raised when the hv_tol_rel or hv_tol_abs criteria is reached."""

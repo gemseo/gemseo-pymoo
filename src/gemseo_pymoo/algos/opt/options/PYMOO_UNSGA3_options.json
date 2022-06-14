@@ -21,7 +21,19 @@
             "type": "number",
             "minimum": 0.0
         },
+        "hv_tol_rel": {
+            "type": "number",
+            "minimum": 0.0
+        },
+        "hv_tol_abs": {
+            "type": "number",
+            "minimum": 0.0
+        },
         "stop_crit_n_x": {
+            "type": "integer",
+            "minimum": 2
+        },
+        "stop_crit_n_hv": {
             "type": "integer",
             "minimum": 2
         },
