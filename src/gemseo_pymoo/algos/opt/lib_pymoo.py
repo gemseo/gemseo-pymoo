@@ -38,10 +38,12 @@ from gemseo.algos.opt.opt_lib import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion
+from gemseo.utils.python_compatibility import Final
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
 from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
+from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 from numpy import inf
 from numpy import ndarray
@@ -112,28 +114,40 @@ class PymooOpt(OptimizationLibrary):
     See :class:`gemseo.algos.opt.opt_lib.OptimizationLibrary`.
     """
 
-    MAX_GEN = "max_gen"
+    N_PROCESSES: Final[str] = "n_processes"
+    """The tag for the number of processes to use."""
+
+    MAX_GEN: Final[str] = "max_gen"
     """The tag for the maximum number of generations allowed."""
 
-    __PYMOO_WEBPAGE = "https://www.pymoo.org"
+    HV_TOL_REL: Final[str] = "hv_tol_rel"
+    """The tag for the relative tolerance used in the hypervolume convergence check."""
+
+    HV_TOL_ABS: Final[str] = "hv_tol_abs"
+    """The tag for the absolute tolerance used in the hypervolume convergence check."""
+
+    STOP_CRIT_N_HV: Final[str] = "stop_crit_n_hv"
+    """The tag for the number of generations to account for in the hypervolume check."""
+
+    __PYMOO_WEBPAGE: Final[str] = "https://www.pymoo.org"
     """The Pymoo webpage."""
 
-    __PYMOO_PREFIX = "PYMOO_"
+    __PYMOO_PREFIX: Final[str] = "PYMOO_"
     """The prefix added to the internal algorithm's name."""
 
-    CROSSOVER_OPERATOR = "crossover"
+    CROSSOVER_OPERATOR: Final[str] = "crossover"
     """The crossover operator's name."""
 
-    MUTATION_OPERATOR = "mutation"
+    MUTATION_OPERATOR: Final[str] = "mutation"
     """The mutation operator's name."""
 
-    SAMPLING_OPERATOR = "sampling"
+    SAMPLING_OPERATOR: Final[str] = "sampling"
     """The sampling operator's name."""
 
-    SELECTION_OPERATOR = "selection"
+    SELECTION_OPERATOR: Final[str] = "selection"
     """The selection operator's name."""
 
-    EVOLUTIONARY_OPERATORS = [
+    EVOLUTIONARY_OPERATORS: Final[list[str]] = [
         CROSSOVER_OPERATOR,
         MUTATION_OPERATOR,
         SAMPLING_OPERATOR,
@@ -141,22 +155,22 @@ class PymooOpt(OptimizationLibrary):
     ]
     """A list with all evolutionary operators available."""
 
-    PYMOO_GA = "PYMOO_GA"
+    PYMOO_GA: Final[str] = "PYMOO_GA"
     """The GEMSEO alias for the Genetic Algorithm."""
 
-    PYMOO_NSGA2 = "PYMOO_NSGA2"
+    PYMOO_NSGA2: Final[str] = "PYMOO_NSGA2"
     """The GEMSEO alias for the Non-dominated Sorting Genetic Algorithm II."""
 
-    PYMOO_NSGA3 = "PYMOO_NSGA3"
+    PYMOO_NSGA3: Final[str] = "PYMOO_NSGA3"
     """The GEMSEO alias for the Non-dominated Sorting Genetic Algorithm III."""
 
-    PYMOO_UNSGA3 = "PYMOO_UNSGA3"
+    PYMOO_UNSGA3: Final[str] = "PYMOO_UNSGA3"
     """The GEMSEO alias for the Unified NSGA-III."""
 
-    PYMOO_RNSGA3 = "PYMOO_RNSGA3"
+    PYMOO_RNSGA3: Final[str] = "PYMOO_RNSGA3"
     """The GEMSEO alias for the Reference Point Based NSGA-III."""
 
-    __PYMOO_METADATA = {
+    __PYMOO_METADATA: Final[dict[str, tuple[str, str]]] = {
         PYMOO_GA: ("Genetic Algorithm", "/soo/nonconvex/ga.html#nb-ga"),
         PYMOO_NSGA2: (
             "Non-dominated Sorting Genetic Algorithm II",
@@ -171,11 +185,14 @@ class PymooOpt(OptimizationLibrary):
     }
     """The description and webpage link of the Pymoo algorithms."""
 
-    LIBRARY_NAME = "Pymoo"
+    LIBRARY_NAME: Final[str] = "Pymoo"
     """The library's name."""
 
     pymoo_n_gen: int = 10000000
-    """Pymoo termination criterion based on the number of generations."""
+    """The Pymoo's termination criterion based on the number of generations."""
+
+    _stop_crit_n_hv: int = 5
+    """The number of generations to account for in the hypervolume convergence check."""
 
     _ds_size: int
     """The design space size."""
@@ -211,7 +228,7 @@ class PymooOpt(OptimizationLibrary):
         # See https://www.pymoo.org/misc/constraints.html for eq constraints.
         for algo_name, algo_value in self.__PYMOO_METADATA.items():
             internal_name = algo_name.split("_")[-1]
-            self.lib_dict[algo_name] = PymooAlgorithmDescription(
+            self.descriptions[algo_name] = PymooAlgorithmDescription(
                 algorithm_name=algo_name,
                 internal_algorithm_name=internal_name,
                 description=algo_value[0],
@@ -249,7 +266,7 @@ class PymooOpt(OptimizationLibrary):
         """
         if (
             opt_problem.objective.dim > 1
-            and not self.lib_dict[algo_name].handle_multiobjective
+            and not self.descriptions[algo_name].handle_multiobjective
         ):
             raise ValueError(
                 f"Requested optimization algorithm {self.algo_name} can not handle "
@@ -264,7 +281,10 @@ class PymooOpt(OptimizationLibrary):
         ftol_abs: float = 1e-9,
         xtol_rel: float = 1e-9,
         xtol_abs: float = 1e-9,
+        hv_tol_rel: float = 1e-9,
+        hv_tol_abs: float = 1e-9,
         stop_crit_n_x: int = 3,
+        stop_crit_n_hv: int = 5,
         normalize_design_space: bool = True,
         eq_tolerance: float = 1e-2,
         ineq_tolerance: float = 1e-4,
@@ -303,8 +323,14 @@ class PymooOpt(OptimizationLibrary):
                 If norm(xk-xk+1)/norm(xk)<= xtol_rel: stop.
             xtol_abs: A stop criterion, absolute tolerance on the design variables.
                 If norm(xk-xk+1)<= xtol_abs: stop.
+            hv_tol_rel: A stop criterion, the relative tolerance on the hypervolume
+                convergence check. If norm(xk-xk+1)/norm(xk)<= hv_tol_rel: stop.
+            hv_tol_abs: A stop criterion, absolute tolerance on the hypervolume
+                convergence check. If norm(xk-xk+1)<= hv_tol_abs: stop.
             stop_crit_n_x: The number of design vectors to account for during the
                criteria check.
+            stop_crit_n_hv: The number of generations to account for during the
+               criterion check on the hypervolume indicator.
             normalize_design_space: If True, scale the variables to the range [0, 1].
             eq_tolerance: The equality tolerance.
             ineq_tolerance: The inequality tolerance.
@@ -413,7 +439,10 @@ class PymooOpt(OptimizationLibrary):
             ftol_abs=ftol_abs,
             xtol_rel=xtol_rel,
             xtol_abs=xtol_abs,
+            hv_tol_rel=hv_tol_rel,
+            hv_tol_abs=hv_tol_abs,
             stop_crit_n_x=stop_crit_n_x,
+            stop_crit_n_hv=stop_crit_n_hv,
             normalize_design_space=normalize_design_space,
             ineq_tolerance=ineq_tolerance,
             eq_tolerance=eq_tolerance,
@@ -640,6 +669,7 @@ class PymooOpt(OptimizationLibrary):
         """
         super()._pre_run(problem, algo_name, **options)
         self._check_mo_handling(algo_name, problem)
+        self._stop_crit_n_hv = options.get(self.STOP_CRIT_N_HV)
 
     def _run(
         self, **options: Any
@@ -658,15 +688,16 @@ class PymooOpt(OptimizationLibrary):
         # Remove normalization from algorithm's options.
         normalize_ds = options.pop(self.NORMALIZE_DESIGN_SPACE_OPTION, True)
 
-        # Number of processes.
-        n_processes = options.pop("n_processes", 1)
-
-        # Maximum number of generations.
-        max_gen = options.pop(self.MAX_GEN)
-
         # Instantiate the Pymoo Problem.
+        pymoo_problem_options = {
+            self.N_PROCESSES: options.pop(self.N_PROCESSES, 1),
+            self.MAX_GEN: options.pop(self.MAX_GEN),
+            self.HV_TOL_REL: options.pop(self.HV_TOL_REL),
+            self.HV_TOL_ABS: options.pop(self.HV_TOL_ABS),
+            self.STOP_CRIT_N_HV: options.pop(self.STOP_CRIT_N_HV),
+        }
         pymoo_problem = PymooProblem(
-            self.problem, normalize_ds, self, n_processes=n_processes, max_gen=max_gen
+            self.problem, normalize_ds, self, **pymoo_problem_options
         )
 
         # Problem type (continuous, discrete, mixed).
@@ -872,6 +903,14 @@ class PymooOpt(OptimizationLibrary):
         if isinstance(error, MaxGenerationsReached):
             message = (
                 "Maximum number of generations reached. GEMSEO stopped the driver."
+            )
+            return self.get_optimum_from_database(message)
+
+        if isinstance(error, HyperVolumeToleranceReached):
+            message = (
+                f"{self._stop_crit_n_hv} successive iterates of the hypervolume "
+                "indicator are closer than hv_tol_rel or hv_tol_abs. "
+                "GEMSEO stopped the driver."
             )
             return self.get_optimum_from_database(message)
 

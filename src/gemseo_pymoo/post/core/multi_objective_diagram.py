@@ -46,10 +46,10 @@ class MultiObjectiveDiagram(OptPostProcessor):
     DEFAULT_FIG_SIZE = (10, 6)
     """The default width and height of the figure, in inches."""
 
-    font_size = 9
+    font_size: int = 9
     """The font size for the plot texts."""
 
-    SCALARIZATION_FUNCTIONS = {
+    SCALARIZATION_FUNCTIONS: dict[str, str] = {
         "weighted-sum": "Weighted Sum",
         "tchebi": "Tchebysheff",
         "pbi": "PBI",

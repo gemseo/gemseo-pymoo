@@ -25,7 +25,6 @@ from contextlib import nullcontext as does_not_raise
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.api import configure_logger
 from gemseo_pymoo.problems.analytical.knapsack import create_random_knapsack_problem
 from gemseo_pymoo.problems.analytical.knapsack import Knapsack
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
@@ -35,7 +34,6 @@ from numpy import ones
 from numpy import zeros
 from numpy.testing import assert_array_equal
 
-configure_logger()
 integer_operators = dict(
     sampling="int_lhs",
     crossover="int_sbx",

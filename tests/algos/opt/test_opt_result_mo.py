@@ -24,7 +24,6 @@ from __future__ import annotations
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.api import configure_logger
 from gemseo.problems.analytical.power_2 import Power2
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import import_hdf
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
@@ -35,8 +34,6 @@ from numpy import array
 from numpy.testing import assert_array_equal
 from pandas import DataFrame
 from pandas import MultiIndex
-
-configure_logger()
 
 
 @pytest.fixture

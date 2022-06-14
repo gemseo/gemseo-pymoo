@@ -24,7 +24,9 @@ from __future__ import annotations
 import logging
 from math import degrees
 from typing import Any
+from typing import Dict
 from typing import Sequence
+from typing import Union
 
 import matplotlib.pyplot as plt
 from gemseo.post.opt_post_processor import OptPostProcessor
@@ -42,6 +44,8 @@ from pymoo.visualization.scatter import Scatter as PymooScatter
 
 LOGGER = logging.getLogger(__name__)
 
+PlotPropertiesType = Dict[str, Union[str, int, float, bool]]
+
 
 class ScatterPareto(OptPostProcessor):
     """Scatter plot with pareto points and points of interest.
@@ -53,28 +57,30 @@ class ScatterPareto(OptPostProcessor):
         pareto front.
     """
 
-    fig_title = "Pareto"
+    fig_title: str = "Pareto"
     """The figure's title."""
 
-    fig_name_prefix = "scatter"
+    fig_name_prefix: str = "scatter"
     """The figure's name prefix."""
 
-    font_size = 9
+    font_size: int = 9
     """The font size for the plot texts."""
 
-    prop_front = dict(color="blue", alpha=0.2, s=10, zorder=1)
+    prop_front: PlotPropertiesType = dict(color="blue", alpha=0.2, s=10, zorder=1)
     """The properties for the pareto points."""
 
-    prop_extra = dict(alpha=0.8, s=30, zorder=2)
+    prop_extra: PlotPropertiesType = dict(alpha=0.8, s=30, zorder=2)
     """The properties for the extra points."""
 
-    prop_interest = dict(alpha=1.0, s=30, zorder=3)
+    prop_interest: PlotPropertiesType = dict(alpha=1.0, s=30, zorder=3)
     """The properties for the points of interest."""
 
-    prop_arrow = dict(color="black", alpha=0.5, arrowstyle="-|>", mutation_scale=12)
+    prop_arrow: PlotPropertiesType = dict(
+        color="black", alpha=0.5, arrowstyle="-|>", mutation_scale=12
+    )
     """The properties for the arrows."""
 
-    prop_annotation = dict(
+    prop_annotation: PlotPropertiesType = dict(
         fontsize=font_size - 2,
         ha="center",
         va="bottom",

@@ -45,7 +45,7 @@ class Compromise(ScatterPareto):
 
     fig_name_prefix = "compromise"
 
-    SCALARIZATION_FUNCTIONS = {
+    SCALARIZATION_FUNCTIONS: dict[str, str] = {
         "weighted-sum": "Weighted Sum",
         "tchebi": "Tchebysheff",
         "pbi": "PBI",
