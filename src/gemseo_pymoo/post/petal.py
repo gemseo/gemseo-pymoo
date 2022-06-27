@@ -24,8 +24,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
 from numpy import ndarray
+
+from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
 
 LOGGER = logging.getLogger(__name__)
 

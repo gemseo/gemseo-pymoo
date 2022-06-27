@@ -39,12 +39,6 @@ from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.utils.python_compatibility import Final
-from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
-from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
-from gemseo_pymoo.algos.opt_result_mo import Pareto
-from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
-from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
-from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -71,6 +65,13 @@ from pymoo.operators.mixed_variable_operator import MixedVariableSampling
 from pymoo.optimize import minimize
 from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
 from pymoo.util.reference_direction import ReferenceDirectionFactory
+
+from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
+from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
+from gemseo_pymoo.algos.opt_result_mo import Pareto
+from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
+from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
+from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 LOGGER = logging.getLogger(__name__)
 
@@ -347,7 +348,7 @@ class PymooOpt(OptimizationLibrary):
             eliminate_duplicates: If True, eliminate duplicates after merging
                 the parent and the offspring population.
             n_offsprings: Number of offspring that are created through mating.
-                if None, it will be set equal to the population size.
+                If None, it will be set equal to the population size.
             seed: The random seed to be used.
             pop_per_ref_point: The size of the population used for each reference point.
             mu: The scaling of the reference lines used during survival selection.

@@ -24,12 +24,13 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from gemseo_pymoo.algos.opt_result_mo import Pareto
-from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 from numpy import atleast_2d
 from numpy import ndarray
 from numpy import vstack
 from pymoo.factory import get_decomposition
+
+from gemseo_pymoo.algos.opt_result_mo import Pareto
+from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 
 LOGGER = logging.getLogger(__name__)
 

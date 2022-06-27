@@ -29,13 +29,14 @@ from typing import Any
 import matplotlib.pyplot as plt
 from gemseo.post.opt_post_processor import OptPostProcessor
 from gemseo.third_party.prettytable import PrettyTable
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from matplotlib.gridspec import GridSpec
 from numpy import atleast_2d
 from numpy import ndarray
 from numpy import vstack
 from pymoo.factory import get_decomposition
 from pymoo.factory import get_visualization
+
+from gemseo_pymoo.algos.opt_result_mo import Pareto
 
 LOGGER = logging.getLogger(__name__)
 
