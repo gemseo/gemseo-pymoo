@@ -30,9 +30,6 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 from gemseo.post.opt_post_processor import OptPostProcessor
-from gemseo_pymoo.algos.opt_result_mo import Pareto
-from gemseo_pymoo.post.core.plot_features import Annotation3D
-from gemseo_pymoo.post.core.plot_features import Arrow3D
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
 from numpy import arctan
@@ -41,6 +38,10 @@ from numpy import ndarray
 from numpy import vstack
 from numpy.linalg import norm as np_norm
 from pymoo.visualization.scatter import Scatter as PymooScatter
+
+from gemseo_pymoo.algos.opt_result_mo import Pareto
+from gemseo_pymoo.post.core.plot_features import Annotation3D
+from gemseo_pymoo.post.core.plot_features import Arrow3D
 
 LOGGER = logging.getLogger(__name__)
 

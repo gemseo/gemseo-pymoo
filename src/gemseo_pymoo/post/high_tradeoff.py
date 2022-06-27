@@ -24,9 +24,10 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
+
 from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
 
 LOGGER = logging.getLogger(__name__)
 

@@ -35,10 +35,6 @@ from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
 from gemseo.core.parallel_execution import ParallelExecution
-from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
-from gemseo_pymoo.algos.opt_result_mo import Pareto
-from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
-from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 from numpy import allclose
 from numpy import atleast_1d
 from numpy import average
@@ -54,6 +50,11 @@ from numpy import zeros
 from pymoo.core.problem import Problem
 from pymoo.factory import get_problem
 from pymoo.indicators.hv import Hypervolume
+
+from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
+from gemseo_pymoo.algos.opt_result_mo import Pareto
+from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
+from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 LOGGER = logging.getLogger(__name__)
 OPTLibraryOutputType = Tuple[Dict[str, Union[float, ndarray]], Dict[str, ndarray]]
