@@ -19,7 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 #                 François Gallard
-"""An adapter for Pymoo :class:`~pymoo.core.problem.Problem`."""
+"""An adapter for pymoo :class:`~pymoo.core.problem.Problem`."""
 from __future__ import annotations
 
 import logging
@@ -97,15 +97,15 @@ def get_gemseo_opt_problem(
     pymoo_pb: str | Problem,
     **pymoo_pb_options: Any,
 ) -> OptimizationProblem:
-    """Create a GEMSEO problem from a Pymoo :class:`~pymoo.core.problem.Problem`.
+    """Create a GEMSEO problem from a pymoo :class:`~pymoo.core.problem.Problem`.
 
-    If the Pymoo problem's name is provided, it must be a valid name among the available
-    ones (see `Pymoo problems <https://pymoo.org/problems/test_problems.html>`_).
+    If the pymoo problem's name is provided, it must be a valid name among the available
+    ones (see `pymoo problems <https://pymoo.org/problems/test_problems.html>`_).
 
     Args:
-        pymoo_pb: The Pymoo problem to be converted.
+        pymoo_pb: The pymoo problem to be converted.
         **pymoo_pb_options: The additional arguments to be passed to the
-            Pymoo's problem ``getter`` ``get_problem``.
+            pymoo's problem ``getter`` ``get_problem``.
 
     Returns:
         An instance of a GEMSEO :class:`~gemseo.algos.opt_problem.OptimizationProblem`.
@@ -145,7 +145,7 @@ def get_gemseo_opt_problem(
 
 
 class PymooProblem(Problem):
-    """Interface between GEMSEO and Pymoo optimization problems.
+    """Interface between GEMSEO and pymoo optimization problems.
 
     It supports multiprocessing.
     """
@@ -196,14 +196,14 @@ class PymooProblem(Problem):
         driver: OptimizationLibrary,
         **options: Any,
     ) -> None:
-        """Initialize a Pymoo :class:`~pymoo.core.problem.Problem` from a GEMSEO one.
+        """Initialize a pymoo :class:`~pymoo.core.problem.Problem` from a GEMSEO one.
 
         It also sets up a parallel object
         :class:`~gemseo.core.parallel_execution.ParallelExecution` for
         multiprocessing purposes.
 
         Args:
-            opt_problem: The GEMSEO problem to convert to a Pymoo problem.
+            opt_problem: The GEMSEO problem to convert to a pymoo problem.
             normalize_ds: Whether to normalize the design variables.
             driver: The optimization library used to handle the problem.
             **options: The other algorithm options.
@@ -430,8 +430,8 @@ class PymooProblem(Problem):
 
         obj_name = self.opt_problem.objective.name
 
-        # Filter only the feasible points because this is not done by Pymoo.
-        # Nevertheless, Pymoo will check and select the non-dominated points
+        # Filter only the feasible points because this is not done by pymoo.
+        # Nevertheless, pymoo will check and select the non-dominated points
         # thanks to the attribute 'nds'. In this way, we do not have to calculate
         # the pareto front at every generation.
         _, f_hist_feasible = self.opt_problem.get_feasible_points()

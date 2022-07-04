@@ -15,6 +15,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Pymoo optimization algorithms core package.
 
-Contains the source code of algorithms developed with Pymoo.
+Contains the source code of algorithms developed with pymoo.
 """
 from __future__ import annotations
