@@ -18,7 +18,7 @@
 #    INITIAL AUTHORS - initial API and implementation and/or initial
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
-"""Termination criteria for Pymoo algorithms."""
+"""Termination criteria for pymoo algorithms."""
 from __future__ import annotations
 
 from gemseo.algos.stop_criteria import TerminationCriterion

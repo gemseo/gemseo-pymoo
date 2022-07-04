@@ -92,9 +92,9 @@ EvolutionaryMixedOperatorTypes = Union[
 
 @dataclass
 class PymooAlgorithmDescription(OptimizationAlgorithmDescription):
-    """The description of an optimization algorithm from the Pymoo library."""
+    """The description of an optimization algorithm from the pymoo library."""
 
-    lib: str = "Pymoo"
+    library_name: str = "pymoo"
 
     handle_integer_variables: bool = True
 
@@ -131,7 +131,7 @@ class PymooOpt(OptimizationLibrary):
     """The tag for the number of generations to account for in the hypervolume check."""
 
     __PYMOO_WEBPAGE: Final[str] = "https://www.pymoo.org"
-    """The Pymoo webpage."""
+    """The pymoo webpage."""
 
     __PYMOO_PREFIX: Final[str] = "PYMOO_"
     """The prefix added to the internal algorithm's name."""
@@ -171,26 +171,28 @@ class PymooOpt(OptimizationLibrary):
     PYMOO_RNSGA3: Final[str] = "PYMOO_RNSGA3"
     """The GEMSEO alias for the Reference Point Based NSGA-III."""
 
+    __PYMOO_ = "PYMOO_"
+
     __PYMOO_METADATA: Final[dict[str, tuple[str, str]]] = {
-        PYMOO_GA: ("Genetic Algorithm", "/soo/nonconvex/ga.html#nb-ga"),
+        PYMOO_GA: ("Genetic Algorithm", "soo/nonconvex/ga.html#nb-ga"),
         PYMOO_NSGA2: (
             "Non-dominated Sorting Genetic Algorithm II",
-            "/moo/nsga2.html#nb-nsga2",
+            "moo/nsga2.html#nb-nsga2",
         ),
         PYMOO_NSGA3: (
             "Non-dominated Sorting Genetic Algorithm III",
-            "/moo/nsga3.html#nb-nsga3",
+            "moo/nsga3.html#nb-nsga3",
         ),
-        PYMOO_UNSGA3: ("Unified NSGA3", "/moo/unsga3.html#nb-unsga3"),
-        PYMOO_RNSGA3: ("Reference Point Based NSGA3", "/moo/rnsga3.html#nb-rnsga3"),
+        PYMOO_UNSGA3: ("Unified NSGA3", "moo/unsga3.html#nb-unsga3"),
+        PYMOO_RNSGA3: ("Reference Point Based NSGA3", "moo/rnsga3.html#nb-rnsga3"),
     }
-    """The description and webpage link of the Pymoo algorithms."""
+    """The description and webpage link of the pymoo algorithms."""
 
-    LIBRARY_NAME: Final[str] = "Pymoo"
+    LIBRARY_NAME: Final[str] = "pymoo"
     """The library's name."""
 
     pymoo_n_gen: int = 10000000
-    """The Pymoo's termination criterion based on the number of generations."""
+    """The pymoo's termination criterion based on the number of generations."""
 
     _stop_crit_n_hv: int = 5
     """The number of generations to account for in the hypervolume convergence check."""
@@ -209,7 +211,7 @@ class PymooOpt(OptimizationLibrary):
             EvolutionaryOperatorTypes | Sampling | Population | ndarray,
         ],
     ]
-    """Map the operator's nature to the corresponding Pymoo's getters and classes."""
+    """Map the operator's nature to the corresponding pymoo's getters and classes."""
 
     def __init__(self) -> None:
         """Constructor.
@@ -228,9 +230,9 @@ class PymooOpt(OptimizationLibrary):
 
         # See https://www.pymoo.org/misc/constraints.html for eq constraints.
         for algo_name, algo_value in self.__PYMOO_METADATA.items():
-            internal_name = algo_name.split("_")[-1]
+            internal_name = algo_name.replace(self.__PYMOO_, "")
             self.descriptions[algo_name] = PymooAlgorithmDescription(
-                algorithm_name=algo_name,
+                algorithm_name=internal_name,
                 internal_algorithm_name=internal_name,
                 description=algo_value[0],
                 website=f"{self.__PYMOO_WEBPAGE}/algorithms/{algo_value[1]}",
@@ -311,7 +313,7 @@ class PymooOpt(OptimizationLibrary):
         r"""Set the options default values.
 
         To get the best and up-to-date information about algorithms options, go to
-        Pymoo's algorithms `documentation <https://pymoo.org/algorithms/index.html>`_
+        pymoo's algorithms `documentation <https://pymoo.org/algorithms/index.html>`_
 
         Args:
             max_iter: The maximum number of iterations, i.e. unique calls to f(x).
@@ -353,7 +355,7 @@ class PymooOpt(OptimizationLibrary):
             pop_per_ref_point: The size of the population used for each reference point.
             mu: The scaling of the reference lines used during survival selection.
                 Increasing mu will generate solutions with a larger spread.
-            ref_points: The reference points (Aspiration Points) as a numpy array
+            ref_points: The reference points (Aspiration Points) as a NumPy array
                 where each row represents a point and each column a variable.
             n_partitions: The number of gaps between two consecutive points
                 along an objective axis.
@@ -364,7 +366,7 @@ class PymooOpt(OptimizationLibrary):
             **options: The other algorithm options.
 
         Notes:
-            The Pymoo library allows the user to define custom operators
+            The pymoo library allows the user to define custom operators
             to manage the processes of sampling, crossover, mutation and selection.
 
             In GEMSEO, these operators can be provided in two ways:
@@ -381,7 +383,7 @@ class PymooOpt(OptimizationLibrary):
             a dictionnary containing each variable type as keys and
             their associated operators as values is expected.
 
-            In case no info regarding these operators is provided, Pymoo's
+            In case no info regarding these operators is provided, pymoo's
             default will be used. Nevertheless, be aware that they may not be
             suitable for problems containing integer design variables.
 
@@ -478,7 +480,7 @@ class PymooOpt(OptimizationLibrary):
             type_vars: The design variables' type (``integer`` of ``float``).
             lower_bounds: The design variables' lower bounds.
             upper_bounds: The design variables' upper bounds.
-            operator_name: The Pymoo operator's name.
+            operator_name: The pymoo operator's name.
 
         Raises:
             ValueError: If ``operator_name`` refers to the mutation operator
@@ -548,7 +550,7 @@ class PymooOpt(OptimizationLibrary):
             operator_options: The operator's custom options.
 
         Returns:
-            Instance of a Pymoo's evolutionary operator.
+            Instance of a pymoo's evolutionary operator.
 
         Raises:
             TypeError: If a custom operator is provided,
@@ -566,7 +568,7 @@ class PymooOpt(OptimizationLibrary):
                 )
             return custom_instance
 
-        # Use the Pymoo factory getter to instantiate
+        # Use the pymoo factory getter to instantiate
         # an operator with the options provided.
         if len(set(types)) == 1 or nature == self.SELECTION_OPERATOR:
             cls_options = self._parse_cls_options(operator_options)
@@ -689,7 +691,7 @@ class PymooOpt(OptimizationLibrary):
         # Remove normalization from algorithm's options.
         normalize_ds = options.pop(self.NORMALIZE_DESIGN_SPACE_OPTION, True)
 
-        # Instantiate the Pymoo Problem.
+        # Instantiate the pymoo Problem.
         pymoo_problem_options = {
             self.N_PROCESSES: options.pop(self.N_PROCESSES, 1),
             self.MAX_GEN: options.pop(self.MAX_GEN),

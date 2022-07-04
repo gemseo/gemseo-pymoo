@@ -15,6 +15,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Pymoo optimization algorithms package.
 
-Contains wrappers to Pymoo library.
+Contains wrappers to pymoo library.
 """
 from __future__ import annotations

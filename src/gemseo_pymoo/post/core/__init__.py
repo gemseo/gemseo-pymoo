@@ -18,5 +18,5 @@
 #    INITIAL AUTHORS - initial API and implementation and/or initial
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
-"""Post-processing and analysis for Pymoo library."""
+"""Post-processing and analysis for pymoo library."""
 from __future__ import annotations
