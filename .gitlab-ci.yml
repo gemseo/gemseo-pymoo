@@ -21,44 +21,28 @@ workflow:
     # Run a tox env named after a job name.
     - tox -e $TOX_ENV_NAME
 
-# Specific settings for linux jobs.
-.linux:
+check:
+  extends:
+    - .base
+  stage: check
   tags:
     - gemseo-docker
   variables:
     # Caches on the CI runner host.
     PIP_CACHE_DIR: "/opt/gitlab-runner-cache/pip"
-
-# Specific settings for windows jobs.
-.windows:
-  tags:
-    - gemseo-windows-server-2012
-  variables:
-    # Caches on the CI runner host.
-    PIP_CACHE_DIR: "C:\\pip"
-
-# Jobs for the check stage.
-check:
-  extends:
-    - .base
-    - .linux
-  stage: check
-  variables:
     PRE_COMMIT_HOME: "$CI_PROJECT_DIR/.cache/pre-commit"
     # Pass the cache locations through the tox env.
     TOX_TESTENV_PASSENV: PIP_CACHE_DIR PRE_COMMIT_HOME
     TOX_ENV_NAME: check
 
-# Tests stage.
-
-# Base tests job, common to all the tests jobs.
-.tests:
+tests:
   extends: .base
   stage: tests
   variables:
     COVERAGE_FILE: coverage.xml
     # The junitxml is for showing the number of tests if gitlab UI.
-    PYTEST_ADDOPTS: --junitxml=report.xml
+    # The term report is for providing data to the gitlab coverage keyword below.
+    PYTEST_ADDOPTS: --junitxml=report.xml --cov-report=term:skip-covered
     TOX_TESTENV_PASSENV: PYTEST_ADDOPTS
   artifacts:
     # Send the artifacts even on job failure.
@@ -69,51 +53,34 @@ check:
         coverage_format: cobertura
         path: $COVERAGE_FILE
   # To get the total coverage shown in gitlab UI.
-  coverage: '/^TOTAL.+?(\d+\%)$/'
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   rules:
-    # Use the version of gemseo declared by the plugin instead of the one from the develop branch.
-    - if: '$CI_COMMIT_REF_NAME == "master" ||  $CI_COMMIT_REF_NAME =~ /rc-.*/'
+    - if: '$TAG_SUFFIX == "docker"'
       variables:
-        GEMSEO_PIP_REQ_SPEC: ""
+        # Caches on the CI runner host.
+        PIP_CACHE_DIR: "/opt/gitlab-runner-cache/pip"
+    - if: '$TAG_SUFFIX == "windows-server-2012"'
+      variables:
+        # Caches on the CI runner host.
+        PIP_CACHE_DIR: "C:\\pip"
     # Only run a test job when the following files have changed.
     - changes:
       - src/**/*.*
       - tests/**/*.*
-      - requirements/test.txt
+      - requirements/test-python*.txt
       - setup.cfg
       - tox.ini
       - .gitlab-ci.yml
-  after_script:
-    - codecov -t $CODECOV_TOKEN -f $COVERAGE_FILE --required
-
-# Common settings for windows tests jobs.
-.tests-windows:
-  extends:
-    - .tests
-    - .windows
-
-# Common settings for linux tests jobs.
-.tests-linux:
-  extends:
-    - .tests
-    - .linux
-
-# Jobs for the tests stage.
-
-.base-tests:
   parallel:
     matrix:
-      - TOX_ENV_NAME:
-        - py37-coverage
-        - py38-coverage
-        - py39-coverage
-
-linux:
-  extends:
-    - .base-tests
-    - .tests-linux
-
-windows:
-  extends:
-    - .base-tests
-    - .tests-windows
+      - TAG_SUFFIX:
+          - docker
+          - windows-server-2012
+        TOX_ENV_NAME:
+          - py37-coverage
+          - py38-coverage
+          - py39-coverage
+  tags:
+    - gemseo-$TAG_SUFFIX
+  after_script:
+    - codecov -t $CODECOV_TOKEN -f $COVERAGE_FILE --required
