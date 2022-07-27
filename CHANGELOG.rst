@@ -26,21 +26,7 @@ and this project adheres to
 `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 
-Version X.X.X (date)
-********************
+Version 1.0.0 (July 2022)
+*************************
 
-Added
------
-
-- XXX
-
-Changed
--------
-
-- XXX
-
-
-Fixed
------
-
-- XXX
+First release.
