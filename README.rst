@@ -10,6 +10,8 @@ A GEMSEO wrapper for pymoo optimization algorithms.
 
 See: https://pymoo.org/index.html
 
+This package is not compatible with Python 3.10 because pymoo is not available for Python 3.10.
+
 Documentation
 -------------
 

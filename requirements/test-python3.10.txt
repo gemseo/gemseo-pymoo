@@ -26,13 +26,13 @@ docstring-inheritance==1.0.0
     # via gemseo
 execnet==1.9.0
     # via pytest-xdist
-fastjsonschema==2.15.3
+fastjsonschema==2.16.1
     # via gemseo
 fonttools==4.34.4
     # via matplotlib
 future==0.18.2
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@develop
+gemseo==4.0.0
     # via gemseo-pymoo (setup.py)
 genson==1.2.2
     # via gemseo
@@ -52,7 +52,7 @@ matplotlib==3.5.2
     # via
     #   gemseo
     #   pymoo
-networkx==2.8.2
+networkx==2.8.5
     # via gemseo
 numpy==1.22.4
     # via
@@ -69,7 +69,7 @@ packaging==21.3
     #   gemseo
     #   matplotlib
     #   pytest
-pandas==1.4.2
+pandas==1.4.3
     # via gemseo
 pillow==9.2.0
     # via matplotlib
@@ -121,7 +121,7 @@ tqdm==4.64.0
     # via gemseo
 typing-extensions==4.3.0
     # via gemseo
-urllib3==1.26.10
+urllib3==1.26.11
     # via requests
 xdsmjs==1.0.1
     # via gemseo
