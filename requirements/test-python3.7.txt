@@ -28,7 +28,7 @@ docstring-inheritance==1.0.0
     # via gemseo
 execnet==1.9.0
     # via pytest-xdist
-fastjsonschema==2.15.3
+fastjsonschema==2.16.1
     # via gemseo
 fonttools==4.34.4
     # via matplotlib
@@ -133,7 +133,7 @@ typing-extensions==4.3.0
     #   gemseo
     #   importlib-metadata
     #   kiwisolver
-urllib3==1.26.10
+urllib3==1.26.11
     # via requests
 xdsmjs==1.0.1
     # via gemseo
