@@ -221,8 +221,8 @@ class PymooProblem(Problem):
         self._hv_tol_abs = options.pop("hv_tol_abs", 1e-9)
         self._stop_crit_n_hv = options.pop("stop_crit_n_hv", 5)
         self._hv_obj_hist_feasible = []
-        self._hv_history = [0]
-        self._hv_ref_point = zeros(opt_problem.objective.dim, dtype=float)
+        self._hv_history = []
+        self._hv_ref_point = -np_inf * ones(opt_problem.objective.dim, dtype=float)
 
         # Set up for parallel execution.
         n_processes = options.pop("n_processes")
@@ -289,16 +289,17 @@ class PymooProblem(Problem):
         if self._parallel is not None:
             obj, cstrs = self._evaluate_parallel(design_variables)
         else:
-            # Objectives and constraints have to be inside the same 'for loop'.
-            # Ensure they are all calculated for each iteration and
+            # Constraints and objectives have to be inside the same 'for loop',
+            # and the constraints must be calculated first.
+            # This will ensure they are all calculated for each iteration and
             # before any termination criteria.
             obj, cstrs = [], []
             for x_i in design_variables:
-                obj.append(self.opt_problem.objective(x_i))
                 if self.n_constr:
                     cstrs.append(
                         hstack([atleast_1d(g(x_i)) for g in self._ineq_constraints])
                     )
+                obj.append(self.opt_problem.objective(x_i))
 
         output_data["F"] = vstack(obj)
         if self.n_constr:
@@ -308,7 +309,7 @@ class PymooProblem(Problem):
         self._n_gen += 1
 
         # Check for termination criteria.
-        self._new_generation_callback(self._n_gen, obj)
+        self._new_generation_callback(obj)
 
     def _evaluate_parallel(
         self, design_variables: ndarray
@@ -378,12 +379,12 @@ class PymooProblem(Problem):
             # Dictionary with all functions evaluation for the current key x_i.
             funcs = database.get(x_i)
 
-            obj.append(funcs.get(self.opt_problem.objective.name))
             if self.n_constr:
                 c_values = [
                     atleast_1d(funcs.get(g.name)) for g in self._ineq_constraints
                 ]
                 cstrs.append(hstack(c_values))
+            obj.append(funcs.get(self.opt_problem.objective.name))
 
         return obj, cstrs
 
@@ -404,29 +405,22 @@ class PymooProblem(Problem):
             x_vect=sample, normalize=self.normalize_ds
         )
 
-    def _new_generation_callback(self, generation: int, obj: list[ndarray]) -> None:
+    def _new_generation_callback(self, obj: list[ndarray]) -> None:
         """Callback called at each new generation evaluated.
 
         Args:
-            generation: The generation number.
             obj: The objective value for all the individuals in the generation.
 
         Raises:
             MaxGenerationsReached: If the maximum number of generations is reached.
-            HyperVolumeToleranceReached: If the problem is multi-objective and
-                the hypervolume indicator has converged to a value.
+            HyperVolumeToleranceReached: If the hypervolume indicator has converged.
         """
         # Termination criterion on the number of generations.
         # It is important to avoid being stuck when dealing with discrete variables,
         # because max_iter may take too long to be reached given the modus operandi
         # of GAs and the way GEMSEO counts the number of iterations.
-        if generation == self.max_gen:
+        if self._n_gen == self.max_gen:
             raise MaxGenerationsReached()
-
-        # For multi-objective problems,
-        # consider the stop criterion based on the hypervolume indicator.
-        if self.n_obj == 1:
-            return
 
         obj_name = self.opt_problem.objective.name
 
@@ -441,7 +435,7 @@ class PymooProblem(Problem):
             LOGGER.debug(
                 "Generation %d does not yield any feasible solution. "
                 "Current hypervolume set to 0!",
-                generation,
+                self._n_gen,
             )
             # Give an infinity value to the objective(s)
             # will lead to a hypervolume of 0.
@@ -450,6 +444,10 @@ class PymooProblem(Problem):
 
         # Get the reference point (nadir point) of the alltime objective history.
         new_hv_ref_point = np_max(vstack([self._hv_ref_point] + obj), axis=0)
+
+        # At the first generation, the reference point is not yet well-defined.
+        if self._n_gen == 1:
+            self._hv_ref_point = new_hv_ref_point
 
         # If the reference point has changed,
         # we must recalculate the hypervolume history for all the past generations.
@@ -476,7 +474,7 @@ class PymooProblem(Problem):
         )
 
         # Run for at least 'stop_crit_n_hv' generations.
-        if generation < self._stop_crit_n_hv:
+        if self._n_gen < self._stop_crit_n_hv:
             return
 
         # Get last 'stop_crit_n_hv' hypervolume values and average it.

@@ -26,6 +26,12 @@ and this project adheres to
 `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 
+Version 1.1.0 (October 2022)
+****************************
+
+The termination criterion ``HyperVolumeToleranceReached`` is now also taken into account for single-objective problems.
+
+
 Version 1.0.0 (July 2022)
 *************************
 

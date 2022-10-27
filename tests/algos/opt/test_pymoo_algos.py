@@ -243,11 +243,8 @@ def test_get_gemseo_opt_problem(opt_factory, pymoo_problem, expectation):
 @pytest.mark.parametrize(
     "options",
     [
-        dict(algo_name="PYMOO_GA", pop_size=100, max_iter=800),
-        dict(algo_name="PYMOO_NSGA2", pop_size=50, max_iter=800),
-        dict(algo_name="PYMOO_NSGA3", ref_dirs_name="das-dennis", n_partitions=10),
-        dict(algo_name="PYMOO_UNSGA3", ref_dirs_name="das-dennis", n_points=20),
-        dict(algo_name="PYMOO_RNSGA3", ref_points=array([[1.0], [5.0]]), max_iter=1500),
+        dict(algo_name="PYMOO_GA", pop_size=100),
+        dict(algo_name="PYMOO_NSGA2", pop_size=50),
     ],
 )
 @pytest.mark.parametrize(
@@ -272,11 +269,44 @@ def test_so(opt_factory, options, problem_class, x_opt, f_opt):
     # Only inequality constraints are considered.
     problem.constraints = problem.get_ineq_constraints()
 
-    options = {**tolerances, "max_iter": 2000, **options}
+    options = dict(stop_crit_n_hv=999, **tolerances, **options)
     res = opt_factory.execute(problem, **options)
 
     assert_allclose(x_opt, res.x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        dict(algo_name="PYMOO_GA", pop_size=100),
+        dict(algo_name="PYMOO_NSGA2", pop_size=50),
+        dict(algo_name="PYMOO_NSGA3", ref_dirs_name="das-dennis", n_partitions=10),
+        dict(algo_name="PYMOO_UNSGA3", ref_dirs_name="das-dennis", n_points=20),
+        dict(algo_name="PYMOO_RNSGA3", ref_points=array([[1.0], [5.0]])),
+    ],
+)
+def test_so_hypervolume(opt_factory, pow2_ineq, options, caplog):
+    """Test the hypervolume convergence of a single-objective problem.
+
+    The maximum number of iterations is set to a very high number,
+    so that the problem is expected to converge according to hypervolume criterion.
+
+    Args:
+        opt_factory: Fixture returning an optimizer factory.
+        pow2_ineq: Fixture returning the problem to be optimized.
+        options: The options for the optimization execution.
+        caplog: Fixture to access and control log capturing.
+    """
+    x_opt, f_opt = pow2_ineq.solution
+
+    options = dict(max_iter=1000000, stop_crit_n_hv=8, **tolerances, **options)
+    res = opt_factory.execute(pow2_ineq, **options)
+
+    assert_allclose(x_opt, res.x_opt, atol=1e-1)
+    assert abs(f_opt - res.f_opt) < 1e-1
+
+    assert "successive iterates of the hypervolume indicator are closer" in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -317,6 +347,7 @@ def test_so_integer(opt_factory, options, problem_class, args, kwargs, x_opt, f_
 
     options = dict(
         max_iter=2**11,
+        stop_crit_n_hv=999,
         **tolerances,
         **integer_operators,
         **integer_options,
@@ -351,6 +382,7 @@ def test_so_mixed_variables(opt_factory, simple_mip_problem, options):
     options = dict(
         max_iter=500,
         pop_size=20,
+        stop_crit_n_hv=999,
         **tolerances,
         **mixed_operators,
         **integer_options,
@@ -383,7 +415,9 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_options, algo_name):
     """
     x_opt, f_opt = pow2_ineq.solution
 
-    options = dict(max_iter=200, pop_size=20, **tolerances, **ref_dirs_options)
+    options = dict(
+        max_iter=200, pop_size=20, stop_crit_n_hv=999, **tolerances, **ref_dirs_options
+    )
     res = opt_factory.execute(pow2_ineq, algo_name=algo_name, **options)
 
     assert_allclose(res.x_opt, x_opt, atol=1e-1)

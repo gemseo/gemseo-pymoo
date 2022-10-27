@@ -22,7 +22,7 @@ fonttools==4.34.4
     # via matplotlib
 future==0.18.2
     # via autograd
-gemseo==4.0.0
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@develop
     # via gemseo-pymoo (setup.py)
 genson==1.2.2
     # via gemseo
