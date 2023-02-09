@@ -26,10 +26,24 @@ and this project adheres to
 `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
 
+Version 1.1.1 (February 2023)
+*****************************
+
+Fixed
+-----
+
+- The missing json file to validate the post processor options.
+- The link to the Genetic Algorithm documentation.
+
+
 Version 1.1.0 (October 2022)
 ****************************
 
-The termination criterion ``HyperVolumeToleranceReached`` is now also taken into account for single-objective problems.
+
+Fixed
+-----
+
+- The termination criterion ``HyperVolumeToleranceReached`` is now also taken into account for single-objective problems.
 
 
 Version 1.0.0 (July 2022)
