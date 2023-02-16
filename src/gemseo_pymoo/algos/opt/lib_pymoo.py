@@ -174,7 +174,7 @@ class PymooOpt(OptimizationLibrary):
     __PYMOO_ = "PYMOO_"
 
     __PYMOO_METADATA: Final[dict[str, tuple[str, str]]] = {
-        PYMOO_GA: ("Genetic Algorithm", "soo/nonconvex/ga.html#nb-ga"),
+        PYMOO_GA: ("Genetic Algorithm", "soo/ga.html#GA:-Genetic-Algorithm"),
         PYMOO_NSGA2: (
             "Non-dominated Sorting Genetic Algorithm II",
             "moo/nsga2.html#nb-nsga2",
