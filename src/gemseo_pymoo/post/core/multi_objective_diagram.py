@@ -120,7 +120,6 @@ class MultiObjectiveDiagram(OptPostProcessor):
         # Prepare points to plot.
         points, title = [], []
         for weight in weights:
-
             # Apply decomposition.
             d_res = decomp.do(
                 pareto.front,

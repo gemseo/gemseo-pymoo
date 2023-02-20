@@ -82,7 +82,6 @@ def import_hdf(
     opt_pb = OptimizationProblem.import_hdf(file_path, x_tolerance)
 
     with h5py.File(file_path, "r") as h5file:
-
         # Update solution.
         if opt_pb.SOLUTION_GROUP in h5file:
             pareto = Pareto(opt_pb) if opt_pb.solution.is_feasible else None

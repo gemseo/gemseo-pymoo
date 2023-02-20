@@ -32,7 +32,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Radar(MultiObjectiveDiagram):
-    """`Radar plots <https://pymoo.org/visualization/radar.html>`_).
+    """`Radar plots <https://pymoo.org/visualization/radar.html>`_.
 
     Note:
         This post-processor assumes the optimization has converged to a well-defined
