@@ -120,7 +120,6 @@ class Compromise(ScatterPareto):
         points = []  # Points' coordinates.
         point_labels = []  # Points' labels.
         for weight in weights:
-
             # Apply decomposition.
             d_res = decomposition.do(
                 pareto.front,
