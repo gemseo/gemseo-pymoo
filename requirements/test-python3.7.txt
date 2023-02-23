@@ -16,7 +16,7 @@ cma==2.7
     # via pymoo
 covdefaults==2.2.2
     # via gemseo-pymoo (setup.py)
-coverage[toml]==7.1.0
+coverage[toml]==7.2.0
     # via
     #   covdefaults
     #   pytest-cov
