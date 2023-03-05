@@ -90,7 +90,7 @@ pyparsing==3.0.9
     # via
     #   matplotlib
     #   packaging
-pytest==7.2.1
+pytest==7.2.2
     # via
     #   gemseo-pymoo (setup.py)
     #   pytest-cov
