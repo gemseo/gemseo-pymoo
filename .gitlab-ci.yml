@@ -1,6 +1,5 @@
 include:
-  - project: "gemseo/dev/ci-includes"
-    file: "plugin.yml"
+  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/main/plugin.yml"
 
 test:
   parallel:

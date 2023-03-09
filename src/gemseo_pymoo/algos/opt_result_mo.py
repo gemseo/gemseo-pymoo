@@ -313,7 +313,7 @@ class Pareto:
         table.align = "r"
         return table
 
-    def __str__(self):
+    def __str__(self) -> str:
         obj_names = [self._problem.get_objective_name()]
         c_names = self._problem.get_constraints_names()
         dv_names = self._problem.get_design_variable_names()
@@ -374,7 +374,7 @@ class MultiObjectiveOptimizationResult(OptimizationResult):
     pareto: Pareto | None = None
     """The pareto efficient solutions."""
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         msg = MultiLineString()
         msg.add("Multi-objective optimization result:")
         msg.indent()
@@ -390,7 +390,7 @@ class MultiObjectiveOptimizationResult(OptimizationResult):
             msg.dedent()
         return str(msg)
 
-    def __str__(self):
+    def __str__(self) -> str:
         msg = MultiLineString()
         msg.add("Multi-objective optimization result:")
         msg.indent()

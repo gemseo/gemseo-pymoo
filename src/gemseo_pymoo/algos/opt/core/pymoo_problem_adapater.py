@@ -34,7 +34,9 @@ from gemseo.algos.opt.opt_lib import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
-from gemseo.core.parallel_execution import ParallelExecution
+from gemseo.core.parallel_execution.callable_parallel_execution import (
+    CallableParallelExecution,
+)
 from numpy import allclose
 from numpy import atleast_1d
 from numpy import average
@@ -182,7 +184,7 @@ class PymooProblem(Problem):
     _hv_ref_point: ndarray
     """The reference point used for computing the hypervolume indicator."""
 
-    _parallel: ParallelExecution | None
+    _parallel: CallableParallelExecution | None
     """The object handling the parallel execution."""
 
     _ineq_constraints: list[MDOFunction]
@@ -229,11 +231,9 @@ class PymooProblem(Problem):
             LOGGER.info(
                 "Running Optimization in parallel on n_processes = %d", n_processes
             )
-            self._parallel = ParallelExecution(
-                self._worker,
+            self._parallel = CallableParallelExecution(
+                [self._worker],
                 n_processes=n_processes,
-                use_threading=False,
-                wait_time_between_fork=0.0,
                 exceptions_to_re_raise=(TerminationCriterion,),
             )
         else:
