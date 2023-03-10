@@ -38,7 +38,7 @@ from gemseo.algos.opt.opt_lib import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion
-from gemseo.utils.python_compatibility import Final
+from gemseo.utils.compatibility.python import Final
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
