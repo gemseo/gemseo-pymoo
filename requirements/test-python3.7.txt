@@ -24,7 +24,7 @@ cycler==0.11.0
     # via matplotlib
 docstring-inheritance==1.0.0
     # via gemseo
-exceptiongroup==1.1.0
+exceptiongroup==1.1.1
     # via pytest
 execnet==1.9.0
     # via pytest-xdist
@@ -99,7 +99,7 @@ pytest==7.2.2
     #   pytest-xdist
 pytest-cov==4.0.0
     # via gemseo-pymoo (setup.py)
-pytest-xdist==3.2.0
+pytest-xdist==3.2.1
     # via gemseo-pymoo (setup.py)
 python-dateutil==2.8.2
     # via
