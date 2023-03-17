@@ -29,6 +29,7 @@ from dataclasses import dataclass
 from typing import Any
 from typing import Callable
 from typing import Dict
+from typing import Final
 from typing import Sequence
 from typing import Tuple
 from typing import Union
@@ -38,7 +39,6 @@ from gemseo.algos.opt.opt_lib import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion
-from gemseo.utils.compatibility.python import Final
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
