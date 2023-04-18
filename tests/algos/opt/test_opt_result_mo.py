@@ -165,7 +165,7 @@ def test_export_import_optimization_history(tmp_wd, problem_2obj):
             optimization problem to export.
     """
     file_path = tmp_wd / "problem.h5"
-    problem_2obj.export_hdf(file_path)
+    problem_2obj.to_hdf(file_path)
 
     assert file_path.exists()
 
@@ -185,7 +185,7 @@ def test_export_import_empty_optimization_history(tmp_wd):
     file_path = tmp_wd / "problem.h5"
 
     problem = Power2()
-    problem.export_hdf(file_path)
+    problem.to_hdf(file_path)
 
     assert file_path.exists()
 

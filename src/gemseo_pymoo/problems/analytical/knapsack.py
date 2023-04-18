@@ -57,7 +57,6 @@ from __future__ import annotations
 import logging
 
 from gemseo.algos.design_space import DesignSpace
-from gemseo.algos.design_space import DesignVariableType
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
 from numpy import atleast_1d
@@ -183,7 +182,11 @@ class Knapsack(OptimizationProblem):
 
         design_space = DesignSpace()
         design_space.add_variable(
-            "x", size=n_items, l_b=0, u_b=items_ub, var_type=DesignVariableType.INTEGER
+            "x",
+            size=n_items,
+            l_b=0,
+            u_b=items_ub,
+            var_type=DesignSpace.DesignVariableType.INTEGER,
         )
         if initial_guess is None:
             design_space.set_current_value(zeros(n_items))
@@ -197,9 +200,9 @@ class Knapsack(OptimizationProblem):
         self.objective = MDOFunction(
             self.compute_knapsack_value,
             name="knapsack",
-            f_type=MDOFunction.TYPE_OBJ,
+            f_type=MDOFunction.FunctionType.OBJ,
             expr="sum(values * x)",
-            args=["x"],
+            input_names=["x"],
             dim=1,
         )
 
@@ -211,9 +214,9 @@ class Knapsack(OptimizationProblem):
             ineq_weight = MDOFunction(
                 self._compute_weight_constraint,
                 name="weight_surpass",
-                f_type=MDOFunction.TYPE_INEQ,
+                f_type=MDOFunction.ConstraintType.INEQ,
                 expr="sum(weights * x) - capacity_weight",
-                args=["x"],
+                input_names=["x"],
                 dim=1,
             )
             self.add_ineq_constraint(ineq_weight)
@@ -223,9 +226,9 @@ class Knapsack(OptimizationProblem):
             ineq_items = MDOFunction(
                 self._compute_items_constraint,
                 name="items_surpass",
-                f_type=MDOFunction.TYPE_INEQ,
+                f_type=MDOFunction.ConstraintType.INEQ,
                 expr="sum(x) - capacity_items",
-                args=["x"],
+                input_names=["x"],
                 dim=1,
             )
             self.add_ineq_constraint(ineq_items)
@@ -348,9 +351,9 @@ class MultiObjectiveKnapsack(Knapsack):
         self.objective = MDOFunction(
             self._compute_objective,
             name="knapsack",
-            f_type=MDOFunction.TYPE_OBJ,
+            f_type=MDOFunction.FunctionType.OBJ,
             expr="[-sum(values * x), sum(x)]",
-            args=["x"],
+            input_names=["x"],
             dim=2,
         )
 

@@ -82,12 +82,12 @@ class Pareto:
         )
 
         # Get dataset as a dataframe.
-        df = self._problem.export_to_dataset().export_to_dataframe()
+        df = self._problem.to_dataset().export_to_dataframe()
         df.index = df.index.astype(int)
 
         # Get design variables group,
         # and reorder the columns to match the design space order.
-        df_dp = df[Dataset.DESIGN_GROUP][problem.design_space.variables_names]
+        df_dp = df[Dataset.DESIGN_GROUP][problem.design_space.variable_names]
         ind_anchor = [df.index[np_all(df_dp == p, axis=1)][0] for p in self._anchor_set]
         ind_min_norm = [
             df.index[np_all(df_dp == p, axis=1)][0] for p in self._min_norm_x
@@ -315,7 +315,7 @@ class Pareto:
 
     def __str__(self) -> str:
         obj_names = [self._problem.get_objective_name()]
-        c_names = self._problem.get_constraints_names()
+        c_names = self._problem.get_constraint_names()
         dv_names = self._problem.get_design_variable_names()
 
         msg = MultiLineString()
@@ -415,7 +415,7 @@ class MultiObjectiveOptimizationResult(OptimizationResult):
 
         The keys are the names of the optimization result fields,
         except for the constraint values, gradients and the :attr:`.pareto`.
-        The key ``"constr:y"`` maps to ``result.constraints_values["y"]``,
+        The key ``"constr:y"`` maps to ``result.constraint_values["y"]``,
         ``"constr_grad:y"`` maps to ``result.constraints_grad["y"]`` and
         ``"pareto:y"`` maps to ``result.pareto.y``.
 

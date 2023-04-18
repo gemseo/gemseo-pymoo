@@ -30,7 +30,7 @@ from typing import Union
 
 import h5py
 from gemseo.algos.design_space import DesignSpace
-from gemseo.algos.opt.opt_lib import OptimizationLibrary
+from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
@@ -68,7 +68,7 @@ def import_hdf(
 ) -> OptimizationProblem:
     """Import an optimization history from an HDF file.
 
-    It uses :meth:`gemseo.algos.opt_problem.OptimizationProblem.import_hdf` to import
+    It uses :meth:`gemseo.algos.opt_problem.OptimizationProblem.from_hdf` to import
     the optimization history from the HDF file. Afterwards, it replaces the
     :class:`gemseo.algos.opt_result.OptimizationResult` object in
     :attr:`gemseo.algos.opt_problem.OptimizationProblem.solution` by a
@@ -81,7 +81,7 @@ def import_hdf(
     Returns:
         The read optimization problem.
     """
-    opt_pb = OptimizationProblem.import_hdf(file_path, x_tolerance)
+    opt_pb = OptimizationProblem.from_hdf(file_path, x_tolerance)
 
     with h5py.File(file_path, "r") as h5file:
         # Update solution.
@@ -132,7 +132,8 @@ def get_gemseo_opt_problem(
     )
 
     gemseo_pb = OptimizationProblem(
-        design_space, differentiation_method=OptimizationProblem.FINITE_DIFFERENCES
+        design_space,
+        differentiation_method=OptimizationProblem.ApproximationMode.FINITE_DIFFERENCES,
     )
     gemseo_pb.objective = MDOFunction(
         lambda x: pymoo_pb.evaluate(x, return_as_dictionary=True)["F"], "F"
@@ -259,7 +260,7 @@ class PymooProblem(Problem):
             xl=lower_bounds,
             xu=upper_bounds,
             type_var=np_concat(
-                [design_space.get_type(var) for var in design_space.variables_names]
+                [design_space.get_type(var) for var in design_space.variable_names]
             ),
             **options,
         )

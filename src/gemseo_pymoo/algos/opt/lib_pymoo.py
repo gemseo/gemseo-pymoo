@@ -34,8 +34,8 @@ from typing import Sequence
 from typing import Tuple
 from typing import Union
 
-from gemseo.algos.opt.opt_lib import OptimizationAlgorithmDescription
-from gemseo.algos.opt.opt_lib import OptimizationLibrary
+from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
+from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion
@@ -106,13 +106,15 @@ class PymooAlgorithmDescription(OptimizationAlgorithmDescription):
 
     positive_constraints: bool = False
 
-    problem_type: str = OptimizationProblem.NON_LINEAR_PB
+    problem_type: OptimizationProblem.ProblemType = (
+        OptimizationProblem.ProblemType.NON_LINEAR
+    )
 
 
 class PymooOpt(OptimizationLibrary):
     """Pymoo optimization library interface.
 
-    See :class:`gemseo.algos.opt.opt_lib.OptimizationLibrary`.
+    See :class:`gemseo.algos.opt.optimization_library.OptimizationLibrary`.
     """
 
     N_PROCESSES: Final[str] = "n_processes"
@@ -861,7 +863,7 @@ class PymooOpt(OptimizationLibrary):
             status=status,
             n_obj_call=self.problem.objective.n_calls,
             is_feasible=is_feas,
-            constraints_values=c_opt,
+            constraint_values=c_opt,
             constraints_grad=c_opt_grad,
             pareto=pareto,
         )
