@@ -38,8 +38,8 @@ LOGGER = logging.getLogger(__name__)
 class Compromise(ScatterPareto):
     """Scatter plot with pareto front and compromise points.
 
-    See `Compromise Programming
-    <https://pymoo.org/mcdm/index.html#Compromise-Programming>`_.
+    See
+    `Compromise Programming <https://pymoo.org/mcdm/index.html#Compromise-Programming>`_.
     """
 
     fig_title = "Compromise Points"
