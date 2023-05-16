@@ -336,9 +336,9 @@ class PymooProblem(Problem):
             if self.normalize_ds:
                 x_u = sample_to_design(x_i)
                 x_r = round_vect(x_u)
-                database.store(x_r, {}, add_iter=True)
+                database.store(x_r, {})
             else:
-                database.store(x_i, {}, add_iter=True)
+                database.store(x_i, {})
 
         # Define a callback function to store the samples on the fly
         # during the parallel execution.

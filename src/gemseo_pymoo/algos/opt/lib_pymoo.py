@@ -844,7 +844,7 @@ class PymooOpt(OptimizationLibrary):
                 status=status,
                 n_obj_call=0,
             )
-        x_0 = self.problem.database.get_x_by_iter(0)
+        x_0 = self.problem.database.get_x_vect(1)
         # Compute the best feasible or infeasible point.
         f_opt, x_opt, is_feas, c_opt, c_opt_grad = self.problem.get_optimum()
 
