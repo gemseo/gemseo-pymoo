@@ -28,7 +28,6 @@ from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.opt_result import Value
 from gemseo.algos.pareto_front import compute_pareto_optimal_points
-from gemseo.core.dataset import Dataset
 from gemseo.third_party.prettytable import PrettyTable
 from gemseo.utils.string_tools import MultiLineString
 from numpy import all as np_all
@@ -82,12 +81,12 @@ class Pareto:
         )
 
         # Get dataset as a dataframe.
-        df = self._problem.to_dataset().export_to_dataframe()
+        df = self._problem.to_dataset()
         df.index = df.index.astype(int)
 
         # Get design variables group,
         # and reorder the columns to match the design space order.
-        df_dp = df[Dataset.DESIGN_GROUP][problem.design_space.variable_names]
+        df_dp = df.get_view(variable_names=problem.design_space.variable_names)
         ind_anchor = [df.index[np_all(df_dp == p, axis=1)][0] for p in self._anchor_set]
         ind_min_norm = [
             df.index[np_all(df_dp == p, axis=1)][0] for p in self._min_norm_x
@@ -235,10 +234,8 @@ class Pareto:
         obj_history = zeros((n_iter, gemseo_problem.objective.dim))
         feasibility = zeros(n_iter)
 
+        iteration = 0
         for x_vect, out_val in gemseo_problem.database.items():
-            # Cast to int required for when importing from hdf file.
-            iteration = int(out_val["Iter"][0] - 1)
-
             dv_history[iteration] = x_vect.unwrap()
             if gemseo_problem.objective.name in out_val:
                 obj_history[iteration] = array(out_val[gemseo_problem.objective.name])
@@ -248,6 +245,7 @@ class Pareto:
             else:
                 obj_history[iteration] = float("nan")
                 feasibility[iteration] = False
+            iteration += 1
 
         pareto_opt_pts = compute_pareto_optimal_points(obj_history, feasibility)
         pareto_front = obj_history[pareto_opt_pts]
