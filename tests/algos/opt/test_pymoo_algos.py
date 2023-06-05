@@ -31,7 +31,7 @@ from typing import Any
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.core.grammars.errors import InvalidDataException
+from gemseo.core.grammars.errors import InvalidDataError
 from gemseo.problems.analytical.binh_korn import BinhKorn
 from gemseo.problems.analytical.power_2 import Power2
 from gemseo.problems.analytical.rosenbrock import Rosenbrock
@@ -127,7 +127,7 @@ def pow2_ineq_int() -> OptimizationProblem:
     """
     power2 = Power2()
     power2.constraints = power2.get_ineq_constraints()
-    power2.design_space.variables_types["x"] = array(["integer"] * 3)
+    power2.design_space.variable_types["x"] = array(["integer"] * 3)
 
     x_opt = array([1, 1, 0])
     f_opt = Power2().pow2(x_opt)
@@ -212,7 +212,7 @@ def test_operators_jason_schema(opt_factory, algo_name):
     opt_grammar = lib.init_options_grammar(algo_name)
     try:
         opt_grammar.validate(options, raise_exception=True)
-    except InvalidDataException as exception:
+    except InvalidDataError as exception:
         pytest.fail(exception)
 
 
@@ -340,7 +340,7 @@ def test_so_integer(opt_factory, options, problem_class, args, kwargs, x_opt, f_
     """
     problem = problem_class(*args, **kwargs)
     ds_dim = problem.design_space.dimension
-    problem.design_space.variables_types["x"] = array(["integer"] * ds_dim)
+    problem.design_space.variable_types["x"] = array(["integer"] * ds_dim)
 
     # Only inequality constraints are considered.
     problem.constraints = problem.get_ineq_constraints()

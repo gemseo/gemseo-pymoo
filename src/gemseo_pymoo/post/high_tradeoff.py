@@ -35,7 +35,8 @@ LOGGER = logging.getLogger(__name__)
 class HighTradeOff(ScatterPareto):
     """Scatter plot with pareto front and high trade-off points.
 
-    See `High Trade-Off Points <https://pymoo.org/mcdm/index.html#nb-high-tradeoff>`_.
+    See High Trade-Off Points
+    `here<https://pymoo.org/mcdm/index.html#nb-high-tradeoff>`_.
     """
 
     fig_title = "High Trade-Off Points"

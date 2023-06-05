@@ -191,7 +191,6 @@ class ScatterPareto(OptPostProcessor):
         # Create arrows.
         if plot_arrow:
             for point in points:
-
                 # Arrow vector.
                 vect = point - pareto.utopia
                 norm = np_norm(vect)

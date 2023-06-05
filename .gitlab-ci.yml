@@ -1,14 +1,6 @@
 include:
-  - project: "gemseo/dev/ci-includes"
-    file: "plugin.yml"
+  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/main/plugin.yml"
 
-test:
-  parallel:
-    matrix:
-      - TAG:
-          - docker
-          - windows-server-2012
-        TOX_ENV_NAME:
-          - py37-coverage
-          - py38-coverage
-          - py39-coverage
+.test-env-names:
+  - py38-coverage
+  - py39-coverage

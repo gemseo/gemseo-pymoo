@@ -85,12 +85,12 @@ class Viennet(OptimizationProblem):
         self.objective = MDOFunction(
             self.compute_objective,
             name="viennet",
-            f_type=MDOFunction.TYPE_OBJ,
+            f_type=MDOFunction.FunctionType.OBJ,
             jac=self.compute_objective_jacobian,
             expr="[(x**2 + y**2) / 2 + sin(x**2 + y**2), 9*x - (y-1)**2,"
             "(3*x - 2*y + 4)**2 / 8 + (x - y + 1)^2 / 27 + 15,"
             "1 / (x**2 + y**2 + 1) - 1.1*exp(-(x**2 + y**2))]",
-            args=["x", "y"],
+            input_names=["x", "y"],
             dim=3,
         )
 

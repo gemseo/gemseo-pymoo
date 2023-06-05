@@ -91,20 +91,20 @@ class ChankongHaimes(OptimizationProblem):
         self.objective = MDOFunction(
             self.compute_objective,
             name="changkong_haimes",
-            f_type=MDOFunction.TYPE_OBJ,
+            f_type=MDOFunction.FunctionType.OBJ,
             jac=self.compute_objective_jacobian,
             expr="[2 + (x-2)**2 + (y-1)**2, 9*x - (y-1)**2]",
-            args=["x", "y"],
+            input_names=["x", "y"],
             dim=2,
         )
 
         ineq1 = MDOFunction(
             self.compute_constraint_1,
             name="ineq1",
-            f_type=MDOFunction.TYPE_INEQ,
+            f_type=MDOFunction.ConstraintType.INEQ,
             jac=self.compute_constraint_1_jacobian,
             expr="x**2 + y**2 - 225",
-            args=["x", "y"],
+            input_names=["x", "y"],
             dim=1,
         )
         self.add_ineq_constraint(ineq1)
@@ -112,10 +112,10 @@ class ChankongHaimes(OptimizationProblem):
         ineq2 = MDOFunction(
             self.compute_constraint_2,
             name="ineq2",
-            f_type=MDOFunction.TYPE_INEQ,
+            f_type=MDOFunction.ConstraintType.INEQ,
             jac=self.compute_constraint_2_jacobian,
             expr="x - 3*y + 10",
-            args=["x", "y"],
+            input_names=["x", "y"],
             dim=1,
         )
         self.add_ineq_constraint(ineq2)

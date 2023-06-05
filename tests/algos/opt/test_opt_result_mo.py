@@ -86,8 +86,8 @@ def test_pareto(problem_1obj, problem_2obj):
     # Check problem property.
     assert pareto.problem == problem_2obj
 
-    obj0 = database.get_f_of_x(obj_name, keys[0])
-    obj1 = database.get_f_of_x(obj_name, keys[1])
+    obj0 = database.get_function_value(obj_name, keys[0])
+    obj1 = database.get_function_value(obj_name, keys[1])
     if len(pareto.front) == 1:
         assert (obj0 in pareto.front) or (obj1 in pareto.front)
     else:
@@ -96,11 +96,14 @@ def test_pareto(problem_1obj, problem_2obj):
     # Check if the anchor points are in database.
     for anchor_point, anchor_obj in zip(pareto.anchor_set, pareto.anchor_front):
         assert_array_equal(
-            database.get_f_of_x(problem_2obj.objective.name, anchor_point), anchor_obj
+            database.get_function_value(problem_2obj.objective.name, anchor_point),
+            anchor_obj,
         )
 
     # Check if the minimum norm point is in database.
-    assert pareto.min_norm_f in database.get_func_history(problem_2obj.objective.name)
+    assert pareto.min_norm_f in database.get_function_history(
+        problem_2obj.objective.name
+    )
 
 
 def test_get_lowest_norm(result):
@@ -165,7 +168,7 @@ def test_export_import_optimization_history(tmp_wd, problem_2obj):
             optimization problem to export.
     """
     file_path = tmp_wd / "problem.h5"
-    problem_2obj.export_hdf(file_path)
+    problem_2obj.to_hdf(file_path)
 
     assert file_path.exists()
 
@@ -185,7 +188,7 @@ def test_export_import_empty_optimization_history(tmp_wd):
     file_path = tmp_wd / "problem.h5"
 
     problem = Power2()
-    problem.export_hdf(file_path)
+    problem.to_hdf(file_path)
 
     assert file_path.exists()
 

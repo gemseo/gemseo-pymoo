@@ -69,8 +69,8 @@ class Annotation3D(Annotation):
     """Annotation for 3D plots."""
 
     _vertices_3d: ndarray
-    """The 2D array containing the starting and ending positions
-    of the vector to be annotated."""
+    """The 2D array containing the starting and ending positions of the vector to be
+    annotated."""
 
     def __init__(self, text: str, xyzs: ndarray, *args: Any, **kwargs: Any) -> None:
         """Instantiate a 3D annotation.
