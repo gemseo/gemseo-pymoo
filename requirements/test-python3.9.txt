@@ -4,7 +4,7 @@
 #
 #    pip-compile --extra=test --output-file=requirements/test-python3.9.txt
 #
-autograd==1.5
+autograd==1.6.2
     # via pymoo
 certifi==2023.5.7
     # via requests
@@ -12,7 +12,7 @@ charset-normalizer==3.1.0
     # via requests
 cma==2.7
     # via pymoo
-contourpy==1.0.7
+contourpy==1.1.0
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (setup.py)
@@ -22,7 +22,7 @@ coverage[toml]==7.2.7
     #   pytest-cov
 cycler==0.11.0
     # via matplotlib
-docstring-inheritance==1.1.1
+docstring-inheritance==2.0.0
     # via gemseo
 exceptiongroup==1.1.1
     # via pytest
@@ -30,7 +30,7 @@ execnet==1.9.0
     # via pytest-xdist
 fastjsonschema==2.16.3
     # via gemseo
-fonttools==4.39.4
+fonttools==4.40.0
     # via matplotlib
 future==0.18.3
     # via autograd
@@ -84,15 +84,15 @@ pandas==2.0.0
     #   gemseo-pymoo (setup.py)
 pillow==9.5.0
     # via matplotlib
-pluggy==1.0.0
+pluggy==1.2.0
     # via pytest
 pydantic==1.10.8
     # via gemseo
 pymoo==0.5.0
     # via gemseo-pymoo (setup.py)
-pyparsing==3.0.9
+pyparsing==3.1.0
     # via matplotlib
-pytest==7.3.1
+pytest==7.4.0
     # via
     #   gemseo-pymoo (setup.py)
     #   pytest-cov
@@ -125,13 +125,13 @@ tomli==2.0.1
     #   pytest
 tqdm==4.65.0
     # via gemseo
-typing-extensions==4.6.3
+typing-extensions==4.7.0
     # via
     #   gemseo
     #   pydantic
 tzdata==2023.3
     # via pandas
-urllib3==2.0.2
+urllib3==2.0.3
     # via requests
 xdsmjs==2.0.0
     # via gemseo
