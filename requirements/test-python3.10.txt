@@ -8,7 +8,7 @@ autograd==1.6.2
     # via pymoo
 certifi==2023.5.7
     # via requests
-charset-normalizer==3.1.0
+charset-normalizer==3.2.0
     # via requests
 cma==2.7
     # via pymoo
@@ -24,9 +24,9 @@ cycler==0.11.0
     # via matplotlib
 docstring-inheritance==2.0.0
     # via gemseo
-exceptiongroup==1.1.1
+exceptiongroup==1.1.2
     # via pytest
-execnet==1.9.0
+execnet==2.0.2
     # via pytest-xdist
 fastjsonschema==2.16.3
     # via gemseo
@@ -80,7 +80,7 @@ pandas==2.0.0
     # via
     #   gemseo
     #   gemseo-pymoo (setup.py)
-pillow==9.5.0
+pillow==10.0.0
     # via matplotlib
 pluggy==1.2.0
     # via pytest
@@ -123,7 +123,7 @@ tomli==2.0.1
     #   pytest
 tqdm==4.65.0
     # via gemseo
-typing-extensions==4.7.0
+typing-extensions==4.7.1
     # via
     #   gemseo
     #   pydantic
