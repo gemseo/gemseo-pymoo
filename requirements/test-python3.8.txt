@@ -16,7 +16,7 @@ contourpy==1.1.0
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (setup.py)
-coverage[toml]==7.2.7
+coverage[toml]==7.3.0
     # via
     #   covdefaults
     #   pytest-cov
@@ -24,11 +24,11 @@ cycler==0.11.0
     # via matplotlib
 docstring-inheritance==2.0.0
     # via gemseo
-exceptiongroup==1.1.2
+exceptiongroup==1.1.3
     # via pytest
 execnet==2.0.2
     # via pytest-xdist
-fastjsonschema==2.16.3
+fastjsonschema==2.18.0
     # via gemseo
 fonttools==4.42.0
     # via matplotlib
@@ -38,7 +38,7 @@ gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@develop
     # via gemseo-pymoo (setup.py)
 genson==1.2.2
     # via gemseo
-h5py==3.8.0
+h5py==3.9.0
     # via
     #   gemseo
     #   gemseo-pymoo (setup.py)
@@ -54,7 +54,7 @@ kiwisolver==1.4.4
     # via matplotlib
 markupsafe==2.1.3
     # via jinja2
-matplotlib==3.7.1
+matplotlib==3.7.2
     # via
     #   gemseo
     #   gemseo-pymoo (setup.py)
@@ -78,7 +78,7 @@ packaging==23.1
     #   gemseo
     #   matplotlib
     #   pytest
-pandas==2.0.0
+pandas==2.0.3
     # via
     #   gemseo
     #   gemseo-pymoo (setup.py)
@@ -86,11 +86,11 @@ pillow==10.0.0
     # via matplotlib
 pluggy==1.2.0
     # via pytest
-pydantic==1.10.8
+pydantic==1.10.12
     # via gemseo
 pymoo==0.5.0
     # via gemseo-pymoo (setup.py)
-pyparsing==3.1.1
+pyparsing==3.0.9
     # via matplotlib
 pytest==7.4.0
     # via
@@ -107,7 +107,7 @@ python-dateutil==2.8.2
     #   pandas
 pytz==2023.3
     # via pandas
-pyxdsm==2.2.2
+pyxdsm==2.3.0
     # via gemseo
 requests==2.31.0
     # via gemseo
@@ -117,7 +117,7 @@ scipy==1.10.1
     #   pymoo
 six==1.16.0
     # via python-dateutil
-strenum==0.4.10
+strenum==0.4.15
     # via gemseo
 tomli==2.0.1
     # via
@@ -135,7 +135,7 @@ urllib3==2.0.4
     # via requests
 xdsmjs==2.0.0
     # via gemseo
-xxhash==3.2.0
+xxhash==3.3.0
     # via gemseo
 zipp==3.16.2
     # via importlib-resources
