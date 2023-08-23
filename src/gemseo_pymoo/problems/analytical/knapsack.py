@@ -206,7 +206,7 @@ class Knapsack(OptimizationProblem):
         )
 
         # Maximize knapsack value.
-        self.change_objective_sign()
+        self.minimize_objective = False
 
         # Knapsack weight limit.
         if capacity_weight is not None:
@@ -346,6 +346,9 @@ class MultiObjectiveKnapsack(Knapsack):
             initial_guess,
         )
 
+        # Reset minimization goal.
+        self.minimize_objective = True
+
         # Set objective function.
         self.objective = MDOFunction(
             self._compute_objective,
@@ -355,9 +358,6 @@ class MultiObjectiveKnapsack(Knapsack):
             input_names=["x"],
             dim=2,
         )
-
-        # Reset minimization goal.
-        self.minimize_objective = True
 
     def _compute_objective(self, design_variables: ndarray) -> ndarray:
         """Compute the objectives of the multi-objective Knapsack problem.
