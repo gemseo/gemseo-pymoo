@@ -185,7 +185,7 @@ def test_mo_maximize(mo_knapsack):
     Args:
         mo_knapsack: Fixture returning a MultiObjectiveKnapsack `OptimizationProblem`.
     """
-    mo_knapsack.change_objective_sign()
+    mo_knapsack.minimize_objective = False
 
     options = dict(max_iter=500, max_gen=20, **integer_operators, **integer_options)
     res = OptimizersFactory().execute(mo_knapsack, algo_name="PYMOO_NSGA2", **options)
