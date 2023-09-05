@@ -1,0 +1,13 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 81c3c5f
+_src_path: /home/ad/gemseo-copier
+author_email: contact@gemseo.org
+author_name: Francois Gallard
+gemseo_min_version: '5'
+package_is_a_gemseo_plugin: true
+project_is_open_source: true
+project_name: gemseo-pymoo
+project_name_suffix: pymoo
+project_slug: gemseo_pymoo
+short_description: A GEMSEO wrapper for pymoo optimization algorithms.
+use_gemseo_develop: true
