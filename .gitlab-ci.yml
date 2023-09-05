@@ -1,6 +1,9 @@
 include:
   - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/main/plugin.yml"
 
+variables:
+  TOX_EXE: tox4
+
 .test-env-names:
   - py38-coverage
   - py39-coverage
