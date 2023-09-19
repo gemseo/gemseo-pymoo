@@ -12,7 +12,7 @@ charset-normalizer==3.2.0
     # via requests
 cma==2.7.0
     # via pymoo
-contourpy==1.1.0
+contourpy==1.1.1
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (pyproject.toml)
@@ -156,7 +156,7 @@ tomli==2.0.1
     #   pytest
 tqdm==4.65.0
     # via gemseo
-typing-extensions==4.7.1
+typing-extensions==4.8.0
     # via
     #   gemseo
     #   pydantic
