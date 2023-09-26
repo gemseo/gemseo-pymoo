@@ -10,7 +10,7 @@ certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
     # via requests
-cma==2.7.0
+cma==2.7
     # via pymoo
 contourpy==1.1.1
     # via matplotlib
@@ -38,7 +38,7 @@ fonttools==4.42.1
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all] @ git+https://gitlab.com/gemseo/dev/gemseo.git@develop
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@develop
     # via gemseo-pymoo (pyproject.toml)
 genson==1.2.2
     # via gemseo
