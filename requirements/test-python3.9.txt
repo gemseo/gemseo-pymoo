@@ -10,7 +10,7 @@ autograd==1.6.2
     # via pymoo
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.3.1
+charset-normalizer==3.3.2
     # via requests
 cma==2.7.0
     # via pymoo
@@ -40,7 +40,7 @@ fonttools==4.43.1
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev95+gd5dd5e51
+gemseo[all]==5.1.2.dev99+g2ca9a995
     # via gemseo-pymoo (pyproject.toml)
 genson==1.2.2
     # via gemseo
