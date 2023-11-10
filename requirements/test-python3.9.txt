@@ -40,7 +40,7 @@ fonttools==4.44.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev133+geea2d772
+gemseo[all]==5.1.2.dev141+g4bfa2df9
     # via gemseo-pymoo (pyproject.toml)
 genson==1.2.2
     # via gemseo
