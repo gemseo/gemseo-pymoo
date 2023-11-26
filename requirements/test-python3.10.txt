@@ -40,7 +40,7 @@ fonttools==4.45.1
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev173+g9b708730
+gemseo[all]==5.1.2.dev175+g9217d695
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -52,7 +52,7 @@ h5py==3.10.0
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
-idna==3.5
+idna==3.6
     # via requests
 iniconfig==2.0.0
     # via pytest
