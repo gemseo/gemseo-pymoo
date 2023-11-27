@@ -23,8 +23,8 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.opt_result import Value
 from gemseo.algos.pareto_front import compute_pareto_optimal_points
@@ -39,9 +39,12 @@ from numpy import min as np_min
 from numpy import ndarray
 from numpy import zeros
 from numpy.linalg import norm as np_norm
-from pandas import concat as pd_concat
 from pandas import DataFrame
 from pandas import MultiIndex
+from pandas import concat as pd_concat
+
+if TYPE_CHECKING:
+    from gemseo.algos.opt_problem import OptimizationProblem
 
 LOGGER = logging.getLogger(__name__)
 
@@ -116,7 +119,7 @@ class Pareto:
         return self._front
 
     @property
-    def set(self) -> ndarray:
+    def set(self) -> ndarray:  # noqa: A003
         """The values of the design variables of all pareto efficient solutions."""
         return self._set
 

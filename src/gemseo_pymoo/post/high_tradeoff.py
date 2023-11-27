@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from typing import ClassVar
 
 from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
 
@@ -43,7 +44,12 @@ class HighTradeOff(ScatterPareto):
 
     fig_name_prefix = "high_tradeoff"
 
-    prop_interest = dict(color="navy", alpha=1.0, s=30, zorder=3)
+    prop_interest: ClassVar[dict[str, str]] = {
+        "color": "navy",
+        "alpha": 1.0,
+        "s": 30,
+        "zorder": 3,
+    }
 
     def _plot(
         self,

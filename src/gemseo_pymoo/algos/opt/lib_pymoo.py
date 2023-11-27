@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
 from typing import Dict
@@ -37,8 +38,6 @@ from typing import Union
 from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.algos.opt_result import OptimizationResult
-from gemseo.algos.stop_criteria import TerminationCriterion
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -63,8 +62,6 @@ from pymoo.operators.mixed_variable_operator import MixedVariableCrossover
 from pymoo.operators.mixed_variable_operator import MixedVariableMutation
 from pymoo.operators.mixed_variable_operator import MixedVariableSampling
 from pymoo.optimize import minimize
-from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
-from pymoo.util.reference_direction import ReferenceDirectionFactory
 
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
@@ -72,6 +69,12 @@ from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
+
+if TYPE_CHECKING:
+    from gemseo.algos.opt_result import OptimizationResult
+    from gemseo.algos.stop_criteria import TerminationCriterion
+    from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
+    from pymoo.util.reference_direction import ReferenceDirectionFactory
 
 LOGGER = logging.getLogger(__name__)
 
@@ -238,7 +241,7 @@ class PymooOpt(OptimizationLibrary):
                 internal_algorithm_name=internal_name,
                 description=algo_value[0],
                 website=f"{self.__PYMOO_WEBPAGE}/algorithms/{algo_value[1]}",
-                handle_multiobjective=not (internal_name == "GA"),
+                handle_multiobjective=internal_name != "GA",
             )
 
         self._operators_map = {
@@ -437,7 +440,7 @@ class PymooOpt(OptimizationLibrary):
             Moreover, the selection operator is not concerned in the case of
             mixed variables.
         """
-        popts = self._process_options(
+        return self._process_options(
             max_iter=max_iter,
             max_gen=max_gen,
             ftol_rel=ftol_rel,
@@ -470,7 +473,6 @@ class PymooOpt(OptimizationLibrary):
             scaling_2=scaling_2,
             **options,
         )
-        return popts
 
     @staticmethod
     def _check_operator_suitable(
@@ -583,22 +585,22 @@ class PymooOpt(OptimizationLibrary):
         i_idx = (types == "int").nonzero()[0]
         return mixed_operator_class(
             types,
-            dict(
-                float=self._get_operator(
+            {
+                "float": self._get_operator(
                     ["float"],
                     lower_bounds[f_idx],
                     upper_bounds[f_idx],
                     nature,
                     operator_options.get("float"),
                 ),
-                integer=self._get_operator(
+                "integer": self._get_operator(
                     ["integer"],
                     lower_bounds[i_idx],
                     upper_bounds[i_idx],
                     nature,
                     operator_options.get("int", operator_options.get("integer")),
                 ),
-            ),
+            },
         )
 
     def _get_ref_dirs(

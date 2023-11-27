@@ -25,6 +25,7 @@ import logging
 from math import ceil
 from math import sqrt
 from typing import Any
+from typing import ClassVar
 
 import matplotlib.pyplot as plt
 from gemseo.post.opt_post_processor import OptPostProcessor
@@ -50,7 +51,7 @@ class MultiObjectiveDiagram(OptPostProcessor):
     font_size: int = 9
     """The font size for the plot texts."""
 
-    SCALARIZATION_FUNCTIONS: dict[str, str] = {
+    SCALARIZATION_FUNCTIONS: ClassVar[dict[str, str]] = {
         "weighted-sum": "Weighted Sum",
         "tchebi": "Tchebysheff",
         "pbi": "PBI",
