@@ -22,12 +22,13 @@
 from __future__ import annotations
 
 import pytest
-from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from numpy import array
 from numpy.testing import assert_allclose
 
+from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 
-@pytest.fixture
+
+@pytest.fixture()
 def chankong_haimes() -> ChankongHaimes:
     """Create a :class:`.ChankongHaimes` optimization problem.
 

@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from typing import ClassVar
 
 from numpy import atleast_2d
 from numpy import ndarray
@@ -46,7 +47,7 @@ class Compromise(ScatterPareto):
 
     fig_name_prefix = "compromise"
 
-    SCALARIZATION_FUNCTIONS: dict[str, str] = {
+    SCALARIZATION_FUNCTIONS: ClassVar[dict[str, str]] = {
         "weighted-sum": "Weighted Sum",
         "tchebi": "Tchebysheff",
         "pbi": "PBI",

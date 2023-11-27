@@ -22,11 +22,13 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 from typing import Any
 
-from numpy import ndarray
-
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
+
+if TYPE_CHECKING:
+    from numpy import ndarray
 
 LOGGER = logging.getLogger(__name__)
 

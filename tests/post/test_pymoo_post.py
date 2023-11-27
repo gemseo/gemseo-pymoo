@@ -22,20 +22,24 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.post.post_factory import PostFactory
 from gemseo.problems.analytical.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
+from numpy import array
+
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
-from numpy import array
+
+if TYPE_CHECKING:
+    from gemseo.algos.opt_problem import OptimizationProblem
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_1obj() -> OptimizationProblem:
     """Create an optimization problem with 1 objective ready to be post-processed.
 
@@ -48,7 +52,7 @@ def problem_1obj() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_2obj() -> OptimizationProblem:
     """Create an optimization problem with 2 objectives ready to be post-processed.
 
@@ -60,7 +64,7 @@ def problem_2obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_3obj() -> OptimizationProblem:
     """Create an optimization problem with 3 objectives ready to be post-processed.
 
@@ -72,7 +76,7 @@ def problem_3obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture
+@pytest.fixture()
 def post_factory() -> PostFactory:
     """Create a :class:`gemseo.post.post_factory.PostFactory` instance.
 
@@ -92,7 +96,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
         pyplot_close_all: Fixture that prevents figures aggregation
             with matplotlib pyplot.
     """
-    options = dict(scalar_name="asf", weights=[0.3, 0.7], plot_arrow=True)
+    options = {"scalar_name": "asf", "weights": [0.3, 0.7], "plot_arrow": True}
     post = post_factory.execute(
         problem_2obj, "Compromise", save=True, file_path="compromise1", **options
     )
@@ -102,7 +106,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
 
 
 @pytest.mark.parametrize(
-    "diagram_name, s_func, opts, baseline_images",
+    ("diagram_name", "s_func", "opts", "baseline_images"),
     [
         ("Petal", "weighted-sum", {}, ["petal_viennet_weighted_sum"]),
         ("Petal", "tchebi", {}, ["petal_viennet_tchebi"]),
@@ -146,11 +150,9 @@ def test_post(
     options = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
         options.update(
-            **dict(
-                scalar_name=s_func,
-                weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
-                beta=5,
-            )
+            scalar_name=s_func,
+            weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
+            beta=5,
         )
 
     # Check "weights = None" option.
@@ -164,15 +166,15 @@ def test_post(
         fig_name = f"compromise_{s_func}_1"
         post.figures[fig_name].draw(post.figures[fig_name].canvas.get_renderer())
 
-    post.figures
+    post.figures  # noqa:B018
 
 
 @pytest.mark.parametrize(
-    "single_objective, options, expectation",
+    ("single_objective", "options", "expectation"),
     [
         (
             True,
-            dict(points=array([[0, 1], [2, 3], [4, 5]]), point_labels=["a", "b"]),
+            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
             pytest.raises(
                 ValueError,
                 match="This post-processing is only suitable for optimization "
@@ -181,7 +183,7 @@ def test_post(
         ),
         (
             False,
-            dict(points=array([[0, 1], [2, 3], [4, 5]]), point_labels=["a", "b"]),
+            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
             pytest.raises(
                 ValueError,
                 match="You must provide either a single label for all points "
@@ -204,10 +206,7 @@ def test_exceptions_scatter(
         options: The post-processing options.
         expectation: The expected exception to be raised.
     """
-    if single_objective:
-        problem = problem_1obj
-    else:
-        problem = problem_2obj
+    problem = problem_1obj if single_objective else problem_2obj
 
     post = ScatterPareto(problem)
     with expectation:
@@ -215,17 +214,17 @@ def test_exceptions_scatter(
 
 
 @pytest.mark.parametrize(
-    "options, expectation",
+    ("options", "expectation"),
     [
         (
-            dict(scalar_name="unknown", weights=[1]),
+            {"scalar_name": "unknown", "weights": [1]},
             pytest.raises(
                 ValueError,
                 match="The scalarization function name must be one of the following",
             ),
         ),
         (
-            dict(scalar_name="asf", weights=[1, 2]),
+            {"scalar_name": "asf", "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="You must provide exactly one weight for each objective function",
@@ -247,11 +246,11 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
 
 
 @pytest.mark.parametrize(
-    "diagram, options, expectation",
+    ("diagram", "options", "expectation"),
     [
         (
             "Petal",
-            dict(scalar_name="unknown", weights=[1, 2]),
+            {"scalar_name": "unknown", "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="The scalarization function name must be one of ",
@@ -259,7 +258,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Petal",
-            dict(scalar_name="asf", weights=[1, 2, 3]),
+            {"scalar_name": "asf", "weights": [1, 2, 3]},
             pytest.raises(
                 ValueError,
                 match="provide exactly one weight for each objective",
@@ -267,7 +266,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Radar",
-            dict(scalar_name="asf", weights=[1, 2]),
+            {"scalar_name": "asf", "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="The Radar post-processing is only suitable for optimization "
