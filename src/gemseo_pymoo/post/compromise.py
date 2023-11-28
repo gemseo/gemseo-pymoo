@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Compromise points for multi-criteria decision-making."""
+
 from __future__ import annotations
 
 import logging

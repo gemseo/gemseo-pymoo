@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """High Trade-Off Points for multi-criteria decision-making."""
+
 from __future__ import annotations
 
 import logging

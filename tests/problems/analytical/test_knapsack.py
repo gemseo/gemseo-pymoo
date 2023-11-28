@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the Knapsack problem."""
+
 from __future__ import annotations
 
 from contextlib import nullcontext as does_not_raise

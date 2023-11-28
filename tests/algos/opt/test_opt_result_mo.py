@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the multi-objective optimization result."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

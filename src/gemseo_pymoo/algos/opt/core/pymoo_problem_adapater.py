@@ -20,6 +20,7 @@
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 #                 François Gallard
 """An adapter for pymoo :class:`~pymoo.core.problem.Problem`."""
+
 from __future__ import annotations
 
 import logging

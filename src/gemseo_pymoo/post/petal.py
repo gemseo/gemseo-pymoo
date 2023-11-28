@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Petal diagram."""
+
 from __future__ import annotations
 
 import logging

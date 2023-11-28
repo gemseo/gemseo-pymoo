@@ -35,6 +35,7 @@ This module implements the Viennet multi-objective unconstrained problem:
    & -3.0 \leq y \leq 3.0
    \end{aligned}
 """
+
 from __future__ import annotations
 
 import logging

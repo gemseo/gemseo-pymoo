@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the Chankong and Haimes problem."""
+
 from __future__ import annotations
 
 import pytest

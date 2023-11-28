@@ -17,4 +17,5 @@
 
 Contains wrappers to pymoo library.
 """
+
 from __future__ import annotations

@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Multi-objective diagram base class."""
+
 from __future__ import annotations
 
 import logging

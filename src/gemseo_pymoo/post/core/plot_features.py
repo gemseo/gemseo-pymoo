@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Features for scatter plots."""
+
 from __future__ import annotations
 
 from math import degrees
