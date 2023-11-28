@@ -17,4 +17,5 @@
 
 Contains multi-objective and discrete variables problems.
 """
+
 from __future__ import annotations

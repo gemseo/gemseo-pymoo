@@ -41,6 +41,7 @@ Chankong, V., & Haimes, Y. Y. (2008).
 Multiobjective decision making: theory and methodology.
 Courier Dover Publications.
 """
+
 from __future__ import annotations
 
 import logging

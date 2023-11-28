@@ -19,4 +19,5 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Post-processing and analysis for pymoo library."""
+
 from __future__ import annotations

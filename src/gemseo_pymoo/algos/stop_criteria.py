@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Termination criteria for pymoo algorithms."""
+
 from __future__ import annotations
 
 from gemseo.algos.stop_criteria import TerminationCriterion

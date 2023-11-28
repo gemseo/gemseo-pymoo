@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Scatter plot for multi-objective optimization problems."""
+
 from __future__ import annotations
 
 import logging

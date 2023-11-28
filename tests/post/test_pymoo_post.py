@@ -19,6 +19,7 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the pymoo post-processing."""
+
 from __future__ import annotations
 
 from pathlib import Path

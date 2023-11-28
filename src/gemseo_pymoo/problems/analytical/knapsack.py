@@ -51,6 +51,7 @@ in which the following new objective function is added to previous formulation:
 
    \text{minimize the number of items carried } & \sum_{i=1}^{n} x_i
 """
+
 from __future__ import annotations
 
 import logging

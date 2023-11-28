@@ -22,6 +22,7 @@
 #                 Lluis ARMENGOL GARCIA
 #                 Luca SARTORI
 """Tests for the Pymoo library wrapper."""
+
 from __future__ import annotations
 
 import logging

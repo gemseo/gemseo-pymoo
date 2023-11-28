@@ -17,4 +17,5 @@
 
 Contains the source code of algorithms developed with pymoo.
 """
+
 from __future__ import annotations
