@@ -40,7 +40,7 @@ fonttools==4.45.1
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev181+ge1da81c3
+gemseo[all]==5.1.2.dev185+ga82207ec
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -167,7 +167,7 @@ tomli==2.0.1
     #   pytest
 tqdm==4.66.1
     # via gemseo
-typing-extensions==4.8.0
+typing-extensions==4.9.0rc1
     # via
     #   gemseo
     #   pydantic
