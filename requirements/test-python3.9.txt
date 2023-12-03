@@ -36,11 +36,11 @@ execnet==2.0.2
     # via pytest-xdist
 fastjsonschema==2.18.1
     # via gemseo
-fonttools==4.45.1
+fonttools==4.46.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev205+g5590b304
+gemseo[all]==5.1.2.dev209+g7ec5e0ac
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
