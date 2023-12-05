@@ -263,9 +263,9 @@ class PymooProblem(Problem):
             n_constr=sum(constr.dim for constr in self._ineq_constraints),
             xl=lower_bounds,
             xu=upper_bounds,
-            type_var=np_concat(
-                [design_space.get_type(var) for var in design_space.variable_names]
-            ),
+            type_var=np_concat([
+                design_space.get_type(var) for var in design_space.variable_names
+            ]),
             **options,
         )
 
