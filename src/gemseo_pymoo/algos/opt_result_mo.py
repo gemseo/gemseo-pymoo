@@ -349,9 +349,9 @@ class Pareto:
 
         # Prepare DataFrame for design space.
         ds = self._problem.design_space
-        cols = MultiIndex.from_tuples(
-            [(n, str(d + 1)) for n in dv_names for d in range(ds.get_size(n))]
-        )
+        cols = MultiIndex.from_tuples([
+            (n, str(d + 1)) for n in dv_names for d in range(ds.get_size(n))
+        ])
         types = np_concat([ds.get_type(var) for var in dv_names])
         df_lb = DataFrame(
             ds.get_lower_bounds().reshape(1, -1), columns=cols, index=["lower_bound"]
@@ -360,9 +360,12 @@ class Pareto:
             ds.get_upper_bounds().reshape(1, -1), columns=cols, index=["upper_bound"]
         )
         df_types = DataFrame(types.reshape(1, -1), columns=cols, index=["type"])
-        df_interest_dv = pd_concat(
-            [df_lb, self._df_interest[dv_names], df_ub, df_types]
-        )
+        df_interest_dv = pd_concat([
+            df_lb,
+            self._df_interest[dv_names],
+            df_ub,
+            df_types,
+        ])
 
         for line in str(self.get_pretty_table_from_df(df_interest_dv.T)).split("\n"):
             msg.add("{}", line)

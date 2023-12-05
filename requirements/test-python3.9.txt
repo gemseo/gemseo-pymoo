@@ -6,6 +6,8 @@
 #
 --extra-index-url https://gitlab.com/api/v4/projects/25527353/packages/pypi/simple
 
+annotated-types==0.6.0
+    # via pydantic
 autograd==1.6.2
     # via pymoo
 certifi==2023.11.17
@@ -40,7 +42,7 @@ fonttools==4.46.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.1.2.dev211+gf42d11a5
+gemseo[all]==5.1.2.dev223+g14cc4935
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -116,8 +118,10 @@ pluggy==1.3.0
     # via pytest
 psutil==5.9.6
     # via openturns
-pydantic==1.10.13
+pydantic==2.5.2
     # via gemseo
+pydantic-core==2.14.5
+    # via pydantic
 pydoe2==1.3.0
     # via gemseo
 pymoo==0.5.0
@@ -171,6 +175,7 @@ typing-extensions==4.9.0rc1
     # via
     #   gemseo
     #   pydantic
+    #   pydantic-core
 tzdata==2023.3
     # via pandas
 urllib3==2.1.0
