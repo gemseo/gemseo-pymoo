@@ -30,10 +30,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
-from typing import Dict
 from typing import Final
-from typing import Sequence
-from typing import Tuple
 from typing import Union
 
 from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
@@ -72,6 +69,8 @@ from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from gemseo.algos.opt_result import OptimizationResult
     from gemseo.algos.stop_criteria import TerminationCriterion
     from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
@@ -80,11 +79,11 @@ if TYPE_CHECKING:
 LOGGER = logging.getLogger(__name__)
 
 EvolutionaryOperatorTypes = Union[Crossover, Mutation, Sampling, Selection]
-EvolutionaryOperatorSimpleOptionsType = Tuple[str, Dict[str, Union[float, bool]]]
+EvolutionaryOperatorSimpleOptionsType = tuple[str, dict[str, Union[float, bool]]]
 EvolutionaryOperatorOptionsType = Union[
     str,  # Operator's name.
     EvolutionaryOperatorSimpleOptionsType,  # Operator's name with options.
-    Dict[
+    dict[
         str,  # Variable type.
         Union[str, EvolutionaryOperatorTypes, EvolutionaryOperatorSimpleOptionsType],
     ],  # Mixed variables.
@@ -408,10 +407,10 @@ class PymooOpt(OptimizationLibrary):
             ...
             ...
             >>> operators = dict(
-            ...     selection='random',
-            ...     sampling='int_random',
-            ...     crossover=('int_sbx', dict(prob=0.9, eta=30)),
-            ...     mutation=dict(custom=MyIntegerMutationOperator())
+            ...     selection="random",
+            ...     sampling="int_random",
+            ...     crossover=("int_sbx", dict(prob=0.9, eta=30)),
+            ...     mutation=dict(custom=MyIntegerMutationOperator()),
             ... )
 
             Now, if we consider an optimization problem with
@@ -425,16 +424,16 @@ class PymooOpt(OptimizationLibrary):
             ...
             ...
             >>> operators = dict(
-            ...     selection='random',
-            ...     sampling=dict(integer='int_random', float='real_random'),
+            ...     selection="random",
+            ...     sampling=dict(integer="int_random", float="real_random"),
             ...     crossover=dict(
-            ...         integer=('int_sbx', dict(prob=0.9, eta=30)),
-            ...         float=('real_sbx', dict(prob=0.9, eta=30))
+            ...         integer=("int_sbx", dict(prob=0.9, eta=30)),
+            ...         float=("real_sbx", dict(prob=0.9, eta=30)),
             ...     ),
             ...     mutation=dict(
             ...         integer=dict(custom=MyIntegerMutationOperator()),
-            ...         float=dict(custom=MyFloatMutationOperator())
-            ...     )
+            ...         float=dict(custom=MyFloatMutationOperator()),
+            ...     ),
             ... )
 
             Note that in this case, we must provide an operator for each variable type.

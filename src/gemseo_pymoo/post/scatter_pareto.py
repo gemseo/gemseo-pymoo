@@ -24,10 +24,9 @@ from __future__ import annotations
 
 import logging
 from math import degrees
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import Sequence
 from typing import Union
 
 import matplotlib.pyplot as plt
@@ -45,9 +44,12 @@ from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 LOGGER = logging.getLogger(__name__)
 
-PlotPropertiesType = Dict[str, Union[str, int, float, bool]]
+PlotPropertiesType = dict[str, Union[str, int, float, bool]]
 
 
 class ScatterPareto(OptPostProcessor):
