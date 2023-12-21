@@ -26,8 +26,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import Tuple
 from typing import Union
 
 import h5py
@@ -63,7 +61,7 @@ if TYPE_CHECKING:
     from gemseo.algos.opt.optimization_library import OptimizationLibrary
 
 LOGGER = logging.getLogger(__name__)
-OPTLibraryOutputType = Tuple[Dict[str, Union[float, ndarray]], Dict[str, ndarray]]
+OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
 
 
 def import_hdf(
