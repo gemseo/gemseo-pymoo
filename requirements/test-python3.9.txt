@@ -42,7 +42,7 @@ fonttools==4.47.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.0
+gemseo[all]==5.2.1.dev7+g6fce3729
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -118,9 +118,9 @@ pluggy==1.3.0
     # via pytest
 psutil==5.9.7
     # via openturns
-pydantic==2.5.2
+pydantic==2.5.3
     # via gemseo
-pydantic-core==2.14.5
+pydantic-core==2.14.6
     # via pydantic
 pydoe2==1.3.0
     # via gemseo
