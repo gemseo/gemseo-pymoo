@@ -40,7 +40,7 @@ fonttools==4.47.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.1.dev9+g6ee7c0a7
+gemseo[all]==5.2.1.dev11+g3dec2319
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -168,7 +168,7 @@ typing-extensions==4.9.0
     #   gemseo
     #   pydantic
     #   pydantic-core
-tzdata==2023.3
+tzdata==2023.4
     # via pandas
 urllib3==2.1.0
     # via requests
