@@ -49,8 +49,8 @@ from numpy import ones
 from numpy import vstack
 from numpy import zeros
 from pymoo.core.problem import Problem
-from pymoo.factory import get_problem
 from pymoo.indicators.hv import Hypervolume
+from pymoo.problems import get_problem
 
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
 from gemseo_pymoo.algos.opt_result_mo import Pareto

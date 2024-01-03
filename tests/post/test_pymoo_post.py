@@ -31,6 +31,12 @@ from gemseo.post.post_factory import PostFactory
 from gemseo.problems.analytical.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
+from pymoo.decomposition.aasf import AASF
+from pymoo.decomposition.asf import ASF
+from pymoo.decomposition.pbi import PBI
+from pymoo.decomposition.perp_dist import PerpendicularDistance
+from pymoo.decomposition.tchebicheff import Tchebicheff
+from pymoo.decomposition.weighted_sum import WeightedSum
 
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
@@ -73,7 +79,12 @@ def problem_3obj() -> OptimizationProblem:
         A :class:`.Viennet` instance.
     """
     problem = Viennet()
-    OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizersFactory().execute(
+        problem,
+        algo_name="PYMOO_NSGA2",
+        max_iter=1000,
+        pop_size=50,
+    )
     return problem
 
 
@@ -97,7 +108,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
         pyplot_close_all: Fixture that prevents figures aggregation
             with matplotlib pyplot.
     """
-    options = {"scalar_name": "asf", "weights": [0.3, 0.7], "plot_arrow": True}
+    options = {"decomposition": ASF(), "weights": [0.3, 0.7], "plot_arrow": True}
     post = post_factory.execute(
         problem_2obj, "Compromise", save=True, file_path="compromise1", **options
     )
@@ -107,17 +118,23 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
 
 
 @pytest.mark.parametrize(
-    ("diagram_name", "s_func", "opts", "baseline_images"),
+    ("diagram_name", "decomposition", "opts", "baseline_images"),
     [
-        ("Petal", "weighted-sum", {}, ["petal_viennet_weighted_sum"]),
-        ("Petal", "tchebi", {}, ["petal_viennet_tchebi"]),
-        ("Radar", "pbi", {}, ["radar_viennet_pbi"]),
-        ("Radar", "asf", {}, ["radar_viennet_asf"]),
+        ("Petal", WeightedSum(), {}, ["petal_viennet_weighted_sum"]),
+        ("Petal", Tchebicheff(), {}, ["petal_viennet_tchebi"]),
+        ("Radar", PBI(), {}, ["radar_viennet_pbi"]),
+        ("Radar", ASF(), {}, ["radar_viennet_asf"]),
         ("ScatterPareto", "", {"plot_arrow": True}, ["scatter_pareto_viennet"]),
-        ("Compromise", "aasf", {"plot_arrow": True}, ["compromise_viennet_aasf"]),
+        ("Compromise", AASF(beta=5), {"plot_arrow": True}, ["compromise_viennet_aasf"]),
         (
             "Compromise",
-            "perp_dist",
+            None,
+            {"plot_arrow": False},
+            ["compromise_viennet_weighted_sum"],
+        ),
+        (
+            "Compromise",
+            PerpendicularDistance(),
             {"plot_arrow": False},
             ["compromise_viennet_perp_dist"],
         ),
@@ -129,7 +146,7 @@ def test_post(
     post_factory,
     problem_3obj,
     diagram_name,
-    s_func,
+    decomposition,
     opts,
     baseline_images,
     pyplot_close_all,
@@ -142,7 +159,7 @@ def test_post(
         post_factory: Fixture returning a post-processing factory.
         problem_3obj: Fixture returning the optimization problem to be post-processed.
         diagram_name: The name of the diagram.
-        s_func: The name of the scalarization function.
+        decomposition: The instance of the scalarization function.
         opts: The post-processing options.
         baseline_images: The reference images to be compared.
         pyplot_close_all: Fixture that prevents figures aggregation
@@ -151,20 +168,21 @@ def test_post(
     options = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
         options.update(
-            scalar_name=s_func,
+            decomposition=decomposition,
             weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
-            beta=5,
         )
 
     # Check "weights = None" option.
-    if diagram_name == "Compromise" and s_func == "perp_dist":
+    if diagram_name == "Compromise" and isinstance(
+        decomposition, PerpendicularDistance
+    ):
         options.pop("weights")
 
     post = post_factory.execute(problem_3obj, diagram_name, **options)
 
     # Cover Arrow3D and Annotation3D draw methods.
     if diagram_name == "Compromise" and opts["plot_arrow"]:
-        fig_name = f"compromise_{s_func}_1"
+        fig_name = f"compromise_{decomposition.__class__.__name__}_1"
         post.figures[fig_name].draw(post.figures[fig_name].canvas.get_renderer())
 
     post.figures  # noqa:B018
@@ -218,14 +236,15 @@ def test_exceptions_scatter(
     ("options", "expectation"),
     [
         (
-            {"scalar_name": "unknown", "weights": [1]},
+            {"decomposition": "unknown", "weights": [1]},
             pytest.raises(
-                ValueError,
-                match="The scalarization function name must be one of the following",
+                TypeError,
+                match="The scalarization function must be an instance of"
+                " pymoo.core.Decomposition.",
             ),
         ),
         (
-            {"scalar_name": "asf", "weights": [1, 2]},
+            {"decomposition": ASF(), "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="You must provide exactly one weight for each objective function",
@@ -251,15 +270,16 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
     [
         (
             "Petal",
-            {"scalar_name": "unknown", "weights": [1, 2]},
+            {"decomposition": "unknown", "weights": [1, 2]},
             pytest.raises(
-                ValueError,
-                match="The scalarization function name must be one of ",
+                TypeError,
+                match="The scalarization function must be an instance of "
+                "pymoo.core.Decomposition.",
             ),
         ),
         (
             "Petal",
-            {"scalar_name": "asf", "weights": [1, 2, 3]},
+            {"decomposition": ASF(), "weights": [1, 2, 3]},
             pytest.raises(
                 ValueError,
                 match="provide exactly one weight for each objective",
@@ -267,7 +287,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Radar",
-            {"scalar_name": "asf", "weights": [1, 2]},
+            {"decomposition": ASF(), "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="The Radar post-processing is only suitable for optimization "

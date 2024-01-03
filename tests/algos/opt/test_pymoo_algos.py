@@ -42,8 +42,10 @@ from numpy import min as np_min
 from numpy import ndarray
 from numpy.testing import assert_allclose
 from pymoo.core.problem import Problem
-from pymoo.factory import get_mutation
-from pymoo.factory import get_sampling
+from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
+from pymoo.operators.mutation.pm import PolynomialMutation
+from pymoo.operators.repair.rounding import RoundingRepair
+from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import get_gemseo_opt_problem
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
@@ -56,20 +58,9 @@ if TYPE_CHECKING:
 tolerances = {"ftol_rel": 0.0, "ftol_abs": 0.0, "xtol_rel": 0.0, "xtol_abs": 0.0}
 integer_options = {"normalize_design_space": False, "stop_crit_n_x": 99}
 integer_operators = {
-    "sampling": "int_lhs",
-    "crossover": "int_sbx",
-    "mutation": ("int_pm", {"prob": 1.0, "eta": 3.0}),
-}
-mixed_operators = {
-    "sampling": {
-        "integer": "int_random",
-        "float": {"custom": get_sampling("real_random")},
-    },
-    "crossover": {
-        "integer": ("int_sbx", {"prob": 1.0, "eta": 3.0}),
-        "float": ("real_sbx", {"prob": 1.0, "eta": 3.0}),
-    },
-    "mutation": {"int": ("int_pm", {"eta": 3.0}), "float": ("real_pm", {"eta": 3.0})},
+    "sampling": IntegerRandomSampling(),
+    "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
+    "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
 }
 
 
@@ -191,7 +182,7 @@ def opt_factory() -> OptimizersFactory:
     "algo_name",
     ["PYMOO_NSGA2", "PYMOO_NSGA3", "PYMOO_UNSGA3", "PYMOO_RNSGA3", "PYMOO_GA"],
 )
-def test_operators_jason_schema(opt_factory, algo_name):
+def test_operators_json_schema(opt_factory, algo_name):
     """Check JSON grammars.
 
     Args:
@@ -201,12 +192,9 @@ def test_operators_jason_schema(opt_factory, algo_name):
     options = {
         "max_iter": 1,
         "selection": None,
-        "sampling": "s",
-        "crossover": {"integer": ("string", {"a": 1}), "float": ("string", {"b": 2})},
-        "mutation": {
-            "int": {"custom": get_mutation("int_pm")},
-            "float": {"custom": get_mutation("real_pm")},
-        },
+        "sampling": IntegerRandomSampling(),
+        "crossover": SimulatedBinaryCrossover(),
+        "mutation": PolynomialMutation(),
     }
 
     if algo_name == "PYMOO_NSGA2":
@@ -229,7 +217,7 @@ def test_operators_jason_schema(opt_factory, algo_name):
     [
         (
             Rosenbrock(),
-            pytest.raises(Exception, match=f"Problem must be an instance of {Problem}"),
+            pytest.raises(TypeError, match=f"Problem must be an instance of {Problem}"),
         ),
         ("rosenbrock", does_not_raise()),
     ],
@@ -289,9 +277,23 @@ def test_so(opt_factory, options, problem_class, x_opt, f_opt):
     [
         {"algo_name": "PYMOO_GA", "pop_size": 100},
         {"algo_name": "PYMOO_NSGA2", "pop_size": 50},
-        {"algo_name": "PYMOO_NSGA3", "ref_dirs_name": "das-dennis", "n_partitions": 10},
-        {"algo_name": "PYMOO_UNSGA3", "ref_dirs_name": "das-dennis", "n_points": 20},
-        {"algo_name": "PYMOO_RNSGA3", "ref_points": array([[1.0], [5.0]])},
+        {
+            "algo_name": "PYMOO_NSGA3",
+            "ref_dirs_name": "das-dennis",
+            "n_partitions": 10,
+            "pop_size": 600,
+        },
+        {
+            "algo_name": "PYMOO_UNSGA3",
+            "ref_dirs_name": "energy",
+            "n_points": 10,
+            "pop_size": 600,
+        },
+        {
+            "algo_name": "PYMOO_RNSGA3",
+            "ref_points": array([[1.0], [5.0]]),
+            "pop_size": 600,
+        },
     ],
 )
 def test_so_hypervolume(opt_factory, pow2_ineq, options, caplog):
@@ -368,45 +370,6 @@ def test_so_integer(opt_factory, options, problem_class, args, kwargs, x_opt, f_
 
 
 @pytest.mark.parametrize(
-    "options",
-    [
-        {"algo_name": "PYMOO_GA"},
-        {"algo_name": "PYMOO_NSGA2"},
-        {"algo_name": "PYMOO_NSGA3", "ref_dirs_name": "das-dennis", "n_partitions": 20},
-        {
-            "algo_name": "PYMOO_UNSGA3",
-            "ref_dirs_name": "das-dennis",
-            "n_partitions": 20,
-        },
-        {"algo_name": "PYMOO_RNSGA3", "mu": 0.1, "ref_points": array([[1.0], [10.0]])},
-    ],
-)
-def test_so_mixed_variables(opt_factory, simple_mip_problem, options):
-    """Test the optimization of single-objective problems with mixed variables.
-
-    Args:
-        opt_factory: Fixture returning an optimizer factory.
-        simple_mip_problem: Fixture returning the problem to be optimized.
-        options: The options for the optimization execution.
-    """
-    mip_x_opt, mip_f_opt = simple_mip_problem.solution
-
-    options = dict(
-        max_iter=500,
-        pop_size=20,
-        stop_crit_n_hv=999,
-        **tolerances,
-        **mixed_operators,
-        **integer_options,
-        **options,
-    )
-    res = opt_factory.execute(simple_mip_problem, **options)
-
-    assert_allclose(res.x_opt, mip_x_opt, atol=1e-1)
-    assert abs(mip_f_opt - res.f_opt) < 1e-1
-
-
-@pytest.mark.parametrize(
     "ref_dirs_options",
     [
         {"ref_dirs_name": "energy", "n_points": 90},
@@ -433,7 +396,7 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_options, algo_name):
     x_opt, f_opt = pow2_ineq.solution
 
     options = dict(
-        max_iter=200, pop_size=20, stop_crit_n_hv=999, **tolerances, **ref_dirs_options
+        max_iter=500, pop_size=20, stop_crit_n_hv=999, **tolerances, **ref_dirs_options
     )
     res = opt_factory.execute(pow2_ineq, algo_name=algo_name, **options)
 
@@ -444,14 +407,19 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_options, algo_name):
 @pytest.mark.parametrize(
     "options",
     [
-        {"algo_name": "PYMOO_NSGA2"},
+        {"algo_name": "PYMOO_NSGA2", "pop_size": 50},
         {"algo_name": "PYMOO_NSGA3", "ref_dirs_name": "das-dennis", "n_partitions": 10},
         {
             "algo_name": "PYMOO_UNSGA3",
             "ref_dirs_name": "das-dennis",
             "n_partitions": 10,
         },
-        {"algo_name": "PYMOO_RNSGA3", "mu": 0.5, "ref_points_": array([[1.0], [1.0]])},
+        {
+            "algo_name": "PYMOO_RNSGA3",
+            "mu": 0.5,
+            "ref_points_": array([[1.0], [1.0]]),
+            "pop_size": 50,
+        },
     ],
 )
 @pytest.mark.parametrize(
@@ -543,8 +511,8 @@ def test_multiprocessing_constrained(opt_factory, pow2_ineq, normalize):
     x_opt, f_opt = pow2_ineq.solution
 
     options = {
-        "max_iter": 600,
-        "pop_size": 200,
+        "max_iter": 800,
+        "pop_size": 50,
         "n_processes": 2,
         "normalize_design_space": normalize,
     }
@@ -563,7 +531,7 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
     """
     x_opt, f_opt = pow2_unconstrained.solution
 
-    options = {"max_iter": 800, "pop_size": 200, "n_processes": 2, "stop_crit_n_x": 999}
+    options = {"max_iter": 800, "pop_size": 50, "n_processes": 2, "stop_crit_n_x": 999}
     res = opt_factory.execute(pow2_unconstrained, algo_name="PYMOO_NSGA2", **options)
 
     assert_allclose(res.x_opt, x_opt, atol=1e-1)
@@ -582,24 +550,13 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
             Rosenbrock(l_b=0, u_b=0),
             {
                 "algo_name": "PYMOO_GA",
-                "mutation": "real_pm",
+                "mutation": PolynomialMutation(),
                 "normalize_design_space": False,
             },
             pytest.raises(
                 ValueError,
-                match="PolynomialMutation cannot handle equal lower and upper bounds!",
+                match="PolynomialMutation cannot handle equal lower and upper bounds.",
             ),
-        ),
-        (
-            get_gemseo_opt_problem(MixedVariablesProblem(), mask=["integer", "float"]),
-            {
-                "algo_name": "PYMOO_NSGA2",
-                "crossover": {
-                    "integer": {"custom": get_mutation("int_pm")},
-                    "float": "real_sbx",
-                },
-            },
-            pytest.raises(Exception, match="must be an instance of"),
         ),
         (
             Rosenbrock(),
@@ -616,9 +573,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
         ),
         (
             Viennet(),
-            {"algo_name": "PYMOO_NSGA2", "mutation": {"custom": DummyMutation()}},
+            {"algo_name": "PYMOO_NSGA2", "mutation": DummyMutation()},
             pytest.raises(
-                Exception, match=r"\D+ must be an instance of \D+ or inherit from it!"
+                TypeError, match=r"\D+ must be an instance of \D+ or inherit from it."
             ),
         ),
     ],
@@ -634,32 +591,6 @@ def test_execution_exceptions(opt_factory, problem, options, expectation):
     """
     with expectation:
         opt_factory.execute(problem, **options)
-
-
-@pytest.mark.parametrize(
-    "operators",
-    [
-        {},
-        {
-            "sampling": "real_lhs",
-            "crossover": ("real_k_point", [2]),
-            "mutation": "real_pm",
-        },
-    ],
-)
-def test_check_operator_suitability(opt_factory, pow2_ineq_int, operators, caplog):
-    """Test the suitability of the operators for the given problem.
-
-    Args:
-        opt_factory: Fixture returning an optimizer factory.
-        pow2_ineq_int: Fixture returning the problem to be optimized.
-        operators: A dictionary with the evolutionary operators.
-        caplog: Fixture to access and control log capturing.
-    """
-    options = dict(max_iter=100, **tolerances, **operators, **integer_options)
-    opt_factory.execute(pow2_ineq_int, algo_name="PYMOO_NSGA2", **options)
-
-    assert "operator may not be suitable for integer" in caplog.text
 
 
 def test_empty_database(opt_factory):
@@ -706,3 +637,28 @@ def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
 
     assert "Current hypervolume set to 0!" in caplog.text
     assert "Hypervolume stopping criterion is ignored!" in caplog.text
+
+
+def test_log_integer_problem(opt_factory, mo_knapsack, caplog):
+    """Test the warning message for integer problems with default operators.
+
+    Args:
+        opt_factory: Fixture returning an optimizer factory.
+        mo_knapsack: Fixture returning the problem to be optimized.
+        caplog: Fixture to access and control log capturing.
+    """
+    message = (
+        "Pymoo's default sampling operator may not be suitable for integer variables."
+    )
+    operators = {
+        "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
+        "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
+    }
+    opt_factory.execute(
+        mo_knapsack, algo_name="PYMOO_NSGA2", **operators, **integer_options
+    )
+    assert (
+        "gemseo_pymoo.algos.opt.lib_pymoo",
+        logging.WARNING,
+        message,
+    ) in caplog.record_tuples

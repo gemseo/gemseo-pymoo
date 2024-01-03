@@ -1,17 +1,13 @@
 {
   "name": "MultiObjectiveDiagram_options",
   "required": [
-    "diagram",
-    "scalar_name",
+    "visualization",
+    "decomposition",
     "weights"
   ],
   "properties": {
-    "diagram": {
-      "type": "string"
-    },
-    "scalar_name": {
-      "type": "string"
-    },
+    "visualization": {},
+    "decomposition": {},
     "weights": {
       "oneOf": [
         {

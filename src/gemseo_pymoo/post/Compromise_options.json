@@ -1,9 +1,7 @@
 {
   "name": "Compromise_options",
   "properties": {
-    "scalar_name": {
-      "type": "string"
-    },
+    "decomposition": {},
     "weights": {
       "oneOf": [
         {

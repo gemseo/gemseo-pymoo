@@ -25,8 +25,8 @@ from __future__ import annotations
 import logging
 from math import ceil
 from math import sqrt
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import ClassVar
 
 import matplotlib.pyplot as plt
 from gemseo.post.opt_post_processor import OptPostProcessor
@@ -35,10 +35,13 @@ from matplotlib.gridspec import GridSpec
 from numpy import atleast_2d
 from numpy import ndarray
 from numpy import vstack
-from pymoo.factory import get_decomposition
-from pymoo.factory import get_visualization
+from pymoo.core.decomposition import Decomposition
+from pymoo.visualization.radar import Radar
 
 from gemseo_pymoo.algos.opt_result_mo import Pareto
+
+if TYPE_CHECKING:
+    from pymoo.core.plot import Plot
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,20 +55,10 @@ class MultiObjectiveDiagram(OptPostProcessor):
     font_size: int = 9
     """The font size for the plot texts."""
 
-    SCALARIZATION_FUNCTIONS: ClassVar[dict[str, str]] = {
-        "weighted-sum": "Weighted Sum",
-        "tchebi": "Tchebysheff",
-        "pbi": "PBI",
-        "asf": "Achievement Scalarization Function",
-        "aasf": "Augmented Achievement Scalarization Function",
-        "perp_dist": "Perpendicular Distance",
-    }
-    """The alias and the corresponding name of the scalarization functions."""
-
     def _plot(
         self,
-        diagram: str,
-        scalar_name: str,
+        visualization: type[Plot],
+        decomposition: Decomposition,
         weights: ndarray,
         normalize_each_objective: bool = True,
         **scalar_options: Any,
@@ -76,21 +69,23 @@ class MultiObjectiveDiagram(OptPostProcessor):
         to transform the multi-objective functions into a single-objective.
 
         Args:
-            diagram: The type of the diagram to be created.
-            scalar_name: The name of the scalarization function to use.
+            visualization: The Pymoo visualization class to be used to create the plot.
+            decomposition: The instance of the scalarization function to use.
             weights: The weights for the scalarization function.
             normalize_each_objective: Whether the objectives should be normalized.
             **scalar_options: The keyword arguments for the scalarization function.
 
         Raises:
-            ValueError: Either if the scalarization function name is unknown, if the
-                number of weights does not match the number of objectives, or if the
-                diagram ``radar`` is used for problems with less than 3 objectives.
+            TypeError: If the scalarization function is not an instance of
+                ``Decomposition``.
+            ValueError: If the number of weights does not match the number
+                of objectives, or if the diagram ``radar`` is used for problems with
+                less than 3 objectives.
         """
-        if scalar_name not in self.SCALARIZATION_FUNCTIONS:
-            raise ValueError(
-                "The scalarization function name must be one of the "
-                f"following: {self.SCALARIZATION_FUNCTIONS}"
+        if not isinstance(decomposition, Decomposition):
+            raise TypeError(
+                "The scalarization function must be an instance of "
+                "pymoo.core.Decomposition."
             )
 
         # Ensure correct dimension and type.
@@ -107,7 +102,7 @@ class MultiObjectiveDiagram(OptPostProcessor):
             )
 
         # Check post-processing suitability.
-        if diagram == "radar" and n_obj < 3:
+        if visualization == Radar and n_obj < 3:
             raise ValueError(
                 "The Radar post-processing is only suitable for optimization "
                 "problems with at least 3 objective functions!"
@@ -116,14 +111,11 @@ class MultiObjectiveDiagram(OptPostProcessor):
         # Create Pareto object.
         pareto = Pareto(self.opt_problem)
 
-        # Initialize decomposition function.
-        decomp = get_decomposition(scalar_name, **scalar_options)
-
         # Prepare points to plot.
         points, title = [], []
         for weight in weights:
             # Apply decomposition.
-            d_res = decomp.do(
+            d_res = decomposition.do(
                 pareto.front,
                 weight,
                 utopian_point=pareto.utopia,
@@ -155,8 +147,7 @@ class MultiObjectiveDiagram(OptPostProcessor):
             title.append([""])
 
         # Create plot.
-        plot = get_visualization(
-            diagram,
+        plot = visualization(
             bounds=[pareto.utopia, pareto.anti_utopia],
             figsize=self.DEFAULT_FIG_SIZE,
             title=title,
@@ -216,8 +207,10 @@ class MultiObjectiveDiagram(OptPostProcessor):
         ax_text.axis("off")
 
         # Set figure title with the scalarization function's name.
-        plot.fig.suptitle(f"s = {self.SCALARIZATION_FUNCTIONS[scalar_name]}")
+        plot.fig.suptitle(f"s = {decomposition.__class__.__name__}")
 
         self._add_figure(
-            plot.fig, file_name=f"{diagram}_{scalar_name}_{len(self.figures) + 1}"
+            plot.fig,
+            file_name=f"{visualization.__class__.__name__}_"
+            f"{decomposition.__class__.__name__}_{len(self.figures) + 1}",
         )

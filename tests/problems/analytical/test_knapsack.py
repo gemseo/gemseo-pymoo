@@ -31,15 +31,19 @@ from numpy import array
 from numpy import ones
 from numpy import zeros
 from numpy.testing import assert_array_equal
+from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
+from pymoo.operators.mutation.pm import PolynomialMutation
+from pymoo.operators.repair.rounding import RoundingRepair
+from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
 from gemseo_pymoo.problems.analytical.knapsack import Knapsack
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.knapsack import create_random_knapsack_problem
 
 integer_operators = {
-    "sampling": "int_lhs",
-    "crossover": "int_sbx",
-    "mutation": ("int_pm", {"prob": 1.0, "eta": 3.0}),
+    "sampling": IntegerRandomSampling(),
+    "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
+    "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
 }
 integer_options = {"normalize_design_space": False, "stop_crit_n_x": 99}
 
@@ -194,6 +198,7 @@ def test_mo_maximize(mo_knapsack):
 
     # Known solution (one of the anchor points).
     anchor_x = zeros(10)
-    anchor_f = zeros(2)
+    anchor_x[4] = 1
+    anchor_f = array([4, -1])
     assert anchor_x in res.pareto.set
     assert anchor_f in res.pareto.front
