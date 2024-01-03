@@ -1,13 +1,11 @@
 {
   "name": "Petal_options",
   "required": [
-    "scalar_name",
+    "decomposition",
     "weights"
   ],
   "properties": {
-    "scalar_name": {
-      "type": "string"
-    },
+    "decomposition": {},
     "weights": {
       "oneOf": [
         {

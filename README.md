@@ -9,9 +9,6 @@ Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 A GEMSEO wrapper for pymoo optimization algorithms.
 
-This package is not compatible with Python 3.10 because pymoo is not
-available for Python 3.10.
-
 # Documentation
 
 How to get the docs?
@@ -45,3 +42,4 @@ The list of dependencies with their licenses is given in the CREDITS.md file.
 - Antoine Dechaume
 - Lluis ARMENGOL GARCIA
 - Luca SARTORI
+- Gilberto RUIZ JIMENEZ

@@ -26,10 +26,13 @@ import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
+from pymoo.visualization.radar import Radar as PymooRadar
+
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
 
 if TYPE_CHECKING:
     from numpy import ndarray
+    from pymoo.core.decomposition import Decomposition
 
 LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +47,7 @@ class Radar(MultiObjectiveDiagram):
 
     def _plot(
         self,
-        scalar_name: str,
+        decomposition: Decomposition,
         weights: ndarray,
         normalize_each_objective: bool = True,
         **scalar_options: Any,
@@ -55,14 +58,11 @@ class Radar(MultiObjectiveDiagram):
         to transform the multi-objective functions into a single-objective.
 
         Args:
-            scalar_name: The name of the scalarization function to use.
-            weights: The weights for the scalarization function.
             normalize_each_objective: Whether the objectives should be normalized.
-            **scalar_options: The keyword arguments for the scalarization function.
         """
         super()._plot(
-            "radar",
-            scalar_name,
+            PymooRadar,
+            decomposition,
             weights,
             normalize_each_objective=normalize_each_objective,
             **scalar_options,
