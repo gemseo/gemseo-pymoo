@@ -50,7 +50,7 @@ fonttools==4.47.0
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.1.dev15+gc7f4718b
+gemseo[all]==5.2.1.dev19+g5e29507f
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
