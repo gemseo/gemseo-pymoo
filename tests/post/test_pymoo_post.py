@@ -98,15 +98,13 @@ def post_factory() -> PostFactory:
     return PostFactory()
 
 
-def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
+def test_saving(tmp_wd, post_factory, problem_2obj):
     """Test the figure saving.
 
     Args:
         tmp_wd: Fixture to move into a temporary working directory.
         post_factory: Fixture returning a post-processing factory.
         problem_2obj: Fixture returning the optimization problem to be post-processed.
-        pyplot_close_all: Fixture that prevents figures aggregation
-            with matplotlib pyplot.
     """
     options = {"decomposition": ASF(), "weights": [0.3, 0.7], "plot_arrow": True}
     post = post_factory.execute(
@@ -143,13 +141,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
 )
 @image_comparison(None, extensions=["png"], style="default")
 def test_post(
-    post_factory,
-    problem_3obj,
-    diagram_name,
-    decomposition,
-    opts,
-    baseline_images,
-    pyplot_close_all,
+    post_factory, problem_3obj, diagram_name, decomposition, opts, baseline_images
 ):
     """Test images created by the post-processes.
 
@@ -162,8 +154,6 @@ def test_post(
         decomposition: The instance of the scalarization function.
         opts: The post-processing options.
         baseline_images: The reference images to be compared.
-        pyplot_close_all: Fixture that prevents figures aggregation
-            with matplotlib pyplot.
     """
     options = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
