@@ -19,30 +19,36 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the Knapsack problem."""
+
 from __future__ import annotations
 
 from contextlib import nullcontext as does_not_raise
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo_pymoo.problems.analytical.knapsack import create_random_knapsack_problem
-from gemseo_pymoo.problems.analytical.knapsack import Knapsack
-from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from numpy import arange
 from numpy import array
 from numpy import ones
 from numpy import zeros
 from numpy.testing import assert_array_equal
+from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
+from pymoo.operators.mutation.pm import PolynomialMutation
+from pymoo.operators.repair.rounding import RoundingRepair
+from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
-integer_operators = dict(
-    sampling="int_lhs",
-    crossover="int_sbx",
-    mutation=("int_pm", dict(prob=1.0, eta=3.0)),
-)
-integer_options = dict(normalize_design_space=False, stop_crit_n_x=99)
+from gemseo_pymoo.problems.analytical.knapsack import Knapsack
+from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
+from gemseo_pymoo.problems.analytical.knapsack import create_random_knapsack_problem
+
+integer_operators = {
+    "sampling": IntegerRandomSampling(),
+    "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
+    "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
+}
+integer_options = {"normalize_design_space": False, "stop_crit_n_x": 99}
 
 
-@pytest.fixture
+@pytest.fixture()
 def knapsack_max_items() -> Knapsack:
     """Create a :class:`.Knapsack` optimization problem.
 
@@ -63,7 +69,7 @@ def knapsack_max_items() -> Knapsack:
     return knapsack
 
 
-@pytest.fixture
+@pytest.fixture()
 def mo_knapsack() -> MultiObjectiveKnapsack:
     """Create a :class:`.MultiObjectiveKnapsack` optimization problem.
 
@@ -79,7 +85,7 @@ def mo_knapsack() -> MultiObjectiveKnapsack:
 
 
 @pytest.mark.parametrize(
-    "args, expectation",
+    ("args", "expectation"),
     [
         (
             [arange(5), arange(4), ones(5)],
@@ -132,7 +138,7 @@ def test_warnings(caplog):
 
 
 @pytest.mark.parametrize(
-    "args, expectation",
+    ("args", "expectation"),
     [
         (
             [0],
@@ -192,6 +198,7 @@ def test_mo_maximize(mo_knapsack):
 
     # Known solution (one of the anchor points).
     anchor_x = zeros(10)
-    anchor_f = zeros(2)
+    anchor_x[4] = 1
+    anchor_f = array([4, -1])
     assert anchor_x in res.pareto.set
     assert anchor_f in res.pareto.front

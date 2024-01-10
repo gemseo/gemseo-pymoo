@@ -20,17 +20,16 @@
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 #                 François Gallard
 """An adapter for pymoo :class:`~pymoo.core.problem.Problem`."""
+
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import Tuple
 from typing import Union
 
 import h5py
 from gemseo.algos.design_space import DesignSpace
-from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
@@ -50,16 +49,19 @@ from numpy import ones
 from numpy import vstack
 from numpy import zeros
 from pymoo.core.problem import Problem
-from pymoo.factory import get_problem
 from pymoo.indicators.hv import Hypervolume
+from pymoo.problems import get_problem
 
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
 from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
+if TYPE_CHECKING:
+    from gemseo.algos.opt.optimization_library import OptimizationLibrary
+
 LOGGER = logging.getLogger(__name__)
-OPTLibraryOutputType = Tuple[Dict[str, Union[float, ndarray]], Dict[str, ndarray]]
+OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
 
 
 def import_hdf(
@@ -259,9 +261,9 @@ class PymooProblem(Problem):
             n_constr=sum(constr.dim for constr in self._ineq_constraints),
             xl=lower_bounds,
             xu=upper_bounds,
-            type_var=np_concat(
-                [design_space.get_type(var) for var in design_space.variable_names]
-            ),
+            type_var=np_concat([
+                design_space.get_type(var) for var in design_space.variable_names
+            ]),
             **options,
         )
 
@@ -420,7 +422,7 @@ class PymooProblem(Problem):
         # because max_iter may take too long to be reached given the modus operandi
         # of GAs and the way GEMSEO counts the number of iterations.
         if self._n_gen == self.max_gen:
-            raise MaxGenerationsReached()
+            raise MaxGenerationsReached
 
         obj_name = self.opt_problem.objective.name
 
@@ -443,7 +445,7 @@ class PymooProblem(Problem):
         self._hv_obj_hist_feasible.append(obj_hist_feasible)
 
         # Get the reference point (nadir point) of the alltime objective history.
-        new_hv_ref_point = np_max(vstack([self._hv_ref_point] + obj), axis=0)
+        new_hv_ref_point = np_max(vstack([self._hv_ref_point, *obj]), axis=0)
 
         # At the first generation, the reference point is not yet well-defined.
         if self._n_gen == 1:
@@ -495,4 +497,4 @@ class PymooProblem(Problem):
         if allclose(
             n_last_hv, hv_average, atol=self._hv_tol_abs, rtol=self._hv_tol_rel
         ):
-            raise HyperVolumeToleranceReached()
+            raise HyperVolumeToleranceReached

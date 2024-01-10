@@ -49,8 +49,11 @@ in which the following new objective function is added to previous formulation:
 
 .. math::
 
-   \text{minimize the number of items carried } & \sum_{i=1}^{n} x_i
+   \begin{aligned}
+   \text{minimize the number of items carried } & \sum_{i=1}^{n} x_i \\
+   \end{aligned}
 """
+
 from __future__ import annotations
 
 import logging
@@ -63,7 +66,7 @@ from numpy import ndarray
 from numpy import ones
 from numpy import sum as np_sum
 from numpy import zeros
-from numpy.random import randint
+from numpy.random import default_rng
 
 LOGGER = logging.getLogger(__name__)
 
@@ -187,9 +190,8 @@ class Knapsack(OptimizationProblem):
             u_b=items_ub,
             var_type=DesignSpace.DesignVariableType.INTEGER,
         )
-        if initial_guess is None:
-            design_space.set_current_value(zeros(n_items))
-        elif len(initial_guess) == n_items:
+
+        if initial_guess is None or len(initial_guess) == n_items:
             design_space.set_current_value(zeros(n_items))
         else:
             raise ValueError(f"initial_guess must have {n_items} elements!")
@@ -412,8 +414,9 @@ def create_random_knapsack_problem(
     if not 0.0 < capacity_level < 1.0:
         raise ValueError("capacity_level must be in the interval (0, 1)!")
 
-    values = randint(1, 100, size=n_items)
-    weights = randint(1, 100, size=n_items)
+    rng = default_rng(1)
+    values = rng.integers(1, 100, size=n_items)
+    weights = rng.integers(1, 100, size=n_items)
 
     capacity_weight = capacity_level * sum(weights)
 

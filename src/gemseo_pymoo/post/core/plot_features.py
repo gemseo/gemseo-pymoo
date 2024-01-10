@@ -19,17 +19,21 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Features for scatter plots."""
+
 from __future__ import annotations
 
 from math import degrees
+from typing import TYPE_CHECKING
 from typing import Any
 
-from matplotlib.backend_bases import RendererBase
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
 from mpl_toolkits.mplot3d import proj3d
 from numpy import arctan
 from numpy import ndarray
+
+if TYPE_CHECKING:
+    from matplotlib.backend_bases import RendererBase
 
 
 class Arrow3D(FancyArrowPatch):

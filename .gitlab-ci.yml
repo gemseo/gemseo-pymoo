@@ -1,9 +1,2 @@
 include:
-  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/auto-merge/plugin.yml"
-
-variables:
-  TOX_EXE: tox4
-
-.test-env-names:
-  - py38-coverage
-  - py39-coverage
+  - remote: "https://gitlab.com/gemseo/dev/ci-includes/-/raw/py311/plugin.yml"

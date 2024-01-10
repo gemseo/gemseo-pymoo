@@ -26,6 +26,49 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Version 2.0.0 (January 2024)
+
+## Added
+
+- Support for Python 3.10 and 3.11.
+- Support for pymoo 0.6.1.
+
+## Changed
+
+- The ``diagram`` option of the ``MultiObjectiveDiagram`` is now called
+  ``visualization`` to match Pymoo's naming.
+- The ``diagram`` option of the ``MultiObjectiveDiagram`` is no longer a
+  string, it must be a Pymoo ``Plot`` instance. This change is due to the
+  removal of the visualization factory of the Pymoo API.
+- The ``scalar_name`` option of the ``MultiObjectiveDiagram`` is now called
+  ``decomposition`` to match Pymoo's naming.
+- The ``scalar_name`` option of the ``MultiObjectiveDiagram`` is no longer a
+  string, it must be a Pymoo ``Decomposition`` instance. This change is due to
+  the removal of the visualization factory of the Pymoo API.
+- A ``TypeError`` is now raised when the scalarization function provided with
+  the ``decomposition`` option is not an instance of Pymoo's ``Decomposition``.
+  In previous versions, a ``ValueError`` was raised.
+- ``PymooOpt.EVOLUTIONARY_OPERATORS`` is now a dictionary with strings as keys
+  and Pymoo ``Operator`` classes as values.
+- Pymoo `0.6.0` removed support for evolutionary operator factories.
+  Therefore, the options ``sampling``, ``selection``, ``mutation`` and
+  ``crossover`` must now be instantiated by the user and then passed to the
+  driver when the problem is executed.
+
+## Removed
+
+- Support for Python 3.8.
+- Support for pymoo <0.6.1.
+- The ``SCALARIZATION_FUNCTIONS`` class variable was removed from
+  ``MultiObjectiveDiagram``.
+- The ``EvolutionaryOperatorSimpleOptionsType`` was removed.
+- The ``EvolutionaryOperatorOptionsType`` was removed.
+- The ``EvolutionaryMixedOperatorTypes`` was removed.
+
+## Fixed
+
+- A typo in the ``Knapsack`` docstring was corrected.
+
 # Version 1.1.3 (October 2023)
 
 Update to GEMSEO 5.1.

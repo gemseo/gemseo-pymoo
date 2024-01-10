@@ -19,13 +19,14 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Scatter plot for multi-objective optimization problems."""
+
 from __future__ import annotations
 
 import logging
 from math import degrees
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import Sequence
+from typing import ClassVar
 from typing import Union
 
 import matplotlib.pyplot as plt
@@ -43,9 +44,12 @@ from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 LOGGER = logging.getLogger(__name__)
 
-PlotPropertiesType = Dict[str, Union[str, int, float, bool]]
+PlotPropertiesType = dict[str, Union[str, int, float, bool]]
 
 
 class ScatterPareto(OptPostProcessor):
@@ -67,27 +71,35 @@ class ScatterPareto(OptPostProcessor):
     font_size: int = 9
     """The font size for the plot texts."""
 
-    prop_front: PlotPropertiesType = dict(color="blue", alpha=0.2, s=10, zorder=1)
+    prop_front: ClassVar[PlotPropertiesType] = {
+        "color": "blue",
+        "alpha": 0.2,
+        "s": 10,
+        "zorder": 1,
+    }
     """The properties for the pareto points."""
 
-    prop_extra: PlotPropertiesType = dict(alpha=0.8, s=30, zorder=2)
+    prop_extra: ClassVar[PlotPropertiesType] = {"alpha": 0.8, "s": 30, "zorder": 2}
     """The properties for the extra points."""
 
-    prop_interest: PlotPropertiesType = dict(alpha=1.0, s=30, zorder=3)
+    prop_interest: ClassVar[PlotPropertiesType] = {"alpha": 1.0, "s": 30, "zorder": 3}
     """The properties for the points of interest."""
 
-    prop_arrow: PlotPropertiesType = dict(
-        color="black", alpha=0.5, arrowstyle="-|>", mutation_scale=12
-    )
+    prop_arrow: ClassVar[PlotPropertiesType] = {
+        "color": "black",
+        "alpha": 0.5,
+        "arrowstyle": "-|>",
+        "mutation_scale": 12,
+    }
     """The properties for the arrows."""
 
-    prop_annotation: PlotPropertiesType = dict(
-        fontsize=font_size - 2,
-        ha="center",
-        va="bottom",
-        transform_rotates_text=True,
-        rotation_mode="anchor",  # Alignment occurs before rotation.
-    )
+    prop_annotation: ClassVar[PlotPropertiesType] = {
+        "fontsize": font_size - 2,
+        "ha": "center",
+        "va": "bottom",
+        "transform_rotates_text": True,
+        "rotation_mode": "anchor",  # Alignment occurs before rotation.
+    }
     """The properties for the annotations."""
 
     def _plot(
@@ -148,14 +160,14 @@ class ScatterPareto(OptPostProcessor):
         pareto = Pareto(self.opt_problem)
 
         # Default plot options.
-        plot_options = dict(
-            figsize=self.DEFAULT_FIG_SIZE,
-            title=self.fig_title,
-            tight_layout=False,
-            legend=(plot_legend, dict(fontsize=self.font_size - 2, loc="best")),
-            labels=[f"{obj_name} ({i + 1})" for i in range(n_obj)],  # Axes' labels.
-            close_on_destroy=False,  # Do not close figure when plot is destroyed.
-        )
+        plot_options = {
+            "figsize": self.DEFAULT_FIG_SIZE,
+            "title": self.fig_title,
+            "tight_layout": False,
+            "legend": (plot_legend, {"fontsize": self.font_size - 2, "loc": "best"}),
+            "labels": [f"{obj_name} ({i + 1})" for i in range(n_obj)],  # Axes' labels.
+            "close_on_destroy": False,  # Do not close figure when plot is destroyed.
+        }
 
         # Update default options with user choices.
         plot_options.update(**scatter_options)

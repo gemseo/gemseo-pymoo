@@ -19,23 +19,34 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the pymoo post-processing."""
+
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.post.post_factory import PostFactory
 from gemseo.problems.analytical.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
+from numpy import array
+from pymoo.decomposition.aasf import AASF
+from pymoo.decomposition.asf import ASF
+from pymoo.decomposition.pbi import PBI
+from pymoo.decomposition.perp_dist import PerpendicularDistance
+from pymoo.decomposition.tchebicheff import Tchebicheff
+from pymoo.decomposition.weighted_sum import WeightedSum
+
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
-from numpy import array
+
+if TYPE_CHECKING:
+    from gemseo.algos.opt_problem import OptimizationProblem
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_1obj() -> OptimizationProblem:
     """Create an optimization problem with 1 objective ready to be post-processed.
 
@@ -48,7 +59,7 @@ def problem_1obj() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_2obj() -> OptimizationProblem:
     """Create an optimization problem with 2 objectives ready to be post-processed.
 
@@ -60,7 +71,7 @@ def problem_2obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_3obj() -> OptimizationProblem:
     """Create an optimization problem with 3 objectives ready to be post-processed.
 
@@ -68,11 +79,16 @@ def problem_3obj() -> OptimizationProblem:
         A :class:`.Viennet` instance.
     """
     problem = Viennet()
-    OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizersFactory().execute(
+        problem,
+        algo_name="PYMOO_NSGA2",
+        max_iter=1000,
+        pop_size=50,
+    )
     return problem
 
 
-@pytest.fixture
+@pytest.fixture()
 def post_factory() -> PostFactory:
     """Create a :class:`gemseo.post.post_factory.PostFactory` instance.
 
@@ -82,17 +98,15 @@ def post_factory() -> PostFactory:
     return PostFactory()
 
 
-def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
+def test_saving(tmp_wd, post_factory, problem_2obj):
     """Test the figure saving.
 
     Args:
         tmp_wd: Fixture to move into a temporary working directory.
         post_factory: Fixture returning a post-processing factory.
         problem_2obj: Fixture returning the optimization problem to be post-processed.
-        pyplot_close_all: Fixture that prevents figures aggregation
-            with matplotlib pyplot.
     """
-    options = dict(scalar_name="asf", weights=[0.3, 0.7], plot_arrow=True)
+    options = {"decomposition": ASF(), "weights": [0.3, 0.7], "plot_arrow": True}
     post = post_factory.execute(
         problem_2obj, "Compromise", save=True, file_path="compromise1", **options
     )
@@ -102,17 +116,23 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
 
 
 @pytest.mark.parametrize(
-    "diagram_name, s_func, opts, baseline_images",
+    ("diagram_name", "decomposition", "opts", "baseline_images"),
     [
-        ("Petal", "weighted-sum", {}, ["petal_viennet_weighted_sum"]),
-        ("Petal", "tchebi", {}, ["petal_viennet_tchebi"]),
-        ("Radar", "pbi", {}, ["radar_viennet_pbi"]),
-        ("Radar", "asf", {}, ["radar_viennet_asf"]),
+        ("Petal", WeightedSum(), {}, ["petal_viennet_weighted_sum"]),
+        ("Petal", Tchebicheff(), {}, ["petal_viennet_tchebi"]),
+        ("Radar", PBI(), {}, ["radar_viennet_pbi"]),
+        ("Radar", ASF(), {}, ["radar_viennet_asf"]),
         ("ScatterPareto", "", {"plot_arrow": True}, ["scatter_pareto_viennet"]),
-        ("Compromise", "aasf", {"plot_arrow": True}, ["compromise_viennet_aasf"]),
+        ("Compromise", AASF(beta=5), {"plot_arrow": True}, ["compromise_viennet_aasf"]),
         (
             "Compromise",
-            "perp_dist",
+            None,
+            {"plot_arrow": False},
+            ["compromise_viennet_weighted_sum"],
+        ),
+        (
+            "Compromise",
+            PerpendicularDistance(),
             {"plot_arrow": False},
             ["compromise_viennet_perp_dist"],
         ),
@@ -121,13 +141,7 @@ def test_saving(tmp_wd, post_factory, problem_2obj, pyplot_close_all):
 )
 @image_comparison(None, extensions=["png"], style="default")
 def test_post(
-    post_factory,
-    problem_3obj,
-    diagram_name,
-    s_func,
-    opts,
-    baseline_images,
-    pyplot_close_all,
+    post_factory, problem_3obj, diagram_name, decomposition, opts, baseline_images
 ):
     """Test images created by the post-processes.
 
@@ -137,42 +151,39 @@ def test_post(
         post_factory: Fixture returning a post-processing factory.
         problem_3obj: Fixture returning the optimization problem to be post-processed.
         diagram_name: The name of the diagram.
-        s_func: The name of the scalarization function.
+        decomposition: The instance of the scalarization function.
         opts: The post-processing options.
         baseline_images: The reference images to be compared.
-        pyplot_close_all: Fixture that prevents figures aggregation
-            with matplotlib pyplot.
     """
     options = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
         options.update(
-            **dict(
-                scalar_name=s_func,
-                weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
-                beta=5,
-            )
+            decomposition=decomposition,
+            weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
         )
 
     # Check "weights = None" option.
-    if diagram_name == "Compromise" and s_func == "perp_dist":
+    if diagram_name == "Compromise" and isinstance(
+        decomposition, PerpendicularDistance
+    ):
         options.pop("weights")
 
     post = post_factory.execute(problem_3obj, diagram_name, **options)
 
     # Cover Arrow3D and Annotation3D draw methods.
     if diagram_name == "Compromise" and opts["plot_arrow"]:
-        fig_name = f"compromise_{s_func}_1"
+        fig_name = f"compromise_{decomposition.__class__.__name__}_1"
         post.figures[fig_name].draw(post.figures[fig_name].canvas.get_renderer())
 
-    post.figures
+    post.figures  # noqa:B018
 
 
 @pytest.mark.parametrize(
-    "single_objective, options, expectation",
+    ("single_objective", "options", "expectation"),
     [
         (
             True,
-            dict(points=array([[0, 1], [2, 3], [4, 5]]), point_labels=["a", "b"]),
+            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
             pytest.raises(
                 ValueError,
                 match="This post-processing is only suitable for optimization "
@@ -181,7 +192,7 @@ def test_post(
         ),
         (
             False,
-            dict(points=array([[0, 1], [2, 3], [4, 5]]), point_labels=["a", "b"]),
+            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
             pytest.raises(
                 ValueError,
                 match="You must provide either a single label for all points "
@@ -204,10 +215,7 @@ def test_exceptions_scatter(
         options: The post-processing options.
         expectation: The expected exception to be raised.
     """
-    if single_objective:
-        problem = problem_1obj
-    else:
-        problem = problem_2obj
+    problem = problem_1obj if single_objective else problem_2obj
 
     post = ScatterPareto(problem)
     with expectation:
@@ -215,17 +223,18 @@ def test_exceptions_scatter(
 
 
 @pytest.mark.parametrize(
-    "options, expectation",
+    ("options", "expectation"),
     [
         (
-            dict(scalar_name="unknown", weights=[1]),
+            {"decomposition": "unknown", "weights": [1]},
             pytest.raises(
-                ValueError,
-                match="The scalarization function name must be one of the following",
+                TypeError,
+                match="The scalarization function must be an instance of"
+                " pymoo.core.Decomposition.",
             ),
         ),
         (
-            dict(scalar_name="asf", weights=[1, 2]),
+            {"decomposition": ASF(), "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="You must provide exactly one weight for each objective function",
@@ -247,19 +256,20 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
 
 
 @pytest.mark.parametrize(
-    "diagram, options, expectation",
+    ("diagram", "options", "expectation"),
     [
         (
             "Petal",
-            dict(scalar_name="unknown", weights=[1, 2]),
+            {"decomposition": "unknown", "weights": [1, 2]},
             pytest.raises(
-                ValueError,
-                match="The scalarization function name must be one of ",
+                TypeError,
+                match="The scalarization function must be an instance of "
+                "pymoo.core.Decomposition.",
             ),
         ),
         (
             "Petal",
-            dict(scalar_name="asf", weights=[1, 2, 3]),
+            {"decomposition": ASF(), "weights": [1, 2, 3]},
             pytest.raises(
                 ValueError,
                 match="provide exactly one weight for each objective",
@@ -267,7 +277,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Radar",
-            dict(scalar_name="asf", weights=[1, 2]),
+            {"decomposition": ASF(), "weights": [1, 2]},
             pytest.raises(
                 ValueError,
                 match="The Radar post-processing is only suitable for optimization "

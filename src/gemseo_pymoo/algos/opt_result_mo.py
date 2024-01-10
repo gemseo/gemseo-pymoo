@@ -19,12 +19,13 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Multi-objective optimization result."""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.opt_result import OptimizationResult
 from gemseo.algos.opt_result import Value
 from gemseo.algos.pareto_front import compute_pareto_optimal_points
@@ -39,9 +40,12 @@ from numpy import min as np_min
 from numpy import ndarray
 from numpy import zeros
 from numpy.linalg import norm as np_norm
-from pandas import concat as pd_concat
 from pandas import DataFrame
 from pandas import MultiIndex
+from pandas import concat as pd_concat
+
+if TYPE_CHECKING:
+    from gemseo.algos.opt_problem import OptimizationProblem
 
 LOGGER = logging.getLogger(__name__)
 
@@ -116,7 +120,7 @@ class Pareto:
         return self._front
 
     @property
-    def set(self) -> ndarray:
+    def set(self) -> ndarray:  # noqa: A003
         """The values of the design variables of all pareto efficient solutions."""
         return self._set
 
@@ -345,9 +349,9 @@ class Pareto:
 
         # Prepare DataFrame for design space.
         ds = self._problem.design_space
-        cols = MultiIndex.from_tuples(
-            [(n, str(d + 1)) for n in dv_names for d in range(ds.get_size(n))]
-        )
+        cols = MultiIndex.from_tuples([
+            (n, str(d + 1)) for n in dv_names for d in range(ds.get_size(n))
+        ])
         types = np_concat([ds.get_type(var) for var in dv_names])
         df_lb = DataFrame(
             ds.get_lower_bounds().reshape(1, -1), columns=cols, index=["lower_bound"]
@@ -356,9 +360,12 @@ class Pareto:
             ds.get_upper_bounds().reshape(1, -1), columns=cols, index=["upper_bound"]
         )
         df_types = DataFrame(types.reshape(1, -1), columns=cols, index=["type"])
-        df_interest_dv = pd_concat(
-            [df_lb, self._df_interest[dv_names], df_ub, df_types]
-        )
+        df_interest_dv = pd_concat([
+            df_lb,
+            self._df_interest[dv_names],
+            df_ub,
+            df_types,
+        ])
 
         for line in str(self.get_pretty_table_from_df(df_interest_dv.T)).split("\n"):
             msg.add("{}", line)

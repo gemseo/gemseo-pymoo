@@ -22,23 +22,19 @@
 #                 Lluis ARMENGOL GARCIA
 #                 Luca SARTORI
 """Pymoo optimization library wrapper."""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
-from typing import Dict
 from typing import Final
-from typing import Sequence
-from typing import Tuple
 from typing import Union
 
 from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.algos.opt_result import OptimizationResult
-from gemseo.algos.stop_criteria import TerminationCriterion
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -51,20 +47,11 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
-from pymoo.core.population import Population
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
-from pymoo.factory import get_crossover
-from pymoo.factory import get_mutation
-from pymoo.factory import get_reference_directions
-from pymoo.factory import get_sampling
-from pymoo.factory import get_selection
-from pymoo.operators.mixed_variable_operator import MixedVariableCrossover
-from pymoo.operators.mixed_variable_operator import MixedVariableMutation
-from pymoo.operators.mixed_variable_operator import MixedVariableSampling
+from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.optimize import minimize
-from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
-from pymoo.util.reference_direction import ReferenceDirectionFactory
+from pymoo.util.ref_dirs import get_reference_directions
 
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
 from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
@@ -73,21 +60,17 @@ from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
+if TYPE_CHECKING:
+    from gemseo.algos.opt_result import OptimizationResult
+    from gemseo.algos.stop_criteria import TerminationCriterion
+    from pymoo.core.operator import Operator
+    from pymoo.core.population import Population
+    from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
+    from pymoo.util.reference_direction import ReferenceDirectionFactory
+
 LOGGER = logging.getLogger(__name__)
 
 EvolutionaryOperatorTypes = Union[Crossover, Mutation, Sampling, Selection]
-EvolutionaryOperatorSimpleOptionsType = Tuple[str, Dict[str, Union[float, bool]]]
-EvolutionaryOperatorOptionsType = Union[
-    str,  # Operator's name.
-    EvolutionaryOperatorSimpleOptionsType,  # Operator's name with options.
-    Dict[
-        str,  # Variable type.
-        Union[str, EvolutionaryOperatorTypes, EvolutionaryOperatorSimpleOptionsType],
-    ],  # Mixed variables.
-]
-EvolutionaryMixedOperatorTypes = Union[
-    MixedVariableCrossover, MixedVariableMutation, MixedVariableSampling, None
-]
 
 
 @dataclass
@@ -150,13 +133,14 @@ class PymooOpt(OptimizationLibrary):
     SELECTION_OPERATOR: Final[str] = "selection"
     """The selection operator's name."""
 
-    EVOLUTIONARY_OPERATORS: Final[list[str]] = [
-        CROSSOVER_OPERATOR,
-        MUTATION_OPERATOR,
-        SAMPLING_OPERATOR,
-        SELECTION_OPERATOR,
-    ]
-    """A list with all evolutionary operators available."""
+    EVOLUTIONARY_OPERATORS: Final[dict[str, Operator]] = {
+        CROSSOVER_OPERATOR: Crossover,
+        MUTATION_OPERATOR: Mutation,
+        SAMPLING_OPERATOR: Sampling,
+        SELECTION_OPERATOR: Selection,
+    }
+    """A dictionary with all evolutionary operators available as keys and their Pymoo
+    classes as values."""
 
     PYMOO_GA: Final[str] = "PYMOO_GA"
     """The GEMSEO alias for the Genetic Algorithm."""
@@ -202,19 +186,6 @@ class PymooOpt(OptimizationLibrary):
     _ds_size: int
     """The design space size."""
 
-    _operators_map: dict[
-        str,
-        tuple[
-            Callable[[str, Any], EvolutionaryOperatorTypes],
-            Callable[
-                [Sequence[str], dict[str, EvolutionaryOperatorTypes]],
-                EvolutionaryMixedOperatorTypes,
-            ],
-            EvolutionaryOperatorTypes | Sampling | Population | ndarray,
-        ],
-    ]
-    """Map the operator's nature to the corresponding pymoo's getters and classes."""
-
     def __init__(self) -> None:
         """Constructor.
 
@@ -238,19 +209,8 @@ class PymooOpt(OptimizationLibrary):
                 internal_algorithm_name=internal_name,
                 description=algo_value[0],
                 website=f"{self.__PYMOO_WEBPAGE}/algorithms/{algo_value[1]}",
-                handle_multiobjective=not (internal_name == "GA"),
+                handle_multiobjective=internal_name != "GA",
             )
-
-        self._operators_map = {
-            self.SAMPLING_OPERATOR: (
-                get_sampling,
-                MixedVariableSampling,
-                (Sampling, Population, ndarray),
-            ),
-            self.MUTATION_OPERATOR: (get_mutation, MixedVariableMutation, Mutation),
-            self.CROSSOVER_OPERATOR: (get_crossover, MixedVariableCrossover, Crossover),
-            self.SELECTION_OPERATOR: (get_selection, None, Selection),
-        }
 
     def _check_mo_handling(
         self,
@@ -295,10 +255,10 @@ class PymooOpt(OptimizationLibrary):
         ineq_tolerance: float = 1e-4,
         ref_dirs: ndarray | None = None,
         pop_size: int = 100,
-        sampling: Sampling | Population | EvolutionaryOperatorOptionsType | None = None,
-        selection: Selection | EvolutionaryOperatorOptionsType | None = None,
-        mutation: Mutation | EvolutionaryOperatorOptionsType | None = None,
-        crossover: Crossover | EvolutionaryOperatorOptionsType | None = None,
+        sampling: Sampling | Population | None = None,
+        selection: Selection | None = None,
+        mutation: Mutation | None = None,
+        crossover: Crossover | None = None,
         eliminate_duplicates: bool = True,
         n_offsprings: int | None = None,
         seed: int = 1,
@@ -371,20 +331,6 @@ class PymooOpt(OptimizationLibrary):
             The pymoo library allows the user to define custom operators
             to manage the processes of sampling, crossover, mutation and selection.
 
-            In GEMSEO, these operators can be provided in two ways:
-
-                1. Operator's name along with associated options:
-                    In such case the associated ``getter``
-                    (e.g. :meth:`pymoo.factory.get_sampling`) will be used to
-                    instantiate the operator.
-                2. Custom operator:
-                    This is done by providing a dictionary with the key ``custom``
-                    and the custom operator instance as its value.
-
-            For the special case of mixed variables (discrete and continous),
-            a dictionnary containing each variable type as keys and
-            their associated operators as values is expected.
-
             In case no info regarding these operators is provided, pymoo's
             default will be used. Nevertheless, be aware that they may not be
             suitable for problems containing integer design variables.
@@ -397,6 +343,10 @@ class PymooOpt(OptimizationLibrary):
             all the design variables are discrete (integers).
             The following operators could be provided among the options:
 
+            >>> from pymoo.operators.crossover.sbx import SBX
+            >>> from pymoo.operators.sampling.rnd import IntegerRandomSampling
+            >>> from pymoo.operators.selection.rnd import RandomSelection
+            >>> from pymoo.operators.repair.rounding import RoundingRepair
             >>> class MyIntegerMutationOperator(Mutation):
             ...
             ...     def _do(self, problem, x, **kwargs_):
@@ -404,40 +354,13 @@ class PymooOpt(OptimizationLibrary):
             ...
             ...
             >>> operators = dict(
-            ...     selection='random',
-            ...     sampling='int_random',
-            ...     crossover=('int_sbx', dict(prob=0.9, eta=30)),
-            ...     mutation=dict(custom=MyIntegerMutationOperator())
+            ...     selection=RandomSelection(),
+            ...     sampling=IntegerRandomSampling(),
+            ...     crossover=SBX(prob=0.9, eta=30, repair=RoundingRepair()),
+            ...     mutation=MyIntegerMutationOperator(),
             ... )
-
-            Now, if we consider an optimization problem with
-            mixed design variables (discrete and continuous).
-            The following operators could be provided among the options:
-
-            >>> class MyFloatMutationOperator(Mutation):
-            ...
-            ...     def _do(self, problem, x, **kwargs_):
-            ...         # my float mutation strategy
-            ...
-            ...
-            >>> operators = dict(
-            ...     selection='random',
-            ...     sampling=dict(integer='int_random', float='real_random'),
-            ...     crossover=dict(
-            ...         integer=('int_sbx', dict(prob=0.9, eta=30)),
-            ...         float=('real_sbx', dict(prob=0.9, eta=30))
-            ...     ),
-            ...     mutation=dict(
-            ...         integer=dict(custom=MyIntegerMutationOperator()),
-            ...         float=dict(custom=MyFloatMutationOperator())
-            ...     )
-            ... )
-
-            Note that in this case, we must provide an operator for each variable type.
-            Moreover, the selection operator is not concerned in the case of
-            mixed variables.
         """
-        popts = self._process_options(
+        return self._process_options(
             max_iter=max_iter,
             max_gen=max_gen,
             ftol_rel=ftol_rel,
@@ -470,136 +393,45 @@ class PymooOpt(OptimizationLibrary):
             scaling_2=scaling_2,
             **options,
         )
-        return popts
 
     @staticmethod
     def _check_operator_suitable(
-        type_vars: str, lower_bounds: ndarray, upper_bounds: ndarray, operator_name: str
+        lower_bounds: ndarray,
+        upper_bounds: ndarray,
+        operator_instance: EvolutionaryOperatorTypes,
+        operator_class: Operator,
     ) -> None:
         """Check operator suitability according to design variables type and bounds.
 
         Args:
-            type_vars: The design variables' type (``integer`` of ``float``).
             lower_bounds: The design variables' lower bounds.
             upper_bounds: The design variables' upper bounds.
-            operator_name: The pymoo operator's name.
+            operator_instance: The pymoo operator instance.
+            operator_class: The specific class of operator that the
+                ``operator_instance`` that is being checked should be an instance of.
 
         Raises:
-            ValueError: If ``operator_name`` refers to the mutation operator
+            TypeError: If the ``operator_instance`` is not an instance of the required
+                ``operator_class``.
+            ValueError: If ``operator_instance`` refers to the mutation operator
                 :class:`~pymoo.operators.mutation.pm.PolynomialMutation` and at least
                 one design variable has equal lower and upper bounds.
         """
-        suitability_tags = {
-            "integer": ["int", "bin", "none"],
-            "float": ["real", "perm"],
-        }
-        if all(tag not in operator_name for tag in suitability_tags[type_vars]):
-            msg = "The %s operator may not be suitable for %s variables"
-            LOGGER.warning(msg, operator_name, type_vars)
+        if not isinstance(operator_instance, operator_class):
+            raise TypeError(
+                f"{operator_instance.__class__.__name__} must be an instance of "
+                f"{operator_class.__class__.__name__} or inherit from it."
+            )
 
         # Anticipate 'division by zero' errors when using PolynomialMutation,
         # which occurs when we have equal lower and upper bounds.
-        if "pm" in operator_name and any(upper_bounds == lower_bounds):
+        if isinstance(operator_instance, PolynomialMutation) and any(
+            upper_bounds == lower_bounds
+        ):
             raise ValueError(
-                "PolynomialMutation cannot handle equal lower and upper bounds!\n"
+                "PolynomialMutation cannot handle equal lower and upper bounds.\n"
                 "Consider setting those design variables as constants of your problem."
             )
-
-    @staticmethod
-    def _parse_cls_options(
-        pymoo_cls_options: EvolutionaryOperatorOptionsType,
-    ) -> tuple[str, Sequence[float], dict[str, float | bool]]:
-        """Parse the evolutionary operator's options.
-
-        Args:
-            pymoo_cls_options: The options to be parsed.
-
-        Returns:
-            The arguments ready to be passed to the corresponding operator's ``getter``
-                from :mod:`pymoo.factory`.
-        """
-        if isinstance(pymoo_cls_options, str):
-            return pymoo_cls_options, [], {}
-
-        pymoo_cls_options = list(pymoo_cls_options)
-        name = pymoo_cls_options.pop(0)
-        args = []
-        kwargs = {}
-        while pymoo_cls_options:
-            if isinstance(pymoo_cls_options[0], dict):
-                kwargs.update(pymoo_cls_options.pop(0))
-            else:
-                args.extend(pymoo_cls_options.pop(0))
-
-        return name, args, kwargs
-
-    def _get_operator(
-        self,
-        types: ndarray | Sequence[str],
-        lower_bounds: ndarray,
-        upper_bounds: ndarray,
-        nature: str,
-        operator_options: EvolutionaryOperatorOptionsType,
-    ) -> EvolutionaryOperatorTypes:
-        """Instantiate an evolutionary operator based on the design variables type.
-
-        Args:
-            types: The design variables type.
-            lower_bounds: The design variables lower bounds.
-            upper_bounds: The design variables upper bounds.
-            nature: The operator's nature
-                ("sampling", "crossover", "mutation", "selection").
-            operator_options: The operator's custom options.
-
-        Returns:
-            Instance of a pymoo's evolutionary operator.
-
-        Raises:
-            TypeError: If a custom operator is provided,
-                but it is not appropriate considered its nature.
-        """
-        get_operator, mixed_operator_class, operator_class = self._operators_map[nature]
-
-        # A custom operator instance is provided.
-        if "custom" in operator_options:
-            custom_instance = operator_options["custom"]
-            if not isinstance(custom_instance, operator_class):
-                raise TypeError(
-                    f"{custom_instance} must be an instance of {operator_class} "
-                    "or inherit from it!"
-                )
-            return custom_instance
-
-        # Use the pymoo factory getter to instantiate
-        # an operator with the options provided.
-        if len(set(types)) == 1 or nature == self.SELECTION_OPERATOR:
-            cls_options = self._parse_cls_options(operator_options)
-            self._check_operator_suitable(
-                types[0], lower_bounds, upper_bounds, cls_options[0]
-            )
-            return get_operator(cls_options[0], *cls_options[1], **cls_options[2])
-
-        f_idx = (types == "float").nonzero()[0]
-        i_idx = (types == "int").nonzero()[0]
-        return mixed_operator_class(
-            types,
-            dict(
-                float=self._get_operator(
-                    ["float"],
-                    lower_bounds[f_idx],
-                    upper_bounds[f_idx],
-                    nature,
-                    operator_options.get("float"),
-                ),
-                integer=self._get_operator(
-                    ["integer"],
-                    lower_bounds[i_idx],
-                    upper_bounds[i_idx],
-                    nature,
-                    operator_options.get("int", operator_options.get("integer")),
-                ),
-            ),
-        )
 
     def _get_ref_dirs(
         self,
@@ -719,24 +551,27 @@ class PymooOpt(OptimizationLibrary):
         else:
             self._ds_size = inf
 
-        # Instantiate evolutionary operators.
         evol_operators = {}
-        for operator in self.EVOLUTIONARY_OPERATORS:
-            opts = options.pop(operator)
-            if opts is not None:
-                evol_operators[operator] = self._get_operator(
-                    pymoo_problem.data["type_var"],
+        for operator_name, operator_class in self.EVOLUTIONARY_OPERATORS.items():
+            operator_instance = options.pop(operator_name)
+            if operator_instance is not None:
+                self._check_operator_suitable(
                     pymoo_problem.xl,
                     pymoo_problem.xu,
-                    operator,
-                    opts,
+                    operator_instance,
+                    operator_class,
                 )
-            elif operator != self.SELECTION_OPERATOR and "integer" in type_var_unique:
+
+                evol_operators[operator_name] = operator_instance
+            elif (
+                operator_name != self.SELECTION_OPERATOR
+                and "integer" in type_var_unique
+            ):
                 msg = (
                     "Pymoo's default %s operator may not be suitable "
-                    "for integer variables!"
+                    "for integer variables."
                 )
-                LOGGER.warning(msg, operator)
+                LOGGER.warning(msg, operator_name)
 
         # Common GeneticAlgorithm parameters.
         common_options = {

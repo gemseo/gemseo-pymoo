@@ -19,32 +19,37 @@
 #                           documentation
 #        :author: Gabriel Max DE MENDONÇA ABRANTES
 """Tests for the multi-objective optimization result."""
+
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import pytest
 from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.problems.analytical.power_2 import Power2
-from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import import_hdf
-from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
-from gemseo_pymoo.algos.opt_result_mo import Pareto
-from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
-from gemseo_pymoo.problems.analytical.viennet import Viennet
 from numpy import array
 from numpy.testing import assert_array_equal
 from pandas import DataFrame
 from pandas import MultiIndex
 
+from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import import_hdf
+from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
+from gemseo_pymoo.algos.opt_result_mo import Pareto
+from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
+from gemseo_pymoo.problems.analytical.viennet import Viennet
 
-@pytest.fixture
+if TYPE_CHECKING:
+    from gemseo.algos.opt_problem import OptimizationProblem
+
+
+@pytest.fixture()
 def result() -> MultiObjectiveOptimizationResult:
     """The optimization result of the Viennet optimization problem."""
     problem = Viennet()
-    res = OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
-    return res
+    return OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_1obj() -> OptimizationProblem:
     """An optimization problem with 1 objective ready to be post-processed."""
     power2 = Power2()
@@ -53,7 +58,7 @@ def problem_1obj() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture
+@pytest.fixture()
 def problem_2obj() -> OptimizationProblem:
     """An optimization problem with 2 objectives ready to be post-processed."""
     problem = ChankongHaimes()
@@ -91,7 +96,8 @@ def test_pareto(problem_1obj, problem_2obj):
     if len(pareto.front) == 1:
         assert (obj0 in pareto.front) or (obj1 in pareto.front)
     else:
-        assert (obj0 in pareto.front) and (obj1 in pareto.front)
+        assert obj0 in pareto.front
+        assert obj1 in pareto.front
 
     # Check if the anchor points are in database.
     for anchor_point, anchor_obj in zip(pareto.anchor_set, pareto.anchor_front):
@@ -142,7 +148,7 @@ def test_pretty_table(result):
             :class:`gemseo_pymoo.algos.opt_result_mo.MultiObjectiveOptimizationResult`.
     """
     # Create DataFrame with multiple index and column levels.
-    dframe = DataFrame(dict(a=[1, 2, 3, 4], b=[5, 6, 7, 8]))
+    dframe = DataFrame({"a": [1, 2, 3, 4], "b": [5, 6, 7, 8]})
     indexes = [("i", "1"), ("i", "2"), ("j", "1"), ("j", "2")]
     dframe.index = MultiIndex.from_tuples(indexes)
     columns = [("c", "a"), ("c", "b")]
