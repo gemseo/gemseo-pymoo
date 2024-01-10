@@ -26,11 +26,12 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# Develop
+# Version 2.0.0 (January 2024)
 
 ## Added
 
-- Support for Python 3.10.
+- Support for Python 3.10 and 3.11.
+- Support for pymoo 0.6.1.
 
 ## Changed
 
@@ -57,6 +58,7 @@ and this project adheres to
 ## Removed
 
 - Support for Python 3.8.
+- Support for pymoo <0.6.1.
 - The ``SCALARIZATION_FUNCTIONS`` class variable was removed from
   ``MultiObjectiveDiagram``.
 - The ``EvolutionaryOperatorSimpleOptionsType`` was removed.
