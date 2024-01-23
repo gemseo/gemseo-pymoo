@@ -238,8 +238,8 @@ class Pareto:
         obj_history = zeros((n_iter, gemseo_problem.objective.dim))
         feasibility = zeros(n_iter)
 
-        iteration = 0
-        for x_vect, out_val in gemseo_problem.database.items():
+        for iteration, item in enumerate(gemseo_problem.database.items()):
+            x_vect, out_val = item
             dv_history[iteration] = x_vect.unwrap()
             if gemseo_problem.objective.name in out_val:
                 obj_history[iteration] = array(out_val[gemseo_problem.objective.name])
@@ -249,7 +249,6 @@ class Pareto:
             else:
                 obj_history[iteration] = float("nan")
                 feasibility[iteration] = False
-            iteration += 1
 
         pareto_opt_pts = compute_pareto_optimal_points(obj_history, feasibility)
         pareto_front = obj_history[pareto_opt_pts]
