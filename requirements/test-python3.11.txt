@@ -24,7 +24,7 @@ contourpy==1.2.0
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (pyproject.toml)
-coverage[toml]==7.4.0
+coverage[toml]==7.4.1
     # via
     #   covdefaults
     #   pytest-cov
@@ -48,7 +48,7 @@ fonttools==4.47.2
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.1.dev71+g88d625aa
+gemseo[all]==5.2.1.dev75+g3fa9b767
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
