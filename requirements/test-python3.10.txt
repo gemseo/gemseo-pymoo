@@ -32,7 +32,7 @@ cycler==0.12.1
     # via matplotlib
 deprecated==1.2.14
     # via pymoo
-dill==0.3.7
+dill==0.3.8
     # via
     #   openturns
     #   pymoo
@@ -50,7 +50,7 @@ fonttools==4.47.2
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.1.dev75+g3fa9b767
+gemseo[all]==5.2.1.dev77+g004a1d02
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
