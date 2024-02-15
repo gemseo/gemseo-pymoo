@@ -50,7 +50,7 @@ fonttools==4.48.1
     # via matplotlib
 future==0.18.3
     # via autograd
-gemseo[all]==5.2.1.dev121+ga9890e78
+gemseo[all]==5.2.1.dev123+g3759325f
     # via
     #   gemseo
     #   gemseo-pymoo (pyproject.toml)
@@ -172,7 +172,7 @@ sympy==1.12
     # via gemseo
 tenacity==8.2.3
     # via plotly
-threadpoolctl==3.2.0
+threadpoolctl==3.3.0
     # via scikit-learn
 tomli==2.0.1
     # via
