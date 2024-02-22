@@ -46,9 +46,9 @@ fastjsonschema==2.19.1
     # via gemseo
 fonttools==4.49.0
     # via matplotlib
-future==0.18.3
+future==1.0.0
     # via autograd
-gemseo[all]==5.2.1.dev151+g6e3d2ddd
+gemseo[all]==5.2.1.dev155+g1904ef68
     # via gemseo-pymoo (pyproject.toml)
 genson==1.2.2
     # via gemseo
