@@ -36,7 +36,7 @@ jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
-keyring==24.3.0
+keyring==24.3.1
     # via twine
 markdown-it-py==3.0.0
     # via rich
@@ -54,7 +54,7 @@ pkginfo==1.9.6
     # via twine
 pycparser==2.21
     # via cffi
-pydantic==2.6.2
+pydantic==2.6.3
     # via check-wheel-contents
 pydantic-core==2.16.3
     # via pydantic
