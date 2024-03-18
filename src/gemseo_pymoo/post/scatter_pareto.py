@@ -144,17 +144,19 @@ class ScatterPareto(OptPostProcessor):
 
         # Check post-processing suitability.
         if not 2 <= n_obj <= 3:
-            raise ValueError(
+            msg = (
                 "This post-processing is only suitable for optimization "
                 "problems with 2 or 3 objective functions!"
             )
+            raise ValueError(msg)
 
         # Check labels.
         if not isinstance(point_labels, str) and len(point_labels) != len(points):
-            raise ValueError(
+            msg = (
                 "You must provide either a single label for all points "
                 "or one label for each one!"
             )
+            raise ValueError(msg)
 
         # Create Pareto object.
         pareto = Pareto(self.opt_problem)

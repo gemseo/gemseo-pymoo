@@ -233,10 +233,11 @@ class PymooOpt(OptimizationLibrary):
             opt_problem.objective.dim > 1
             and not self.descriptions[algo_name].handle_multiobjective
         ):
-            raise ValueError(
+            msg = (
                 f"Requested optimization algorithm {self.algo_name} can not handle "
                 "multiple objectives."
             )
+            raise ValueError(msg)
 
     def _get_options(
         self,
@@ -418,20 +419,22 @@ class PymooOpt(OptimizationLibrary):
                 one design variable has equal lower and upper bounds.
         """
         if not isinstance(operator_instance, operator_class):
-            raise TypeError(
+            msg = (
                 f"{operator_instance.__class__.__name__} must be an instance of "
                 f"{operator_class.__class__.__name__} or inherit from it."
             )
+            raise TypeError(msg)
 
         # Anticipate 'division by zero' errors when using PolynomialMutation,
         # which occurs when we have equal lower and upper bounds.
         if isinstance(operator_instance, PolynomialMutation) and any(
             upper_bounds == lower_bounds
         ):
-            raise ValueError(
+            msg = (
                 "PolynomialMutation cannot handle equal lower and upper bounds.\n"
                 "Consider setting those design variables as constants of your problem."
             )
+            raise ValueError(msg)
 
     def _get_ref_dirs(
         self,
@@ -483,10 +486,11 @@ class PymooOpt(OptimizationLibrary):
         if ref_dirs_name == "layer-energy":
             partitions = ref_dirs_options.pop("partitions")
             if n_obj == 1 and np_size(partitions) > 1:
-                raise ValueError(
+                msg = (
                     "For a single-objective problem, "
                     "the partitions array must be of size 1!"
                 )
+                raise ValueError(msg)
             return get_reference_directions(ref_dirs_name, n_obj, partitions)
 
         # By default, return Riesz s-Energy (in case of an unknown name is provided).
@@ -618,7 +622,8 @@ class PymooOpt(OptimizationLibrary):
             )
         else:  # pragma: no cover
             # GEMSEO will check in advance if the algorithm is supported.
-            raise ValueError(f"Algorithm not supported : {self.internal_algo_name}")
+            msg = f"Algorithm not supported : {self.internal_algo_name}"
+            raise ValueError(msg)
 
         res = minimize(
             pymoo_problem,

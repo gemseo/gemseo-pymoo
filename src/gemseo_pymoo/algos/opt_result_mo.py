@@ -193,10 +193,11 @@ class Pareto:
             reference = zeros(pareto_front.shape[1])
 
         if reference.shape != (pareto_front.shape[1],):
-            raise ValueError(
+            msg = (
                 f"Reference point {reference} does not have the "
                 "same amount of objectives as the pareto front"
             )
+            raise ValueError(msg)
 
         pareto_norm = np_norm(pareto_front - reference, axis=1, ord=order)
         min_pareto_norm = np_min(pareto_norm)
@@ -227,7 +228,8 @@ class Pareto:
             RuntimeError: If the optimization problem is single-objective.
         """
         if gemseo_problem.objective.dim == 1:
-            raise RuntimeError("Single-objective problems have no Pareto Front.")
+            msg = "Single-objective problems have no Pareto Front."
+            raise RuntimeError(msg)
 
         n_iter = len(gemseo_problem.database)
         constraints = (
