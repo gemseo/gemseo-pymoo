@@ -121,7 +121,8 @@ def get_gemseo_opt_problem(
         pymoo_pb = get_problem(pymoo_pb, **pymoo_pb_options)
 
     if not isinstance(pymoo_pb, Problem):
-        raise TypeError(f"Problem must be an instance of {Problem}!")
+        msg = f"Problem must be an instance of {Problem}!"
+        raise TypeError(msg)
 
     design_space = DesignSpace()
     design_space.add_variable(

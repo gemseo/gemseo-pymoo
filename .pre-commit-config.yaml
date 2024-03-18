@@ -16,6 +16,7 @@ repos:
         --autofix,
         --no-sort-keys,
       ]
+      exclude: \.ipynb
     - id: check-toml
     - id: destroyed-symlinks
     - id: check-symlinks
@@ -37,7 +38,7 @@ repos:
       ]
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.3.2
+  rev: v0.3.3
   hooks:
     - id: ruff
       args: [
@@ -47,7 +48,7 @@ repos:
       ]
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.3.2
+  rev: v0.3.3
   hooks:
     - id: ruff-format
 

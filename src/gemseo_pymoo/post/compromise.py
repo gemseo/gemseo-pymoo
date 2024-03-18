@@ -86,10 +86,11 @@ class Compromise(ScatterPareto):
         if decomposition is None:
             decomposition = WeightedSum()
         elif not isinstance(decomposition, Decomposition):
-            raise TypeError(
+            msg = (
                 "The scalarization function must be an instance of "
                 "pymoo.core.Decomposition."
             )
+            raise TypeError(msg)
 
         # Objectives.
         n_obj = self.opt_problem.objective.dim
@@ -103,9 +104,8 @@ class Compromise(ScatterPareto):
 
         # Check weight's dimension.
         if weights.shape[1] != n_obj:
-            raise ValueError(
-                "You must provide exactly one weight for each objective function!"
-            )
+            msg = "You must provide exactly one weight for each objective function!"
+            raise ValueError(msg)
 
         # Create Pareto object.
         pareto = Pareto(self.opt_problem)

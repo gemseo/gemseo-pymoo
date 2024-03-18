@@ -83,10 +83,11 @@ class MultiObjectiveDiagram(OptPostProcessor):
                 less than 3 objectives.
         """
         if not isinstance(decomposition, Decomposition):
-            raise TypeError(
+            msg = (
                 "The scalarization function must be an instance of "
                 "pymoo.core.Decomposition."
             )
+            raise TypeError(msg)
 
         # Ensure correct dimension and type.
         weights = atleast_2d(weights).astype(float)
@@ -97,16 +98,16 @@ class MultiObjectiveDiagram(OptPostProcessor):
 
         # Check weight's dimension.
         if weights.shape[1] != n_obj:
-            raise ValueError(
-                "You must provide exactly one weight for each objective function!"
-            )
+            msg = "You must provide exactly one weight for each objective function!"
+            raise ValueError(msg)
 
         # Check post-processing suitability.
         if visualization == Radar and n_obj < 3:
-            raise ValueError(
+            msg = (
                 "The Radar post-processing is only suitable for optimization "
                 "problems with at least 3 objective functions!"
             )
+            raise ValueError(msg)
 
         # Create Pareto object.
         pareto = Pareto(self.opt_problem)
