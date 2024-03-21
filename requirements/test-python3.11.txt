@@ -41,7 +41,7 @@ fonttools==4.50.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@c95893f7e9a71698b96418ba31220d8a840bf368
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@2d7e6a7bf8d90a6c2914b4a6eb90258cab798b0e
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
@@ -150,7 +150,7 @@ sympy==1.12
     # via gemseo
 tenacity==8.2.3
     # via plotly
-threadpoolctl==3.3.0
+threadpoolctl==3.4.0
     # via scikit-learn
 tqdm==4.66.2
     # via gemseo
