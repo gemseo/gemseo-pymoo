@@ -26,6 +26,26 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [Unreleased]
+
+# Changed
+
+- The ``MultiObjectiveOptimizationResult`` class was moved to ``gemseo.algos.opt_result_multiobj``.
+- The ``MultiObjectiveOptimizationResult.pareto`` was renamed to ``MultiObjectiveOptimizationResult.pareto_front``.
+- The ``Pareto`` class was moved to ``gemseo.algos.pareto`` and renamed ``ParetoFront``.
+- ``ParetoFront`` is now a dataclass.
+- ``ParetoFront.problem`` is now a protected field.
+- ``ParetoFront.front`` was renamed to ``ParetoFront.f_optima``.
+- ``ParetoFront.set`` was renamed to ``ParetoFront.x_optima``.
+- ``ParetoFront.utopia`` was renamed to ``ParetoFront.f_utopia``.
+- ``ParetoFront.anti_utopia`` was renamed to ``ParetoFront.f_anti_utopia``.
+- ``ParetoFront.anchor_front`` was renamed to ``ParetoFront.f_anchors``.
+- ``ParetoFront.anchor_set`` was renamed to ``ParetoFront.x_anchors``.
+- ``ParetoFront.min_norm_f`` was renamed to ``ParetoFront.f_utopia_neighbors``.
+- ``ParetoFront.min_norm_x`` was renamed to ``ParetoFront.x_utopia_neighbors``.
+- ``ParetoFront.min_norm`` was renamed to ``ParetoFront.distance_from_utopia``.
+- ``ParetoFront.df_interest`` was renamed and is now a protected field ``ParetoFront._anchors_neighbors``.
+
 # Version 2.0.0 (January 2024)
 
 ## Added

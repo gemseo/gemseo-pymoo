@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 import matplotlib.pyplot as plt
+from gemseo.algos.pareto import ParetoFront
 from gemseo.post.opt_post_processor import OptPostProcessor
 from gemseo.third_party.prettytable import PrettyTable
 from matplotlib.gridspec import GridSpec
@@ -37,8 +38,6 @@ from numpy import ndarray
 from numpy import vstack
 from pymoo.core.decomposition import Decomposition
 from pymoo.visualization.radar import Radar
-
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 
 if TYPE_CHECKING:
     from pymoo.core.plot import Plot
@@ -110,23 +109,23 @@ class MultiObjectiveDiagram(OptPostProcessor):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = Pareto(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
 
         # Prepare points to plot.
         points, title = [], []
         for weight in weights:
             # Apply decomposition.
             d_res = decomposition.do(
-                pareto.front,
+                pareto.f_optima,
                 weight,
-                utopian_point=pareto.utopia,
-                nadir_point=pareto.anti_utopia,
+                utopian_point=pareto.f_utopia,
+                nadir_point=pareto.f_anti_utopia,
                 **scalar_options,
             )
             d_min = d_res.min()
             d_idx = d_res.argmin()
 
-            points.append(pareto.front[d_idx])
+            points.append(pareto.f_optima[d_idx])
 
             float_format = ".2e" if abs(d_min) >= 1e3 else ".2f"
             title.append(f"s({weight}) = {d_min:{float_format}}")
@@ -149,7 +148,7 @@ class MultiObjectiveDiagram(OptPostProcessor):
 
         # Create plot.
         plot = visualization(
-            bounds=[pareto.utopia, pareto.anti_utopia],
+            bounds=[pareto.f_utopia, pareto.f_anti_utopia],
             figsize=self.DEFAULT_FIG_SIZE,
             title=title,
             tight_layout=False,
@@ -191,8 +190,8 @@ class MultiObjectiveDiagram(OptPostProcessor):
         p_table = PrettyTable()
         p_table.title = "Bounds"
         p_table.add_column(obj_name, range(1, n_obj + 1), align="r")
-        p_table.add_column("utopia", pareto.utopia.round(decimals=2), align="r")
-        p_table.add_column("nadir", pareto.anti_utopia.round(decimals=2), align="r")
+        p_table.add_column("utopia", pareto.f_utopia.round(decimals=2), align="r")
+        p_table.add_column("nadir", pareto.f_anti_utopia.round(decimals=2), align="r")
 
         # Plot text in a dedicated subplot.
         ax_text = plot.fig.add_subplot(gs0[0])

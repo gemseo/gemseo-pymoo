@@ -26,9 +26,9 @@ import logging
 from typing import Any
 from typing import ClassVar
 
+from gemseo.algos.pareto import ParetoFront
 from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
 
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 
 LOGGER = logging.getLogger(__name__)
@@ -73,20 +73,20 @@ class HighTradeOff(ScatterPareto):
                 :class:`pymoo.mcdm.high_tradeoff.HighTradeoffPoints`.
         """
         # Create Pareto object.
-        pareto = Pareto(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
 
         # Initialize decomposition function.
         decision_making = HighTradeoffPoints(
-            ideal=pareto.utopia,
-            nadir=pareto.anti_utopia,
+            ideal=pareto.f_utopia,
+            nadir=pareto.f_anti_utopia,
             **high_tradeoff_options,
         )
 
         # Indexes of the High Trade-Off points.
-        indexes_dm = decision_making.do(pareto.front)
+        indexes_dm = decision_making.do(pareto.f_optima)
 
         super()._plot(
-            pareto.front[indexes_dm],
+            pareto.f_optima[indexes_dm],
             "High Trade-Offs",
             plot_extra,
             plot_legend,

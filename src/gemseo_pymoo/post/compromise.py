@@ -25,13 +25,13 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from gemseo.algos.pareto import ParetoFront
 from numpy import atleast_2d
 from numpy import ndarray
 from numpy import vstack
 from pymoo.core.decomposition import Decomposition
 from pymoo.decomposition.weighted_sum import WeightedSum
 
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
 
 LOGGER = logging.getLogger(__name__)
@@ -108,7 +108,7 @@ class Compromise(ScatterPareto):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = Pareto(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
 
         # Prepare points to plot.
         points = []  # Points' coordinates.
@@ -116,10 +116,10 @@ class Compromise(ScatterPareto):
         for weight in weights:
             # Apply decomposition.
             d_res = decomposition.do(
-                pareto.front,
+                pareto.f_optima,
                 weight,
-                utopian_point=pareto.utopia,
-                nadir_point=pareto.anti_utopia,
+                utopian_point=pareto.f_utopia,
+                nadir_point=pareto.f_anti_utopia,
                 **scalar_options,
             )
 
@@ -130,7 +130,7 @@ class Compromise(ScatterPareto):
             d_idx = d_res.argmin()
 
             # Point's coordinates.
-            points.append(pareto.front[d_idx])
+            points.append(pareto.f_optima[d_idx])
 
             # Point's label.
             float_format = ".2e" if abs(d_min) > 1e3 else ".2f"
