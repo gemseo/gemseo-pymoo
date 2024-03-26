@@ -30,6 +30,7 @@ from typing import ClassVar
 from typing import Union
 
 import matplotlib.pyplot as plt
+from gemseo.algos.pareto import ParetoFront
 from gemseo.post.opt_post_processor import OptPostProcessor
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
@@ -40,7 +41,6 @@ from numpy import vstack
 from numpy.linalg import norm as np_norm
 from pymoo.visualization.scatter import Scatter as PymooScatter
 
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
 
@@ -159,7 +159,7 @@ class ScatterPareto(OptPostProcessor):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = Pareto(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
 
         # Default plot options.
         plot_options = {
@@ -181,17 +181,17 @@ class ScatterPareto(OptPostProcessor):
         plt.rc("font", family="monospace", size=self.font_size)
 
         # Plot pareto front.
-        plot.add(pareto.front, label="pareto front", **self.prop_front)
+        plot.add(pareto.f_optima, label="pareto front", **self.prop_front)
 
         # Plot extra pareto related points.
         if plot_extra:
-            plot.add(pareto.anchor_front, label="anchor points", **self.prop_extra)
+            plot.add(pareto.f_anchors, label="anchor points", **self.prop_extra)
 
-            utopia_label = f"utopia = {pareto.utopia.round(decimals=2)}"
-            plot.add(pareto.utopia, label=utopia_label, **self.prop_extra)
+            utopia_label = f"utopia = {pareto.f_utopia.round(decimals=2)}"
+            plot.add(pareto.f_utopia, label=utopia_label, **self.prop_extra)
 
-            nadir_label = f" nadir = {pareto.anti_utopia.round(decimals=2)}"
-            plot.add(pareto.anti_utopia, label=nadir_label, **self.prop_extra)
+            nadir_label = f" nadir = {pareto.f_anti_utopia.round(decimals=2)}"
+            plot.add(pareto.f_anti_utopia, label=nadir_label, **self.prop_extra)
 
         # Plot points of interest.
         if len(points) > 0:
@@ -206,20 +206,20 @@ class ScatterPareto(OptPostProcessor):
         if plot_arrow:
             for point in points:
                 # Arrow vector.
-                vect = point - pareto.utopia
+                vect = point - pareto.f_utopia
                 norm = np_norm(vect)
 
                 if n_obj == 2:
-                    arr = FancyArrowPatch(pareto.utopia, point, **self.prop_arrow)
+                    arr = FancyArrowPatch(pareto.f_utopia, point, **self.prop_arrow)
                     rot = 90 if vect[0] == 0 else degrees(arctan(vect[1] / vect[0]))
                     annot = Annotation(
                         f"{norm:.2f}",
-                        (0.5 * (pareto.utopia + point)),
+                        (0.5 * (pareto.f_utopia + point)),
                         rotation=rot,
                         **self.prop_annotation,
                     )
                 else:
-                    vect = vstack([pareto.utopia, point])
+                    vect = vstack([pareto.f_utopia, point])
                     arr = Arrow3D(vect, **self.prop_arrow)
                     annot = Annotation3D(f"{norm:.2f}", vect, **self.prop_annotation)
 

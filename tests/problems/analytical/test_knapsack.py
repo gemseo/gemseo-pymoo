@@ -200,5 +200,5 @@ def test_mo_maximize(mo_knapsack):
     anchor_x = zeros(10)
     anchor_x[4] = 1
     anchor_f = array([4, -1])
-    assert anchor_x in res.pareto.set
-    assert anchor_f in res.pareto.front
+    assert anchor_x in res.pareto_front.x_optima
+    assert anchor_f in res.pareto_front.f_optima

@@ -423,22 +423,35 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_options, algo_name):
     ],
 )
 @pytest.mark.parametrize(
-    ("problem_class", "min_norm_x", "min_norm_threshold", "atol"),
+    (
+        "problem_class",
+        "x_utopia_neighbors",
+        "distance_from_utopia_threshold",
+        "atol",
+    ),
     [
         (ChankongHaimes, array([[-2.6, 10.6]]), 146.5, 5e-1),
         (Viennet, array([[-0.46, 0.32]]), 0.7, 1e-1),
         # (BinhKorn, array([[1.34, 1.33]]), 28, 1e-1),
     ],
 )
-def test_mo(opt_factory, options, problem_class, min_norm_x, min_norm_threshold, atol):
+def test_mo(
+    opt_factory,
+    options,
+    problem_class,
+    x_utopia_neighbors,
+    distance_from_utopia_threshold,
+    atol,
+):
     """Test the optimization of multi-objectives problems.
 
     Args:
         opt_factory: Fixture returning an optimizer factory.
         options: The options for the optimization execution.
         problem_class: The optimization problem class.
-        min_norm_x: The design variables of the pareto points with the minimum norm.
-        min_norm_threshold: The threshold to compare the pareto point with
+        x_utopia_neighbors: The design variables of the pareto points with the minimum
+            norm.
+        distance_from_utopia_threshold: The threshold to compare the pareto point with
             the minimum norm.
         atol: The absolute threshold tolerance to compare the points.
     """
@@ -453,10 +466,10 @@ def test_mo(opt_factory, options, problem_class, min_norm_x, min_norm_threshold,
     options = dict(max_iter=700, **tolerances, **options)
     res = opt_factory.execute(problem, **options)
 
-    assert_allclose(res.pareto.min_norm_x, min_norm_x, atol=atol)
+    assert_allclose(res.pareto_front.x_utopia_neighbors, x_utopia_neighbors, atol=atol)
 
     # Verify minimum norm value instead of the compromise function values.
-    assert res.pareto.min_norm < min_norm_threshold
+    assert res.pareto_front.distance_from_utopia < distance_from_utopia_threshold
 
 
 def test_mo_integer(opt_factory, mo_knapsack):
@@ -489,14 +502,14 @@ def test_mo_integer(opt_factory, mo_knapsack):
     # Known solution (one of the anchor points).
     anchor_x = array([0, 1, 1, 1, 0, 0, 0, 1, 1, 1])
     anchor_f = array([-295.0, 6])
-    assert anchor_x in res.pareto.set
-    assert anchor_f in res.pareto.front
+    assert anchor_x in res.pareto_front.x_optima
+    assert anchor_f in res.pareto_front.f_optima
 
     # Best compromise.
     comp_x = array([0, 1, 0, 0, 0, 1, 0, 1, 1, 1])
     comp_f = array([-293.0, 5])
-    assert comp_x in res.pareto.set
-    assert comp_f in res.pareto.front
+    assert comp_x in res.pareto_front.x_optima
+    assert comp_f in res.pareto_front.f_optima
 
 
 @pytest.mark.parametrize("normalize", [True, False])
@@ -591,29 +604,6 @@ def test_execution_exceptions(opt_factory, problem, options, expectation):
     """
     with expectation:
         opt_factory.execute(problem, **options)
-
-
-def test_empty_database(opt_factory):
-    """Test an empty multi-objective optimization result.
-
-    Args:
-        opt_factory: Fixture returning an optimizer factory.
-    """
-    opt = opt_factory.create("PYMOO_NSGA2")
-
-    # Assign an optimization problem.
-    opt.problem = Viennet()
-
-    res = opt.get_optimum_from_database()
-    s_res = str(res)
-    r_res = str(repr(res))
-
-    assert "The result is unfeasible." in s_res
-    assert "Number of calls to the objective function by the optimizer: 0" in s_res
-    assert "Pareto available: False" in r_res
-
-    # Check if dictionary does not contain any pareto related attribute.
-    assert "pareto" not in str(res.to_dict().keys())
 
 
 def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):

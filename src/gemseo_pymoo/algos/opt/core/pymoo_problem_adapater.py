@@ -28,7 +28,6 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import Union
 
-import h5py
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.opt_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
@@ -52,8 +51,6 @@ from pymoo.core.problem import Problem
 from pymoo.indicators.hv import Hypervolume
 from pymoo.problems import get_problem
 
-from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
@@ -62,38 +59,6 @@ if TYPE_CHECKING:
 
 LOGGER = logging.getLogger(__name__)
 OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
-
-
-def import_hdf(
-    file_path: str,
-    x_tolerance: float = 0.0,
-) -> OptimizationProblem:
-    """Import an optimization history from an HDF file.
-
-    It uses :meth:`gemseo.algos.opt_problem.OptimizationProblem.from_hdf` to import
-    the optimization history from the HDF file. Afterwards, it replaces the
-    :class:`gemseo.algos.opt_result.OptimizationResult` object in
-    :attr:`gemseo.algos.opt_problem.OptimizationProblem.solution` by a
-    :class:`gemseo_pymoo.algos.opt_result_mo.MultiObjectiveOptimizationResult` object.
-
-    Args:
-        file_path: The file containing the optimization history.
-        x_tolerance: The tolerance on the design variables when reading the file.
-
-    Returns:
-        The read optimization problem.
-    """
-    opt_pb = OptimizationProblem.from_hdf(file_path, x_tolerance)
-
-    with h5py.File(file_path, "r") as h5file:
-        # Update solution.
-        if opt_pb.SOLUTION_GROUP in h5file:
-            pareto = Pareto(opt_pb) if opt_pb.solution.is_feasible else None
-            opt_pb.solution = MultiObjectiveOptimizationResult(
-                **opt_pb.solution.__dict__, pareto=pareto
-            )
-
-    return opt_pb
 
 
 def get_gemseo_opt_problem(
