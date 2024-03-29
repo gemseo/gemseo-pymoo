@@ -153,24 +153,27 @@ class Knapsack(OptimizationProblem):
         n_items = len(values)
 
         if len(weights) != n_items:
-            raise ValueError(
+            msg = (
                 "weights and values must have the same number of elements! "
                 f"{len(weights)} != {n_items}"
             )
+            raise ValueError(msg)
 
         # The knapsack must be constrained.
         if capacity_weight is None and capacity_items is None:
-            raise ValueError("You have to provide at least one type of capacity!")
+            msg = "You have to provide at least one type of capacity!"
+            raise ValueError(msg)
 
         if binary:
             if items_ub is None:
                 # Binary variant.
                 items_ub = ones(n_items)
             elif len(items_ub) != n_items:
-                raise ValueError(
+                msg = (
                     "items_ub and values must have the same number of elements! "
                     f"{len(items_ub)} != {n_items}"
                 )
+                raise ValueError(msg)
             else:
                 LOGGER.warning(
                     "binary option is ignored because "
@@ -194,7 +197,8 @@ class Knapsack(OptimizationProblem):
         if initial_guess is None or len(initial_guess) == n_items:
             design_space.set_current_value(zeros(n_items))
         else:
-            raise ValueError(f"initial_guess must have {n_items} elements!")
+            msg = f"initial_guess must have {n_items} elements!"
+            raise ValueError(msg)
 
         super().__init__(design_space)
 
@@ -409,10 +413,12 @@ def create_random_knapsack_problem(
             capacity_level is outside the range (0, 1).
     """
     if n_items < 1:
-        raise ValueError("Number of items must be a positive number!")
+        msg = "Number of items must be a positive number!"
+        raise ValueError(msg)
 
     if not 0.0 < capacity_level < 1.0:
-        raise ValueError("capacity_level must be in the interval (0, 1)!")
+        msg = "capacity_level must be in the interval (0, 1)!"
+        raise ValueError(msg)
 
     rng = default_rng(1)
     values = rng.integers(1, 100, size=n_items)

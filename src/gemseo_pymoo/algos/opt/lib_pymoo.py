@@ -29,12 +29,15 @@ import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import ClassVar
 from typing import Final
 from typing import Union
 
 from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.optimization_library import OptimizationLibrary
 from gemseo.algos.opt_problem import OptimizationProblem
+from gemseo.algos.opt_result import OptimizationResult
+from gemseo.algos.opt_result_multiobj import MultiObjectiveOptimizationResult
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -54,14 +57,11 @@ from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
-from gemseo_pymoo.algos.opt_result_mo import MultiObjectiveOptimizationResult
-from gemseo_pymoo.algos.opt_result_mo import Pareto
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 if TYPE_CHECKING:
-    from gemseo.algos.opt_result import OptimizationResult
     from gemseo.algos.stop_criteria import TerminationCriterion
     from pymoo.core.operator import Operator
     from pymoo.core.population import Population
@@ -186,6 +186,9 @@ class PymooOpt(OptimizationLibrary):
     _ds_size: int
     """The design space size."""
 
+    _RESULT_CLASS: ClassVar[type[OptimizationResult]] = MultiObjectiveOptimizationResult
+    """The class used to present the result of the optimization."""
+
     def __init__(self) -> None:
         """Constructor.
 
@@ -233,10 +236,11 @@ class PymooOpt(OptimizationLibrary):
             opt_problem.objective.dim > 1
             and not self.descriptions[algo_name].handle_multiobjective
         ):
-            raise ValueError(
+            msg = (
                 f"Requested optimization algorithm {self.algo_name} can not handle "
                 "multiple objectives."
             )
+            raise ValueError(msg)
 
     def _get_options(
         self,
@@ -418,20 +422,22 @@ class PymooOpt(OptimizationLibrary):
                 one design variable has equal lower and upper bounds.
         """
         if not isinstance(operator_instance, operator_class):
-            raise TypeError(
+            msg = (
                 f"{operator_instance.__class__.__name__} must be an instance of "
                 f"{operator_class.__class__.__name__} or inherit from it."
             )
+            raise TypeError(msg)
 
         # Anticipate 'division by zero' errors when using PolynomialMutation,
         # which occurs when we have equal lower and upper bounds.
         if isinstance(operator_instance, PolynomialMutation) and any(
             upper_bounds == lower_bounds
         ):
-            raise ValueError(
+            msg = (
                 "PolynomialMutation cannot handle equal lower and upper bounds.\n"
                 "Consider setting those design variables as constants of your problem."
             )
+            raise ValueError(msg)
 
     def _get_ref_dirs(
         self,
@@ -483,10 +489,11 @@ class PymooOpt(OptimizationLibrary):
         if ref_dirs_name == "layer-energy":
             partitions = ref_dirs_options.pop("partitions")
             if n_obj == 1 and np_size(partitions) > 1:
-                raise ValueError(
+                msg = (
                     "For a single-objective problem, "
                     "the partitions array must be of size 1!"
                 )
+                raise ValueError(msg)
             return get_reference_directions(ref_dirs_name, n_obj, partitions)
 
         # By default, return Riesz s-Energy (in case of an unknown name is provided).
@@ -618,7 +625,8 @@ class PymooOpt(OptimizationLibrary):
             )
         else:  # pragma: no cover
             # GEMSEO will check in advance if the algorithm is supported.
-            raise ValueError(f"Algorithm not supported : {self.internal_algo_name}")
+            msg = f"Algorithm not supported : {self.internal_algo_name}"
+            raise ValueError(msg)
 
         res = minimize(
             pymoo_problem,
@@ -629,27 +637,6 @@ class PymooOpt(OptimizationLibrary):
         )
 
         return self.get_optimum_from_database(res.message, res.success)
-
-    def _post_run(
-        self,
-        problem: OptimizationProblem,
-        algo_name: str,
-        result: OptimizationResult | MultiObjectiveOptimizationResult,
-        **options: Any,
-    ) -> None:
-        """Print a design space suitable for multi-objective problems.
-
-        Args:
-            problem: The problem to be solved.
-            algo_name: The name of the algorithm.
-            result: The optimization result.
-            **options: The options for the algorithm, see associated JSON file.
-        """
-        if self.problem.objective.dim == 1:
-            super()._post_run(problem, algo_name, result, **options)
-        else:
-            LOGGER.info("%s", result)
-            problem.solution = result
 
     def get_optimum_from_database(
         self, message: str | None = None, status: int | None = None
@@ -670,38 +657,13 @@ class PymooOpt(OptimizationLibrary):
         """
         # Single-objective problem.
         if self.problem.objective.dim == 1:
-            return super().get_optimum_from_database(message, status)
-
-        if len(self.problem.database) == 0:
-            return MultiObjectiveOptimizationResult(
-                optimizer_name=self.algo_name,
+            return OptimizationResult.from_optimization_problem(
+                self.problem,
                 message=message,
                 status=status,
-                n_obj_call=0,
+                optimizer_name=self.algo_name,
             )
-        x_0 = self.problem.database.get_x_vect(1)
-        # Compute the best feasible or infeasible point.
-        f_opt, x_opt, is_feas, c_opt, c_opt_grad = self.problem.get_optimum()
-
-        if f_opt is not None and not self.problem.minimize_objective:
-            f_opt = -f_opt
-
-        # There are no pareto efficient solutions for unfeasible problems.
-        pareto = Pareto(self.problem) if is_feas else None
-
-        return MultiObjectiveOptimizationResult(
-            x_0=x_0,
-            x_opt=x_opt,
-            f_opt=f_opt,  # objective vector norm
-            optimizer_name=self.algo_name,
-            message=message,
-            status=status,
-            n_obj_call=self.problem.objective.n_calls,
-            is_feasible=is_feas,
-            constraint_values=c_opt,
-            constraints_grad=c_opt_grad,
-            pareto=pareto,
-        )
+        return super().get_optimum_from_database(message, status)
 
     def _check_design_space_exploration(self, design_variables: ndarray) -> None:
         """Check on the design space exploration.
@@ -755,3 +717,9 @@ class PymooOpt(OptimizationLibrary):
             return self.get_optimum_from_database(message)
 
         return super()._termination_criterion_raised(error)
+
+    def _log_result(self) -> None:
+        if self.problem.objective.dim == 1:
+            super()._log_result()
+        else:
+            LOGGER.info("%s", self.problem.solution)
