@@ -43,7 +43,7 @@ fonttools==4.50.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@9253876b9be4c471ebee6209ac89ef619685ead5
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@83d76b9955e84e9f59d7a82a0307ca6051560e18
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
