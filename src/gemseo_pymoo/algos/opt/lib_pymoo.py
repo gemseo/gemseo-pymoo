@@ -718,8 +718,8 @@ class PymooOpt(OptimizationLibrary):
 
         return super()._termination_criterion_raised(error)
 
-    def _log_result(self) -> None:
+    def _log_result(self, max_design_space_dimension_to_log: int) -> None:
         if self.problem.objective.dim == 1:
-            super()._log_result()
+            super()._log_result(max_design_space_dimension_to_log)
         else:
             LOGGER.info("%s", self.problem.solution)
