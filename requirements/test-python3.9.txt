@@ -35,7 +35,7 @@ et-xmlfile==1.1.0
     # via openpyxl
 exceptiongroup==1.2.0
     # via pytest
-execnet==2.1.0
+execnet==2.1.1
     # via pytest-xdist
 fastjsonschema==2.19.1
     # via gemseo
@@ -43,7 +43,7 @@ fonttools==4.51.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@492f902821a8d0929eb4731f8722a3ec5f13eaa3
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@d070aec39530b5be49f0738c9e5983c346cac0bf
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
@@ -60,7 +60,7 @@ iniconfig==2.0.0
     # via pytest
 jinja2==3.1.3
     # via gemseo
-joblib==1.3.2
+joblib==1.4.0
     # via scikit-learn
 kiwisolver==1.4.5
     # via matplotlib
