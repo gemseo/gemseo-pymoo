@@ -41,7 +41,7 @@ fonttools==4.51.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@a431e2e67f59a949bc8f5bc23ff55d96c9b1c888
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@35ef5507ac8b757120c36251096cc6217abfc511
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
@@ -105,7 +105,7 @@ pillow==10.2.0
     #   matplotlib
 plotly==5.20.0
     # via gemseo
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
 psutil==5.9.8
     # via openturns

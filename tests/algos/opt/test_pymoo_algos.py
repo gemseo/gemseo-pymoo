@@ -31,11 +31,11 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 import pytest
-from gemseo.algos.opt.opt_factory import OptimizersFactory
+from gemseo.algos.opt.factory import OptimizationLibraryFactory
 from gemseo.core.grammars.errors import InvalidDataError
-from gemseo.problems.analytical.binh_korn import BinhKorn
-from gemseo.problems.analytical.power_2 import Power2
-from gemseo.problems.analytical.rosenbrock import Rosenbrock
+from gemseo.problems.multiobjective_optimization.binh_korn import BinhKorn
+from gemseo.problems.optimization.power_2 import Power2
+from gemseo.problems.optimization.rosenbrock import Rosenbrock
 from numpy import array
 from numpy import hstack as np_hstack
 from numpy import min as np_min
@@ -169,13 +169,13 @@ def simple_mip_problem() -> OptimizationProblem:
 
 
 @pytest.fixture()
-def opt_factory() -> OptimizersFactory:
+def opt_factory() -> OptimizationLibraryFactory:
     """Create an optimizer factory instance.
 
     Returns:
-        A :class:`.OptimizersFactory` instance.
+        A :class:`.OptimizationLibraryFactory` instance.
     """
-    return OptimizersFactory()
+    return OptimizationLibraryFactory()
 
 
 @pytest.mark.parametrize(
