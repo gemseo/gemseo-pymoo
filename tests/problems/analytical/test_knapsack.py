@@ -25,7 +25,7 @@ from __future__ import annotations
 from contextlib import nullcontext as does_not_raise
 
 import pytest
-from gemseo.algos.opt.opt_factory import OptimizersFactory
+from gemseo.algos.opt.factory import OptimizationLibraryFactory
 from numpy import arange
 from numpy import array
 from numpy import ones
@@ -177,7 +177,7 @@ def test_optimization(knapsack_max_items):
     x_opt, f_opt = knapsack_max_items.solution
 
     options = dict(max_iter=800, max_gen=20, **integer_operators, **integer_options)
-    res = OptimizersFactory().execute(
+    res = OptimizationLibraryFactory().execute(
         knapsack_max_items, algo_name="PYMOO_NSGA2", **options
     )
 
@@ -194,7 +194,9 @@ def test_mo_maximize(mo_knapsack):
     mo_knapsack.minimize_objective = False
 
     options = dict(max_iter=500, max_gen=20, **integer_operators, **integer_options)
-    res = OptimizersFactory().execute(mo_knapsack, algo_name="PYMOO_NSGA2", **options)
+    res = OptimizationLibraryFactory().execute(
+        mo_knapsack, algo_name="PYMOO_NSGA2", **options
+    )
 
     # Known solution (one of the anchor points).
     anchor_x = zeros(10)

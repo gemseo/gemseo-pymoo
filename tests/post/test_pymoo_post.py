@@ -26,9 +26,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.post.post_factory import PostFactory
-from gemseo.problems.analytical.power_2 import Power2
+from gemseo.algos.opt.factory import OptimizationLibraryFactory
+from gemseo.post.factory import PostFactory
+from gemseo.problems.optimization.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
 from pymoo.decomposition.aasf import AASF
@@ -55,7 +55,7 @@ def problem_1obj() -> OptimizationProblem:
     """
     power2 = Power2()
     power2.constraints = power2.get_ineq_constraints()
-    OptimizersFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizationLibraryFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
     return power2
 
 
@@ -67,7 +67,7 @@ def problem_2obj() -> OptimizationProblem:
         A :class:`.ChankongHaimes` instance.
     """
     problem = ChankongHaimes()
-    OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizationLibraryFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
     return problem
 
 
@@ -79,7 +79,7 @@ def problem_3obj() -> OptimizationProblem:
         A :class:`.Viennet` instance.
     """
     problem = Viennet()
-    OptimizersFactory().execute(
+    OptimizationLibraryFactory().execute(
         problem,
         algo_name="PYMOO_NSGA2",
         max_iter=1000,
