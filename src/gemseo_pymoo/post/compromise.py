@@ -22,10 +22,9 @@
 
 from __future__ import annotations
 
-import logging
 from typing import Any
 
-from gemseo.algos.pareto import ParetoFront
+from gemseo.algos.pareto.pareto_front import ParetoFront
 from numpy import atleast_2d
 from numpy import ndarray
 from numpy import vstack
@@ -33,8 +32,6 @@ from pymoo.core.decomposition import Decomposition
 from pymoo.decomposition.weighted_sum import WeightedSum
 
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-
-LOGGER = logging.getLogger(__name__)
 
 
 class Compromise(ScatterPareto):
@@ -93,7 +90,7 @@ class Compromise(ScatterPareto):
             raise TypeError(msg)
 
         # Objectives.
-        n_obj = self.opt_problem.objective.dim
+        n_obj = self.optimization_problem.objective.dim
 
         # Default weights.
         if weights is None:
@@ -108,7 +105,7 @@ class Compromise(ScatterPareto):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
         # Prepare points to plot.
         points = []  # Points' coordinates.

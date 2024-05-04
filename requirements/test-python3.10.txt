@@ -43,7 +43,7 @@ fonttools==4.51.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@17e4c71af40e6fc97141c46034f209d842498a34
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@57c1b96651acdff29c0acf9b2a5c17adeb6c02dc
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
@@ -58,7 +58,7 @@ iniconfig==2.0.0
     # via pytest
 jinja2==3.1.3
     # via gemseo
-joblib==1.4.0
+joblib==1.4.2
     # via scikit-learn
 kiwisolver==1.4.5
     # via matplotlib
@@ -125,7 +125,7 @@ pytest==7.4.4
     #   pytest-cov
     #   pytest-xdist
 pytest-cov==5.0.0
-pytest-xdist==3.5.0
+pytest-xdist==3.6.1
 python-dateutil==2.9.0.post0
     # via
     #   matplotlib
@@ -152,7 +152,7 @@ sympy==1.12
     # via gemseo
 tenacity==8.2.3
     # via plotly
-threadpoolctl==3.4.0
+threadpoolctl==3.5.0
     # via scikit-learn
 tomli==2.0.1
     # via

@@ -33,11 +33,13 @@ from typing import ClassVar
 from typing import Final
 from typing import Union
 
+from gemseo.algos.multiobjective_optimization_result import (
+    MultiObjectiveOptimizationResult,
+)
 from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.optimization_library import OptimizationLibrary
-from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.algos.opt_result import OptimizationResult
-from gemseo.algos.opt_result_multiobj import MultiObjectiveOptimizationResult
+from gemseo.algos.optimization_problem import OptimizationProblem
+from gemseo.algos.optimization_result import OptimizationResult
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod

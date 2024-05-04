@@ -22,14 +22,13 @@
 
 from __future__ import annotations
 
-import logging
 from math import ceil
 from math import sqrt
 from typing import TYPE_CHECKING
 from typing import Any
 
 import matplotlib.pyplot as plt
-from gemseo.algos.pareto import ParetoFront
+from gemseo.algos.pareto.pareto_front import ParetoFront
 from gemseo.post.opt_post_processor import OptPostProcessor
 from gemseo.third_party.prettytable import PrettyTable
 from matplotlib.gridspec import GridSpec
@@ -41,8 +40,6 @@ from pymoo.visualization.radar import Radar
 
 if TYPE_CHECKING:
     from pymoo.core.plot import Plot
-
-LOGGER = logging.getLogger(__name__)
 
 
 class MultiObjectiveDiagram(OptPostProcessor):
@@ -92,8 +89,8 @@ class MultiObjectiveDiagram(OptPostProcessor):
         weights = atleast_2d(weights).astype(float)
 
         # Objectives.
-        n_obj = self.opt_problem.objective.dim
-        obj_name = self.opt_problem.objective.name
+        n_obj = self.optimization_problem.objective.dim
+        obj_name = self.optimization_problem.objective.name
 
         # Check weight's dimension.
         if weights.shape[1] != n_obj:
@@ -109,7 +106,7 @@ class MultiObjectiveDiagram(OptPostProcessor):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
         # Prepare points to plot.
         points, title = [], []

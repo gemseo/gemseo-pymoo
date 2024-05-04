@@ -53,7 +53,7 @@ from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
-    from gemseo.algos.opt_problem import OptimizationProblem
+    from gemseo.algos.optimization_problem import OptimizationProblem
 
 tolerances = {"ftol_rel": 0.0, "ftol_abs": 0.0, "xtol_rel": 0.0, "xtol_abs": 0.0}
 integer_options = {"normalize_design_space": False, "stop_crit_n_x": 99}

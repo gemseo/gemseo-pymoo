@@ -22,7 +22,6 @@
 
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -33,8 +32,6 @@ from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
 if TYPE_CHECKING:
     from numpy import ndarray
     from pymoo.core.decomposition import Decomposition
-
-LOGGER = logging.getLogger(__name__)
 
 
 class Petal(MultiObjectiveDiagram):

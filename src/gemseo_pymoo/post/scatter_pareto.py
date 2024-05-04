@@ -22,7 +22,6 @@
 
 from __future__ import annotations
 
-import logging
 from math import degrees
 from typing import TYPE_CHECKING
 from typing import Any
@@ -30,7 +29,7 @@ from typing import ClassVar
 from typing import Union
 
 import matplotlib.pyplot as plt
-from gemseo.algos.pareto import ParetoFront
+from gemseo.algos.pareto.pareto_front import ParetoFront
 from gemseo.post.opt_post_processor import OptPostProcessor
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
@@ -47,7 +46,6 @@ from gemseo_pymoo.post.core.plot_features import Arrow3D
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-LOGGER = logging.getLogger(__name__)
 
 PlotPropertiesType = dict[str, Union[str, int, float, bool]]
 
@@ -136,8 +134,8 @@ class ScatterPareto(OptPostProcessor):
                 does not match the number of points.
         """
         # Objectives.
-        n_obj = self.opt_problem.objective.dim
-        obj_name = self.opt_problem.objective.name
+        n_obj = self.optimization_problem.objective.dim
+        obj_name = self.optimization_problem.objective.name
 
         # Ensure right dimension.
         points = [] if points is None else atleast_2d(points)
@@ -159,7 +157,7 @@ class ScatterPareto(OptPostProcessor):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
         # Default plot options.
         plot_options = {
