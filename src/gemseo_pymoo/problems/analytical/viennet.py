@@ -38,18 +38,14 @@ This module implements the Viennet multi-objective unconstrained problem:
 
 from __future__ import annotations
 
-import logging
-
 from gemseo.algos.design_space import DesignSpace
-from gemseo.algos.opt_problem import OptimizationProblem
+from gemseo.algos.optimization_problem import OptimizationProblem
 from gemseo.core.mdofunctions.mdo_function import MDOFunction
 from numpy import cos as np_cos
 from numpy import exp as np_exp
 from numpy import ndarray
 from numpy import sin as np_sin
 from numpy import zeros
-
-LOGGER = logging.getLogger(__name__)
 
 
 class Viennet(OptimizationProblem):
