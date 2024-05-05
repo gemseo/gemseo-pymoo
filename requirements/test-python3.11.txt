@@ -17,7 +17,7 @@ cma==3.2.2
 contourpy==1.2.1
     # via matplotlib
 covdefaults==2.3.0
-coverage==7.5.0
+coverage==7.5.1
     # via
     #   covdefaults
     #   pytest-cov
@@ -41,7 +41,7 @@ fonttools==4.51.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@57c1b96651acdff29c0acf9b2a5c17adeb6c02dc
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@2611266ec6f95123f19690ee33bd7916ae3f1951
 genson==1.2.2
     # via gemseo
 grapheme==0.6.0
