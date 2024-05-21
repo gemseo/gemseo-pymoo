@@ -4,7 +4,7 @@ about-time==4.2.1
     # via alive-progress
 alive-progress==3.1.5
     # via pymoo
-annotated-types==0.6.0
+annotated-types==0.7.0
     # via pydantic
 autograd==1.6.2
     # via pymoo
@@ -44,7 +44,7 @@ fonttools==4.51.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@0d64cddea59c50391df0d0f06a725a69dd28e0b2
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@9b7cd67420496a16f6cd1f993e5f46d5fbc470be
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -148,7 +148,7 @@ pytz==2024.1
     # via pandas
 pyxdsm==2.3.0
     # via gemseo
-requests==2.31.0
+requests==2.32.1
     # via gemseo
 scikit-learn==1.4.1.post1
     # via gemseo
