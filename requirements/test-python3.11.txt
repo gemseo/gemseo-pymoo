@@ -18,7 +18,7 @@ contourpy==1.2.1
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (pyproject.toml)
-coverage==7.5.1
+coverage==7.5.2
     # via
     #   covdefaults
     #   pytest-cov
@@ -42,7 +42,7 @@ fonttools==4.52.1
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@fad9da061f91fe3e1a1d01a6da86e9bb4e743feb
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@8215ca083c4f630795c71c6250dc1acff46cc46d
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
