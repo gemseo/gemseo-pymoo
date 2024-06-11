@@ -42,7 +42,7 @@ fonttools==4.53.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@cd003f9da9c40d9ef74d39ae331aa2485bd2b9d4
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@bb14004bfbdaa06bdacf4afe7ff667991b3d8277
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
