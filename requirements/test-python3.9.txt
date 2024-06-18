@@ -44,7 +44,7 @@ fonttools==4.53.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@624b815aaeecc6184f724905adde57af1ca6d5a3
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@0f2c2b24514280e83200b118f88309d8ec25934c
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -166,7 +166,7 @@ strenum==0.4.15
     # via gemseo
 sympy==1.12
     # via gemseo
-tenacity==8.3.0
+tenacity==8.4.1
     # via plotly
 threadpoolctl==3.5.0
     # via scikit-learn
@@ -183,7 +183,7 @@ typing-extensions==4.12.2
     #   pydantic-core
 tzdata==2024.1
     # via pandas
-urllib3==2.2.1
+urllib3==2.2.2
     # via requests
 wrapt==1.16.0
     # via deprecated
