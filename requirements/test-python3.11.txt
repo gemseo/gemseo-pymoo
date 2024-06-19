@@ -42,7 +42,7 @@ fonttools==4.53.0
     # via matplotlib
 future==1.0.0
     # via autograd
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@0f2c2b24514280e83200b118f88309d8ec25934c
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@7e0d5ebaa9247968e81beb11b94f8cac037f0ac3
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -117,7 +117,7 @@ plotly==5.22.0
     # via gemseo
 pluggy==1.5.0
     # via pytest
-psutil==5.9.8
+psutil==6.0.0
     # via openturns
 pydantic==2.7.4
     # via gemseo
