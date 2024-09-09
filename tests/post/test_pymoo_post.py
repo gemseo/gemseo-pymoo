@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from gemseo.algos.opt.factory import OptimizationLibraryFactory
-from gemseo.post.factory import PostFactory
+from gemseo.post.factory import OptPostProcessorFactory
 from gemseo.problems.optimization.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
@@ -43,10 +43,10 @@ from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
-    from gemseo.algos.opt_problem import OptimizationProblem
+    from gemseo.algos.optimization_problem import OptimizationProblem
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_1obj() -> OptimizationProblem:
     """Create an optimization problem with 1 objective ready to be post-processed.
 
@@ -54,12 +54,12 @@ def problem_1obj() -> OptimizationProblem:
         A :class:`.Power2` instance.
     """
     power2 = Power2()
-    power2.constraints = power2.get_ineq_constraints()
+    power2.constraints = list(power2.constraints.get_inequality_constraints())
     OptimizationLibraryFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
     return power2
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_2obj() -> OptimizationProblem:
     """Create an optimization problem with 2 objectives ready to be post-processed.
 
@@ -71,7 +71,7 @@ def problem_2obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_3obj() -> OptimizationProblem:
     """Create an optimization problem with 3 objectives ready to be post-processed.
 
@@ -88,14 +88,14 @@ def problem_3obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture()
-def post_factory() -> PostFactory:
+@pytest.fixture
+def post_factory() -> OptPostProcessorFactory:
     """Create a :class:`gemseo.post.post_factory.PostFactory` instance.
 
     Returns:
         A post-processing factory instance.
     """
-    return PostFactory()
+    return OptPostProcessorFactory()
 
 
 def test_saving(tmp_wd, post_factory, problem_2obj):
