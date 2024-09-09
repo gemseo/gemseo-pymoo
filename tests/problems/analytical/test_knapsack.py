@@ -48,7 +48,7 @@ integer_operators = {
 integer_options = {"normalize_design_space": False, "stop_crit_n_x": 99}
 
 
-@pytest.fixture()
+@pytest.fixture
 def knapsack_max_items() -> Knapsack:
     """Create a :class:`.Knapsack` optimization problem.
 
@@ -69,7 +69,7 @@ def knapsack_max_items() -> Knapsack:
     return knapsack
 
 
-@pytest.fixture()
+@pytest.fixture
 def mo_knapsack() -> MultiObjectiveKnapsack:
     """Create a :class:`.MultiObjectiveKnapsack` optimization problem.
 

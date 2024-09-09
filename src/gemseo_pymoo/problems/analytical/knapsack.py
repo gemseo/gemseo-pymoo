@@ -60,7 +60,7 @@ import logging
 
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
-from gemseo.core.mdofunctions.mdo_function import MDOFunction
+from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from numpy import atleast_1d
 from numpy import ndarray
 from numpy import ones
@@ -224,7 +224,9 @@ class Knapsack(OptimizationProblem):
                 input_names=["x"],
                 dim=1,
             )
-            self.add_ineq_constraint(ineq_weight)
+            self.add_constraint(
+                ineq_weight, constraint_type=MDOFunction.ConstraintType.INEQ
+            )
 
         # Knapsack number of items limit.
         if capacity_items is not None:
@@ -236,7 +238,9 @@ class Knapsack(OptimizationProblem):
                 input_names=["x"],
                 dim=1,
             )
-            self.add_ineq_constraint(ineq_items)
+            self.add_constraint(
+                ineq_items, constraint_type=MDOFunction.ConstraintType.INEQ
+            )
 
     def _compute_weight_constraint(self, design_variables: ndarray) -> ndarray:
         """Compute the weight capacity constraint.

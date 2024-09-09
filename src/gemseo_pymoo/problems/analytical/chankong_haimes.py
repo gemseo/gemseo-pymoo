@@ -46,7 +46,7 @@ from __future__ import annotations
 
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
-from gemseo.core.mdofunctions.mdo_function import MDOFunction
+from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from numpy import array
 from numpy import ndarray
 from numpy import zeros
@@ -104,7 +104,7 @@ class ChankongHaimes(OptimizationProblem):
             input_names=["x", "y"],
             dim=1,
         )
-        self.add_ineq_constraint(ineq1)
+        self.add_constraint(ineq1, constraint_type=MDOFunction.ConstraintType.INEQ)
 
         ineq2 = MDOFunction(
             self.compute_constraint_2,
@@ -115,7 +115,7 @@ class ChankongHaimes(OptimizationProblem):
             input_names=["x", "y"],
             dim=1,
         )
-        self.add_ineq_constraint(ineq2)
+        self.add_constraint(ineq2, constraint_type=MDOFunction.ConstraintType.INEQ)
 
     @staticmethod
     def compute_objective(design_variables: ndarray) -> ndarray:

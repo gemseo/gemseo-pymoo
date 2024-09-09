@@ -83,7 +83,7 @@ class DummyMutation:
     """Dummy mutation operator."""
 
 
-@pytest.fixture()
+@pytest.fixture
 def pow2_ineq() -> OptimizationProblem:
     """Create a :class:`.Power2` problem with only the inequality constraints.
 
@@ -91,7 +91,7 @@ def pow2_ineq() -> OptimizationProblem:
         A :class:`.Power2` instance.
     """
     power2 = Power2()
-    power2.constraints = power2.get_ineq_constraints()
+    power2.constraints = list(power2.constraints.get_inequality_constraints())
 
     x_opt = array([0.5 ** (1.0 / 3.0), 0.5 ** (1.0 / 3.0), 0.0])
     f_opt = Power2().pow2(x_opt)
@@ -100,7 +100,7 @@ def pow2_ineq() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture()
+@pytest.fixture
 def pow2_unconstrained() -> OptimizationProblem:
     """Create an unconstrained :class:`.Power2` problem.
 
@@ -117,7 +117,7 @@ def pow2_unconstrained() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture()
+@pytest.fixture
 def pow2_ineq_int() -> OptimizationProblem:
     """Create a Power2 problem with integer variables and only inequality constraints.
 
@@ -125,7 +125,7 @@ def pow2_ineq_int() -> OptimizationProblem:
         A :class:`.Power2` instance.
     """
     power2 = Power2()
-    power2.constraints = power2.get_ineq_constraints()
+    power2.constraints = list(power2.constraints.get_inequality_constraints())
     power2.design_space.variable_types["x"] = array(["integer"] * 3)
 
     x_opt = array([1, 1, 0])
@@ -135,7 +135,7 @@ def pow2_ineq_int() -> OptimizationProblem:
     return power2
 
 
-@pytest.fixture()
+@pytest.fixture
 def mo_knapsack() -> MultiObjectiveKnapsack:
     """Create a :class:`.MultiObjectiveKnapsack` optimization problem.
 
@@ -150,7 +150,7 @@ def mo_knapsack() -> MultiObjectiveKnapsack:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def simple_mip_problem() -> OptimizationProblem:
     """Create a very simple MIP problem for test purposes.
 
@@ -168,7 +168,7 @@ def simple_mip_problem() -> OptimizationProblem:
     return gemseo_problem
 
 
-@pytest.fixture()
+@pytest.fixture
 def opt_factory() -> OptimizationLibraryFactory:
     """Create an optimizer factory instance.
 
@@ -205,7 +205,7 @@ def test_operators_json_schema(opt_factory, algo_name):
         options["ref_points"] = array([[1.0], [2.0]])
 
     lib = opt_factory.create(algo_name)
-    opt_grammar = lib.init_options_grammar(algo_name)
+    opt_grammar = lib._init_options_grammar()
     try:
         opt_grammar.validate(options, raise_exception=True)
     except InvalidDataError as exception:
@@ -263,7 +263,7 @@ def test_so(opt_factory, options, problem_class, x_opt, f_opt):
     problem = problem_class()
 
     # Only inequality constraints are considered.
-    problem.constraints = problem.get_ineq_constraints()
+    problem.constraints = list(problem.constraints.get_inequality_constraints())
 
     options = dict(stop_crit_n_hv=999, **tolerances, **options)
     res = opt_factory.execute(problem, **options)
@@ -353,7 +353,7 @@ def test_so_integer(opt_factory, options, problem_class, args, kwargs, x_opt, f_
     problem.design_space.variable_types["x"] = array(["integer"] * ds_dim)
 
     # Only inequality constraints are considered.
-    problem.constraints = problem.get_ineq_constraints()
+    problem.constraints = list(problem.constraints.get_inequality_constraints())
 
     options = dict(
         max_iter=2**11,
@@ -652,3 +652,13 @@ def test_log_integer_problem(opt_factory, mo_knapsack, caplog):
         logging.WARNING,
         message,
     ) in caplog.record_tuples
+
+
+def test_get_gemseo_problem_ineq(simple_mip_problem):
+    """Test the conversion of a constrained Pymoo problem into an OptimizationProblem.
+
+    Args:
+        simple_mip_problem: An ``OptimizationProblem`` converted from a Pymoo
+            ``Problem``.
+    """
+    assert len(list(simple_mip_problem.constraints.get_inequality_constraints())) == 1

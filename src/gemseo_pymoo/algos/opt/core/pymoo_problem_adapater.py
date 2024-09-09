@@ -31,7 +31,7 @@ from typing import Union
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
-from gemseo.core.mdofunctions.mdo_function import MDOFunction
+from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from gemseo.core.parallel_execution.callable_parallel_execution import (
     CallableParallelExecution,
 )
@@ -55,7 +55,7 @@ from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 if TYPE_CHECKING:
-    from gemseo.algos.opt.optimization_library import OptimizationLibrary
+    from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
 
 LOGGER = logging.getLogger(__name__)
 OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
@@ -110,7 +110,7 @@ def get_gemseo_opt_problem(
         ineq = MDOFunction(
             lambda x: pymoo_pb.evaluate(x, return_as_dictionary=True)["G"], "G"
         )
-        gemseo_pb.add_constraint(ineq, cstr_type="ineq")
+        gemseo_pb.add_constraint(ineq, constraint_type=MDOFunction.ConstraintType.INEQ)
     return gemseo_pb
 
 
@@ -129,7 +129,7 @@ class PymooProblem(Problem):
     max_gen: int
     """The maximum number of generations allowed."""
 
-    _driver: OptimizationLibrary
+    _driver: BaseOptimizationLibrary
     """The optimization library currently handling the problem."""
 
     _n_gen: int
@@ -163,7 +163,7 @@ class PymooProblem(Problem):
         self,
         opt_problem: OptimizationProblem,
         normalize_ds: bool,
-        driver: OptimizationLibrary,
+        driver: BaseOptimizationLibrary,
         **options: Any,
     ) -> None:
         """Initialize a pymoo :class:`~pymoo.core.problem.Problem` from a GEMSEO one.
@@ -219,7 +219,9 @@ class PymooProblem(Problem):
             upper_bounds = design_space.get_upper_bounds()
 
         # Constraints.
-        self._ineq_constraints = self.opt_problem.get_ineq_constraints()
+        self._ineq_constraints = list(
+            self.opt_problem.constraints.get_inequality_constraints()
+        )
 
         super().__init__(
             n_var=n_var,
@@ -265,9 +267,11 @@ class PymooProblem(Problem):
             for x_i in design_variables:
                 if self.n_constr:
                     cstrs.append(
-                        hstack([atleast_1d(g(x_i)) for g in self._ineq_constraints])
+                        hstack([
+                            atleast_1d(g.evaluate(x_i)) for g in self._ineq_constraints
+                        ])
                     )
-                obj.append(self.opt_problem.objective(x_i))
+                obj.append(self.opt_problem.objective.evaluate(x_i))
 
         output_data["F"] = vstack(obj)
         if self.n_constr:
@@ -313,7 +317,7 @@ class PymooProblem(Problem):
         def store_callback(index: int, outputs: OPTLibraryOutputType) -> None:
             """Store the outputs in the database.
 
-            The jacobian is ignored because we are dealing
+            The Jacobian is ignored because we are dealing
             with gradient-free algorithms.
 
             Args:
@@ -367,10 +371,10 @@ class PymooProblem(Problem):
         """
         # No need to check subprocess name,
         # since it is set by the ParallelExecution class and must not change.
-        self._driver.deactivate_progress_bar()
+        self._driver._deactivate_progress_bar()
         self.opt_problem.database.clear_listeners()
         return self.opt_problem.evaluate_functions(
-            x_vect=sample, normalize=self.normalize_ds
+            design_vector=sample, design_vector_is_normalized=self.normalize_ds
         )
 
     def _new_generation_callback(self, obj: list[ndarray]) -> None:
@@ -396,7 +400,7 @@ class PymooProblem(Problem):
         # Nevertheless, pymoo will check and select the non-dominated points
         # thanks to the attribute 'nds'. In this way, we do not have to calculate
         # the pareto front at every generation.
-        _, f_hist_feasible = self.opt_problem.get_feasible_points()
+        _, f_hist_feasible = self.opt_problem.history.feasible_points
         if f_hist_feasible:
             obj_hist_feasible = vstack([f_val[obj_name] for f_val in f_hist_feasible])
         else:

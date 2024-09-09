@@ -36,9 +36,8 @@ from typing import Union
 from gemseo.algos.multiobjective_optimization_result import (
     MultiObjectiveOptimizationResult,
 )
-from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
-from gemseo.algos.opt.optimization_library import OptimizationLibrary
-from gemseo.algos.optimization_problem import OptimizationProblem
+from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
+from gemseo.algos.opt.base_optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.optimization_result import OptimizationResult
 from numpy import inf
 from numpy import ndarray
@@ -64,6 +63,7 @@ from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 if TYPE_CHECKING:
+    from gemseo.algos.optimization_problem import OptimizationProblem
     from gemseo.algos.stop_criteria import TerminationCriterion
     from pymoo.core.operator import Operator
     from pymoo.core.population import Population
@@ -91,12 +91,10 @@ class PymooAlgorithmDescription(OptimizationAlgorithmDescription):
 
     positive_constraints: bool = False
 
-    problem_type: OptimizationProblem.ProblemType = (
-        OptimizationProblem.ProblemType.NON_LINEAR
-    )
+    for_linear_problems: bool = False
 
 
-class PymooOpt(OptimizationLibrary):
+class PymooOpt(BaseOptimizationLibrary):
     """Pymoo optimization library interface.
 
     See :class:`gemseo.algos.opt.optimization_library.OptimizationLibrary`.
@@ -191,7 +189,20 @@ class PymooOpt(OptimizationLibrary):
     _RESULT_CLASS: ClassVar[type[OptimizationResult]] = MultiObjectiveOptimizationResult
     """The class used to present the result of the optimization."""
 
-    def __init__(self) -> None:
+    ALGORITHM_INFOS: ClassVar[dict[str, Any]] = {}
+
+    # See https://www.pymoo.org/misc/constraints.html for eq constraints.
+    for __algo_name, __algo_value in __PYMOO_METADATA.items():
+        internal_name = __algo_name.replace(__PYMOO_, "")
+        ALGORITHM_INFOS[__algo_name] = PymooAlgorithmDescription(
+            algorithm_name=internal_name,
+            internal_algorithm_name=internal_name,
+            description=__algo_value[0],
+            website=f"{__PYMOO_WEBPAGE}/algorithms/{__algo_value[1]}",
+            handle_multiobjective=internal_name != "GA",
+        )
+
+    def __init__(self, algo_name: str) -> None:
         """Constructor.
 
         Generate the library dict, which contains the list
@@ -201,25 +212,13 @@ class PymooOpt(OptimizationLibrary):
         - does it handle equality constraints
         - does it handle inequality constraints
         """
-        super().__init__()
+        super().__init__(algo_name)
 
         # The design space size (useful for finite discrete problems).
         self._ds_size = inf
 
-        # See https://www.pymoo.org/misc/constraints.html for eq constraints.
-        for algo_name, algo_value in self.__PYMOO_METADATA.items():
-            internal_name = algo_name.replace(self.__PYMOO_, "")
-            self.descriptions[algo_name] = PymooAlgorithmDescription(
-                algorithm_name=internal_name,
-                internal_algorithm_name=internal_name,
-                description=algo_value[0],
-                website=f"{self.__PYMOO_WEBPAGE}/algorithms/{algo_value[1]}",
-                handle_multiobjective=internal_name != "GA",
-            )
-
     def _check_mo_handling(
         self,
-        algo_name: str,
         opt_problem: OptimizationProblem,
     ) -> None:
         """Check if the algorithm is capable of handling the optimization problem.
@@ -228,7 +227,6 @@ class PymooOpt(OptimizationLibrary):
         except the :class:`~pymoo.algorithms.soo.nonconvex.ga.GA` one.
 
         Args:
-            algo_name: The name of the algorithm.
             opt_problem: The problem to be solved.
 
         Raises:
@@ -236,10 +234,10 @@ class PymooOpt(OptimizationLibrary):
         """
         if (
             opt_problem.objective.dim > 1
-            and not self.descriptions[algo_name].handle_multiobjective
+            and not self.ALGORITHM_INFOS[self._algo_name].handle_multiobjective
         ):
             msg = (
-                f"Requested optimization algorithm {self.algo_name} can not handle "
+                f"Requested optimization algorithm {self._algo_name} can not handle "
                 "multiple objectives."
             )
             raise ValueError(msg)
@@ -503,9 +501,7 @@ class PymooOpt(OptimizationLibrary):
         seed = ref_dirs_options.pop("seed")
         return get_reference_directions(ref_dirs_name, n_obj, n_points, seed=seed)
 
-    def _pre_run(
-        self, problem: OptimizationProblem, algo_name: str, **options: Any
-    ) -> None:
+    def _pre_run(self, problem: OptimizationProblem, **options: Any) -> None:
         """Take into account a new check for multi-objectives handling.
 
         Args:
@@ -513,12 +509,12 @@ class PymooOpt(OptimizationLibrary):
             algo_name: The name of the algorithm.
             **options: The options for the algorithm, see associated JSON file.
         """
-        super()._pre_run(problem, algo_name, **options)
-        self._check_mo_handling(algo_name, problem)
+        super()._pre_run(problem, **options)
+        self._check_mo_handling(problem)
         self._stop_crit_n_hv = options.get(self.STOP_CRIT_N_HV)
 
     def _run(
-        self, **options: Any
+        self, problem: OptimizationProblem, **options: Any
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
         """Run the algorithm.
 
@@ -532,7 +528,7 @@ class PymooOpt(OptimizationLibrary):
             ValueError: If the algorithm's name is not valid.
         """
         # Remove normalization from algorithm's options.
-        normalize_ds = options.pop(self.NORMALIZE_DESIGN_SPACE_OPTION, True)
+        normalize_ds = options.pop(self._NORMALIZE_DESIGN_SPACE_OPTION, True)
 
         # Instantiate the pymoo Problem.
         pymoo_problem_options = {
@@ -543,7 +539,7 @@ class PymooOpt(OptimizationLibrary):
             self.STOP_CRIT_N_HV: options.pop(self.STOP_CRIT_N_HV),
         }
         pymoo_problem = PymooProblem(
-            self.problem, normalize_ds, self, **pymoo_problem_options
+            problem, normalize_ds, self, **pymoo_problem_options
         )
 
         # Problem type (continuous, discrete, mixed).
@@ -555,8 +551,8 @@ class PymooOpt(OptimizationLibrary):
         if len(type_var_unique) == 1 and type_var_unique[0] == "integer":
             l_b, u_b = pymoo_problem.bounds()
             self._ds_size = int(np_prod(u_b - l_b + 1))
-            if self._ds_size < self.problem.max_iter:
-                self.problem.add_callback(self._check_design_space_exploration)
+            if self._ds_size < problem.evaluation_counter.maximum:
+                problem.add_listener(self._check_design_space_exploration)
         else:
             self._ds_size = inf
 
@@ -588,7 +584,10 @@ class PymooOpt(OptimizationLibrary):
             "n_offsprings": options.pop("n_offsprings"),
         }
 
-        algo_name = self.__PYMOO_PREFIX + self.internal_algo_name
+        algo_name = (
+            self.__PYMOO_PREFIX
+            + self.ALGORITHM_INFOS[self._algo_name].internal_algorithm_name
+        )
         if algo_name == self.PYMOO_RNSGA3:
             algorithm = RNSGA3(
                 ref_points=options.pop("ref_points"),
@@ -627,8 +626,19 @@ class PymooOpt(OptimizationLibrary):
             )
         else:  # pragma: no cover
             # GEMSEO will check in advance if the algorithm is supported.
-            msg = f"Algorithm not supported : {self.internal_algo_name}"
+            msg = (
+                f"Algorithm not supported: "
+                f"{self.ALGORITHM_INFOS[self._algo_name].internal_algorithm_name}"
+            )
             raise ValueError(msg)
+
+        # Remove GEMSEO specific options
+        del options[self._MAX_ITER]
+        del options[self._F_TOL_REL]
+        del options[self._F_TOL_ABS]
+        del options[self._X_TOL_REL]
+        del options[self._X_TOL_ABS]
+        del options[self._STOP_CRIT_NX]
 
         res = minimize(
             pymoo_problem,
@@ -638,12 +648,15 @@ class PymooOpt(OptimizationLibrary):
             **options,
         )
 
-        return self.get_optimum_from_database(res.message, res.success)
+        return self._get_optimum_from_database(problem, res.message, res.success)
 
-    def get_optimum_from_database(
-        self, message: str | None = None, status: int | None = None
+    def _get_optimum_from_database(
+        self,
+        problem: OptimizationProblem,
+        message: str | None = None,
+        status: int | None = None,
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
-        """Retrieve the optimum from the database.
+        """Return the optimization result from the database.
 
         Override the super class method in order to return an
         :class:`~gemseo.algos.opt_result.OptimizationResult` instance adapted for
@@ -651,21 +664,22 @@ class PymooOpt(OptimizationLibrary):
         :class:`~gemseo_pymoo.algos.opt_result_mo.MultiObjectiveOptimizationResult`).
 
         Args:
-            message: The message from the optimizer.
-            status: The status from the optimizer.
+            problem: The problem to be solved.
+            message: The message associated with the termination criterion.
+            status: The status associated with the termination criterion.
 
         Returns:
             An optimization result object based on the optimum found.
         """
         # Single-objective problem.
-        if self.problem.objective.dim == 1:
+        if problem.objective.dim == 1:
             return OptimizationResult.from_optimization_problem(
-                self.problem,
+                problem,
                 message=message,
                 status=status,
                 optimizer_name=self.algo_name,
             )
-        return super().get_optimum_from_database(message, status)
+        return super()._get_optimum_from_database(problem, message, status)
 
     def _check_design_space_exploration(self, design_variables: ndarray) -> None:
         """Check on the design space exploration.
@@ -677,11 +691,11 @@ class PymooOpt(OptimizationLibrary):
             DesignSpaceExploredException: If the design space
                 has been completely explored.
         """
-        if self.problem.current_iter == self._ds_size:
+        if self.problem.evaluation_counter.current == self._ds_size:
             raise DesignSpaceExploredException
 
-    def _termination_criterion_raised(
-        self, error: TerminationCriterion
+    def _get_early_stopping_result(
+        self, problem: OptimizationProblem, termination_criterion: TerminationCriterion
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
         """Retrieve the best known iterate when max iter has been reached.
 
@@ -692,36 +706,38 @@ class PymooOpt(OptimizationLibrary):
             - :class:`~gemseo_pymoo.algos.stop_criteria.MaxGenerationsReached`.
 
         Args:
-            error: The obtained error from the algorithm.
+            problem: The problem to be solved.
+            termination_criterion: A termination criterion.
 
         Returns:
             An optimization result object.
         """
-        if isinstance(error, DesignSpaceExploredException):
+        if isinstance(termination_criterion, DesignSpaceExploredException):
             message = (
                 f"All {self._ds_size} points of the design space have been explored. "
                 f"GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimum_from_database(problem, message)
 
-        if isinstance(error, MaxGenerationsReached):
+        if isinstance(termination_criterion, MaxGenerationsReached):
             message = (
                 "Maximum number of generations reached. GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimum_from_database(problem, message)
 
-        if isinstance(error, HyperVolumeToleranceReached):
+        if isinstance(termination_criterion, HyperVolumeToleranceReached):
             message = (
                 f"{self._stop_crit_n_hv} successive iterates of the hypervolume "
                 "indicator are closer than hv_tol_rel or hv_tol_abs. "
                 "GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimum_from_database(problem, message)
+        return super()._get_early_stopping_result(problem, termination_criterion)
 
-        return super()._termination_criterion_raised(error)
-
-    def _log_result(self, max_design_space_dimension_to_log: int) -> None:
-        if self.problem.objective.dim == 1:
-            super()._log_result(max_design_space_dimension_to_log)
+    def _log_result(
+        self, problem: OptimizationProblem, max_design_space_dimension_to_log: int
+    ) -> None:
+        if problem.objective.dim == 1:
+            super()._log_result(problem, max_design_space_dimension_to_log)
         else:
-            LOGGER.info("%s", self.problem.solution)
+            LOGGER.info("%s", problem.solution)

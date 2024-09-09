@@ -29,7 +29,7 @@ from numpy.testing import assert_allclose
 from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 
-@pytest.fixture()
+@pytest.fixture
 def viennet() -> Viennet:
     """Create a :class:`gemseo_pymoo.problems.analytical.viennet.Viennet` problem.
 
