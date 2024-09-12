@@ -47,7 +47,7 @@ fastjsonschema==2.20.0
     # via gemseo
 fonttools==4.53.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@4dbd72208def387d51191513d15a114ced8d0b40
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@1d5f417702580d7bd7c434869adf5c032a84a651
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -59,7 +59,7 @@ grapheme==0.6.0
     # via alive-progress
 graphviz==0.20.3
     # via gemseo
-griffe==1.2.0
+griffe==1.3.0
     # via
     #   griffe-inherited-docstrings
     #   mkdocstrings-python
@@ -71,7 +71,7 @@ h5py==3.11.0
     #   gemseo
 idna==3.8
     # via requests
-importlib-metadata==8.4.0
+importlib-metadata==8.5.0
     # via
     #   markdown
     #   mike
@@ -224,9 +224,9 @@ psutil==6.0.0
     # via openturns
 pybtex==0.24.0
     # via mkdocs-bibtex
-pydantic==2.8.2
+pydantic==2.9.0
     # via gemseo
-pydantic-core==2.20.1
+pydantic-core==2.23.2
     # via pydantic
 pydoe3==1.0.4
     # via gemseo
@@ -254,7 +254,7 @@ python-dateutil==2.9.0.post0
     #   ghp-import
     #   matplotlib
     #   pandas
-pytz==2024.1
+pytz==2024.2
     # via pandas
 pyxdsm==2.3.0
     # via gemseo
@@ -270,7 +270,7 @@ pyyaml-env-tag==0.1
     # via
     #   mike
     #   mkdocs
-regex==2024.7.24
+regex==2024.9.11
     # via mkdocs-material
 requests==2.32.3
     # via
@@ -313,7 +313,9 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
 tzdata==2024.1
-    # via pandas
+    # via
+    #   pandas
+    #   pydantic
 urllib3==2.2.2
     # via requests
 validators==0.34.0
