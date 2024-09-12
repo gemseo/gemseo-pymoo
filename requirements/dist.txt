@@ -24,7 +24,7 @@ docutils==0.21.2
     # via readme-renderer
 idna==3.8
     # via requests
-importlib-metadata==8.4.0
+importlib-metadata==8.5.0
     # via
     #   keyring
     #   twine
@@ -78,7 +78,7 @@ requests-toolbelt==1.0.0
     # via twine
 rfc3986==2.0.0
     # via twine
-rich==13.8.0
+rich==13.8.1
     # via twine
 secretstorage==3.3.3
     # via keyring
