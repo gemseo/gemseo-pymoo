@@ -42,7 +42,7 @@ fastjsonschema==2.20.0
     # via gemseo
 fonttools==4.53.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@1d5f417702580d7bd7c434869adf5c032a84a651
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@a2b519fa71f3aaa7c043cbc6442e420f43aa9abc
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -58,6 +58,8 @@ h5py==3.11.0
     #   gemseo
 idna==3.8
     # via requests
+importlib-metadata==8.5.0
+    # via gemseo
 importlib-resources==6.4.5
     # via matplotlib
 iniconfig==2.0.0
@@ -121,9 +123,9 @@ pluggy==1.5.0
     # via pytest
 psutil==6.0.0
     # via openturns
-pydantic==2.9.0
+pydantic==2.9.1
     # via gemseo
-pydantic-core==2.23.2
+pydantic-core==2.23.3
     # via pydantic
 pydoe3==1.0.4
     # via gemseo
@@ -150,7 +152,7 @@ pyxdsm==2.3.0
     # via gemseo
 requests==2.32.3
     # via gemseo
-scikit-learn==1.5.1
+scikit-learn==1.5.2
     # via gemseo
 scipy==1.13.1
     # via
@@ -180,10 +182,8 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
 tzdata==2024.1
-    # via
-    #   pandas
-    #   pydantic
-urllib3==2.2.2
+    # via pandas
+urllib3==2.2.3
     # via requests
 wrapt==1.16.0
     # via deprecated
@@ -192,4 +192,6 @@ xdsmjs==2.0.0
 xxhash==3.5.0
     # via gemseo
 zipp==3.20.1
-    # via importlib-resources
+    # via
+    #   importlib-metadata
+    #   importlib-resources
