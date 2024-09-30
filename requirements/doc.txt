@@ -12,7 +12,7 @@ babel==2.16.0
     # via mkdocs-material
 black==24.8.0
     # via gemseo-pymoo (pyproject.toml)
-bracex==2.5
+bracex==2.5.post1
     # via wcmatch
 certifi==2024.8.30
     # via requests
@@ -35,7 +35,7 @@ cycler==0.12.1
     # via matplotlib
 deprecated==1.2.14
     # via pymoo
-dill==0.3.8
+dill==0.3.9
     # via
     #   openturns
     #   pymoo
@@ -43,11 +43,13 @@ docstring-inheritance==2.2.1
     # via gemseo
 et-xmlfile==1.1.0
     # via openpyxl
+eval-type-backport==0.2.0
+    # via gemseo
 fastjsonschema==2.20.0
     # via gemseo
-fonttools==4.53.1
+fonttools==4.54.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@64e0bec4742773523836c1693aafd97c8166a7bb
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@60d5112b23c97c009e6c6c7c2f44a2710cd3acfc
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -150,7 +152,7 @@ mkdocs-include-markdown-plugin==6.2.2
     # via gemseo-pymoo (pyproject.toml)
 mkdocs-literate-nav==0.6.1
     # via gemseo-pymoo (pyproject.toml)
-mkdocs-material==9.5.36
+mkdocs-material==9.5.39
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   mkdocs-gallery
@@ -237,7 +239,7 @@ pygments==2.18.0
     #   pygments-ansi-color
 pygments-ansi-color==0.3.0
     # via markdown-exec
-pymdown-extensions==10.10.1
+pymdown-extensions==10.11.1
     # via
     #   markdown-exec
     #   mkdocs-material
@@ -313,7 +315,7 @@ typing-extensions==4.12.2
     #   mkdocstrings
     #   pydantic
     #   pydantic-core
-tzdata==2024.1
+tzdata==2024.2
     # via pandas
 urllib3==2.2.3
     # via requests
@@ -321,9 +323,9 @@ validators==0.34.0
     # via mkdocs-bibtex
 verspec==0.1.0
     # via mike
-watchdog==5.0.2
+watchdog==5.0.3
     # via mkdocs
-wcmatch==9.0
+wcmatch==10.0
     # via mkdocs-include-markdown-plugin
 wrapt==1.16.0
     # via deprecated
