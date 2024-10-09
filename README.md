@@ -20,10 +20,7 @@ A GEMSEO wrapper for pymoo optimization algorithms.
 
 ## Installation
 
-Install the latest stable version with `pip install gemseo-pymoo`.
-
-Install the development version with
-`pip install gemseo-pymoo@git+https://gitlab.com/gemseo/dev/gemseo-pymoo.git@develop`.
+Install the latest version with `pip install gemseo-pymoo`.
 
 See [pip](https://pip.pypa.io/en/stable/getting-started/) for more information.
 
