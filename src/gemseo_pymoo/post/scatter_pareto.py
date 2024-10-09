@@ -30,7 +30,7 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 from gemseo.algos.pareto.pareto_front import ParetoFront
-from gemseo.post.opt_post_processor import OptPostProcessor
+from gemseo.post.base_post import BasePost
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
 from numpy import arctan
@@ -50,7 +50,7 @@ if TYPE_CHECKING:
 PlotPropertiesType = dict[str, Union[str, int, float, bool]]
 
 
-class ScatterPareto(OptPostProcessor):
+class ScatterPareto(BasePost):
     """Scatter plot with pareto points and points of interest.
 
     See `Scatter <https://pymoo.org/visualization/scatter.html>`_.

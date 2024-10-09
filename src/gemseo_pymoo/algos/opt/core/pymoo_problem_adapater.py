@@ -92,9 +92,9 @@ def get_gemseo_opt_problem(
     design_space = DesignSpace()
     design_space.add_variable(
         "x",
-        l_b=pymoo_pb.xl,
-        u_b=pymoo_pb.xu,
-        var_type=pymoo_pb_options.pop("mask", "float"),
+        lower_bound=pymoo_pb.xl,
+        upper_bound=pymoo_pb.xu,
+        type_=pymoo_pb_options.pop("mask", "float"),
         value=0.5 * (pymoo_pb.xl + pymoo_pb.xu),
         size=pymoo_pb.n_var,
     )
@@ -178,7 +178,7 @@ class PymooProblem(Problem):
             driver: The optimization library used to handle the problem.
             **options: The other algorithm options.
         """
-        self.opt_problem = opt_problem
+        self.optimization_problem = opt_problem
         self.normalize_ds = normalize_ds
         self._driver = driver
 
@@ -220,7 +220,7 @@ class PymooProblem(Problem):
 
         # Constraints.
         self._ineq_constraints = list(
-            self.opt_problem.constraints.get_inequality_constraints()
+            self.optimization_problem.constraints.get_inequality_constraints()
         )
 
         super().__init__(
@@ -271,7 +271,7 @@ class PymooProblem(Problem):
                             atleast_1d(g.evaluate(x_i)) for g in self._ineq_constraints
                         ])
                     )
-                obj.append(self.opt_problem.objective.evaluate(x_i))
+                obj.append(self.optimization_problem.objective.evaluate(x_i))
 
         output_data["F"] = vstack(obj)
         if self.n_constr:
@@ -298,9 +298,9 @@ class PymooProblem(Problem):
         Returns:
             The objectives and the constraints evaluations.
         """
-        sample_to_design = self.opt_problem.design_space.untransform_vect
-        round_vect = self.opt_problem.design_space.round_vect
-        database = self.opt_problem.database
+        sample_to_design = self.optimization_problem.design_space.untransform_vect
+        round_vect = self.optimization_problem.design_space.round_vect
+        database = self.optimization_problem.database
 
         # Initialize the order as it is not necessarily guaranteed
         # when using parallel execution.
@@ -356,7 +356,7 @@ class PymooProblem(Problem):
                     atleast_1d(funcs.get(g.name)) for g in self._ineq_constraints
                 ]
                 cstrs.append(hstack(c_values))
-            obj.append(funcs.get(self.opt_problem.objective.name))
+            obj.append(funcs.get(self.optimization_problem.objective.name))
 
         return obj, cstrs
 
@@ -372,8 +372,8 @@ class PymooProblem(Problem):
         # No need to check subprocess name,
         # since it is set by the ParallelExecution class and must not change.
         self._driver._deactivate_progress_bar()
-        self.opt_problem.database.clear_listeners()
-        return self.opt_problem.evaluate_functions(
+        self.optimization_problem.database.clear_listeners()
+        return self.optimization_problem.evaluate_functions(
             design_vector=sample, design_vector_is_normalized=self.normalize_ds
         )
 
@@ -394,13 +394,13 @@ class PymooProblem(Problem):
         if self._n_gen == self.max_gen:
             raise MaxGenerationsReached
 
-        obj_name = self.opt_problem.objective.name
+        obj_name = self.optimization_problem.objective.name
 
         # Filter only the feasible points because this is not done by pymoo.
         # Nevertheless, pymoo will check and select the non-dominated points
         # thanks to the attribute 'nds'. In this way, we do not have to calculate
         # the pareto front at every generation.
-        _, f_hist_feasible = self.opt_problem.history.feasible_points
+        _, f_hist_feasible = self.optimization_problem.history.feasible_points
         if f_hist_feasible:
             obj_hist_feasible = vstack([f_val[obj_name] for f_val in f_hist_feasible])
         else:

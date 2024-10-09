@@ -74,8 +74,8 @@ class ChankongHaimes(OptimizationProblem):
             initial_guess: The initial guess for the optimal solution.
         """
         design_space = DesignSpace()
-        design_space.add_variable("x", size=1, l_b=l_b, u_b=u_b)
-        design_space.add_variable("y", size=1, l_b=l_b, u_b=u_b)
+        design_space.add_variable("x", size=1, lower_bound=l_b, upper_bound=u_b)
+        design_space.add_variable("y", size=1, lower_bound=l_b, upper_bound=u_b)
 
         if initial_guess is None:
             design_space.set_current_value(zeros(2))

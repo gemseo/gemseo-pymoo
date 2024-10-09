@@ -29,7 +29,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 from gemseo.algos.pareto.pareto_front import ParetoFront
-from gemseo.post.opt_post_processor import OptPostProcessor
+from gemseo.post.base_post import BasePost
 from gemseo.third_party.prettytable import PrettyTable
 from matplotlib.gridspec import GridSpec
 from numpy import atleast_2d
@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from pymoo.core.plot import Plot
 
 
-class MultiObjectiveDiagram(OptPostProcessor):
+class MultiObjectiveDiagram(BasePost):
     """Base class for post-processing of multi-objective problems."""
 
     DEFAULT_FIG_SIZE = (10, 6)

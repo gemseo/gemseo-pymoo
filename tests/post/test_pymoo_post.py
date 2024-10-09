@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from gemseo.algos.opt.factory import OptimizationLibraryFactory
-from gemseo.post.factory import OptPostProcessorFactory
+from gemseo.post.factory import PostFactory
 from gemseo.problems.optimization.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
@@ -89,13 +89,13 @@ def problem_3obj() -> OptimizationProblem:
 
 
 @pytest.fixture
-def post_factory() -> OptPostProcessorFactory:
+def post_factory() -> PostFactory:
     """Create a :class:`gemseo.post.post_factory.PostFactory` instance.
 
     Returns:
         A post-processing factory instance.
     """
-    return OptPostProcessorFactory()
+    return PostFactory()
 
 
 def test_saving(tmp_wd, post_factory, problem_2obj):
