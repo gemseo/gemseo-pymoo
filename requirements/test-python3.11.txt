@@ -2,7 +2,7 @@
 #    uv pip compile --extra test --constraint requirements/test-constraints.in -o requirements/test-python3.11.txt --python-version 3.11 pyproject.toml
 about-time==4.2.1
     # via alive-progress
-alive-progress==3.1.5
+alive-progress==3.2.0
     # via pymoo
 annotated-types==0.7.0
     # via pydantic
@@ -10,7 +10,7 @@ autograd==1.7.0
     # via pymoo
 certifi==2024.8.30
     # via requests
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
     # via requests
 cma==3.2.2
     # via pymoo
@@ -18,7 +18,7 @@ contourpy==1.3.0
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (pyproject.toml)
-coverage==7.6.1
+coverage==7.6.4
     # via
     #   covdefaults
     #   pytest-cov
@@ -26,21 +26,21 @@ cycler==0.12.1
     # via matplotlib
 deprecated==1.2.14
     # via pymoo
-dill==0.3.8
+dill==0.3.9
     # via
     #   openturns
     #   pymoo
 docstring-inheritance==2.2.1
     # via gemseo
-et-xmlfile==1.1.0
+et-xmlfile==2.0.0
     # via openpyxl
 execnet==2.1.1
     # via pytest-xdist
 fastjsonschema==2.20.0
     # via gemseo
-fonttools==4.53.1
+fonttools==4.54.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@64e0bec4742773523836c1693aafd97c8166a7bb
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@79174e7563e97a251877194502cacb7db2600c2d
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -64,7 +64,7 @@ joblib==1.4.2
     # via scikit-learn
 kiwisolver==1.4.7
     # via matplotlib
-markupsafe==2.1.5
+markupsafe==3.0.2
     # via jinja2
 matplotlib==3.9.2
     # via
@@ -115,7 +115,7 @@ plotly==5.24.0
     # via gemseo
 pluggy==1.5.0
     # via pytest
-psutil==6.0.0
+psutil==6.1.0
     # via openturns
 pydantic==2.9.1
     # via gemseo
@@ -125,14 +125,14 @@ pydoe3==1.0.4
     # via gemseo
 pymoo==0.6.1
     # via gemseo-pymoo (pyproject.toml)
-pyparsing==3.1.4
+pyparsing==3.2.0
     # via matplotlib
 pytest==8.3.3
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   pytest-cov
     #   pytest-xdist
-pytest-cov==5.0.0
+pytest-cov==6.0.0
     # via gemseo-pymoo (pyproject.toml)
 pytest-xdist==3.6.1
     # via gemseo-pymoo (pyproject.toml)
@@ -164,7 +164,7 @@ tenacity==9.0.0
     # via plotly
 threadpoolctl==3.5.0
     # via scikit-learn
-tomli==2.0.1
+tomli==2.0.2
     # via coverage
 tqdm==4.66.5
     # via gemseo
@@ -173,7 +173,7 @@ typing-extensions==4.12.2
     #   gemseo
     #   pydantic
     #   pydantic-core
-tzdata==2024.1
+tzdata==2024.2
     # via pandas
 urllib3==2.2.3
     # via requests

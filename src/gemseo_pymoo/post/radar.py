@@ -22,16 +22,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-from typing import Any
+from typing import ClassVar
 
 from pymoo.visualization.radar import Radar as PymooRadar
 
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
-
-if TYPE_CHECKING:
-    from numpy import ndarray
-    from pymoo.core.decomposition import Decomposition
+from gemseo_pymoo.post.radar_settings import RadarPostSettings
 
 
 class Radar(MultiObjectiveDiagram):
@@ -42,13 +38,9 @@ class Radar(MultiObjectiveDiagram):
         pareto front.
     """
 
-    def _plot(
-        self,
-        decomposition: Decomposition,
-        weights: ndarray,
-        normalize_each_objective: bool = True,
-        **scalar_options: Any,
-    ) -> None:
+    Settings: ClassVar[type[RadarPostSettings]] = RadarPostSettings
+
+    def _plot(self, settings: RadarPostSettings) -> None:
         """Plot one radar diagram for each set of weights.
 
         A `scalarization function <https://pymoo.org/misc/decomposition.html>`_ is used
@@ -59,8 +51,5 @@ class Radar(MultiObjectiveDiagram):
         """
         super()._plot(
             PymooRadar,
-            decomposition,
-            weights,
-            normalize_each_objective=normalize_each_objective,
-            **scalar_options,
+            settings=settings,
         )

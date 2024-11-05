@@ -23,34 +23,27 @@
 from __future__ import annotations
 
 from math import degrees
-from typing import TYPE_CHECKING
-from typing import Any
 from typing import ClassVar
 from typing import Union
 
 import matplotlib.pyplot as plt
 from gemseo.algos.pareto.pareto_front import ParetoFront
-from gemseo.post.opt_post_processor import OptPostProcessor
+from gemseo.post.base_post import BasePost
 from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
 from numpy import arctan
-from numpy import atleast_2d
-from numpy import ndarray
 from numpy import vstack
 from numpy.linalg import norm as np_norm
 from pymoo.visualization.scatter import Scatter as PymooScatter
 
 from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
-
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
 
 PlotPropertiesType = dict[str, Union[str, int, float, bool]]
 
 
-class ScatterPareto(OptPostProcessor):
+class ScatterPareto(BasePost[ScatterParetoPostSettings]):
     """Scatter plot with pareto points and points of interest.
 
     See `Scatter <https://pymoo.org/visualization/scatter.html>`_.
@@ -100,33 +93,10 @@ class ScatterPareto(OptPostProcessor):
     }
     """The properties for the annotations."""
 
-    def _plot(
-        self,
-        points: ndarray | None = None,
-        point_labels: Sequence[str] = "points",
-        plot_extra: bool = True,
-        plot_legend: bool = True,
-        plot_arrow: bool = False,
-        **scatter_options: Any,
-    ) -> None:
-        """Scatter plot of the pareto front along with the points of interest.
+    Settings: ClassVar[type[ScatterParetoPostSettings]] = ScatterParetoPostSettings
 
-        Args:
-            points: The points of interest to be plotted.
-                If None, only the pareto front is plot along with extra point
-                (depending on ``plot_extra`` value).
-            point_labels: The label of the points of interest. If a list is provided,
-                it must contain as many labels as the points of interest.
-                Moreover, in the last case, each point will have a different color.
-            plot_extra: Whether to plot the extra pareto related points,
-                i.e. ``utopia``, ``nadir`` and ``anchor`` points.
-            plot_legend: Whether to show the legend.
-            plot_arrow: Whether to plot arrows connecting the utopia point to
-                the compromise points. The arrows are annotated with the ``2-norm`` (
-                `Euclidian distance <https://en.wikipedia.org/wiki/Euclidean_distance>`_
-                ) of the vector represented by the arrow.
-            **scatter_options: The keyword arguments for the class
-                :class:`pymoo.visualization.scatter.Scatter`.
+    def _plot(self, settings: ScatterParetoPostSettings) -> None:
+        """Scatter plot of the pareto front along with the points of interest.
 
         Raises:
             ValueError: Either if the number of objectives is not 2 or 3,
@@ -137,9 +107,6 @@ class ScatterPareto(OptPostProcessor):
         n_obj = self.optimization_problem.objective.dim
         obj_name = self.optimization_problem.objective.name
 
-        # Ensure right dimension.
-        points = [] if points is None else atleast_2d(points)
-
         # Check post-processing suitability.
         if not 2 <= n_obj <= 3:
             msg = (
@@ -148,32 +115,27 @@ class ScatterPareto(OptPostProcessor):
             )
             raise ValueError(msg)
 
-        # Check labels.
-        if not isinstance(point_labels, str) and len(point_labels) != len(points):
-            msg = (
-                "You must provide either a single label for all points "
-                "or one label for each one!"
-            )
-            raise ValueError(msg)
-
         # Create Pareto object.
         pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
-        # Default plot options.
-        plot_options = {
-            "figsize": self.DEFAULT_FIG_SIZE,
+        # Default plot settings.
+        plot_settings = {
+            "figsize": settings.fig_size,
             "title": self.fig_title,
             "tight_layout": False,
-            "legend": (plot_legend, {"fontsize": self.font_size - 2, "loc": "best"}),
+            "legend": (
+                settings.plot_legend,
+                {"fontsize": self.font_size - 2, "loc": "best"},
+            ),
             "labels": [f"{obj_name} ({i + 1})" for i in range(n_obj)],  # Axes' labels.
             "close_on_destroy": False,  # Do not close figure when plot is destroyed.
         }
 
-        # Update default options with user choices.
-        plot_options.update(**scatter_options)
+        # Update default settings with user choices.
+        plot_settings.update(**settings.model_dump())
 
         # Create plot.
-        plot = PymooScatter(**plot_options)
+        plot = PymooScatter(**plot_settings)
 
         # Change font family to ensure good alignment.
         plt.rc("font", family="monospace", size=self.font_size)
@@ -182,7 +144,7 @@ class ScatterPareto(OptPostProcessor):
         plot.add(pareto.f_optima, label="pareto front", **self.prop_front)
 
         # Plot extra pareto related points.
-        if plot_extra:
+        if settings.plot_extra:
             plot.add(pareto.f_anchors, label="anchor points", **self.prop_extra)
 
             utopia_label = f"utopia = {pareto.f_utopia.round(decimals=2)}"
@@ -192,17 +154,19 @@ class ScatterPareto(OptPostProcessor):
             plot.add(pareto.f_anti_utopia, label=nadir_label, **self.prop_extra)
 
         # Plot points of interest.
-        if len(points) > 0:
-            if isinstance(point_labels, str):
-                plot.add(points, label=point_labels, **self.prop_interest)
+        if len(settings.points) > 0:
+            if isinstance(settings.points_labels, str):
+                plot.add(
+                    settings.points, label=settings.points_labels, **self.prop_interest
+                )
             else:
-                for point, label in zip(points, point_labels):
+                for point, label in zip(settings.points, settings.points_labels):
                     plot.add(point, label=label, **self.prop_interest)
         plot.do()
 
         # Create arrows.
-        if plot_arrow:
-            for point in points:
+        if settings.plot_arrow:
+            for point in settings.points:
                 # Arrow vector.
                 vect = point - pareto.f_utopia
                 norm = np_norm(vect)

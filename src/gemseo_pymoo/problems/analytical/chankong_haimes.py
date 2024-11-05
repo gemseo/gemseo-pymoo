@@ -57,8 +57,8 @@ class ChankongHaimes(OptimizationProblem):
 
     def __init__(
         self,
-        l_b: float = -20.0,
-        u_b: float = 20.0,
+        lower_bound: float = -20.0,
+        upper_bound: float = 20.0,
         initial_guess: ndarray | None = None,
     ) -> None:
         """The constructor.
@@ -69,13 +69,17 @@ class ChankongHaimes(OptimizationProblem):
         constraints functions.
 
         Args:
-            l_b: The lower bound (common value to all variables).
-            u_b: The upper bound (common value to all variables).
+            lower_bound: The lower bound (common value to all variables).
+            upper_bound: The upper bound (common value to all variables).
             initial_guess: The initial guess for the optimal solution.
         """
         design_space = DesignSpace()
-        design_space.add_variable("x", size=1, l_b=l_b, u_b=u_b)
-        design_space.add_variable("y", size=1, l_b=l_b, u_b=u_b)
+        design_space.add_variable(
+            "x", size=1, lower_bound=lower_bound, upper_bound=upper_bound
+        )
+        design_space.add_variable(
+            "y", size=1, lower_bound=lower_bound, upper_bound=upper_bound
+        )
 
         if initial_guess is None:
             design_space.set_current_value(zeros(2))
