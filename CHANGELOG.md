@@ -26,6 +26,12 @@ The format is based on
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Unreleased
+
+# Removed
+
+- The function `get_gemseo_opt_problem` is no longer available.
+
 # Version 3.0.0 (March 2024)
 
 # Changed

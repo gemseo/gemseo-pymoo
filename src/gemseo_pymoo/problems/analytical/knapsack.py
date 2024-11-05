@@ -66,6 +66,7 @@ from numpy import ndarray
 from numpy import ones
 from numpy import sum as np_sum
 from numpy import zeros
+from numpy.core.numeric import infty
 from numpy.random import default_rng
 
 LOGGER = logging.getLogger(__name__)
@@ -180,18 +181,23 @@ class Knapsack(OptimizationProblem):
                     "the items upper bounds were provided!"
                 )
 
-        self.values = values
+        if items_ub is None:
+            items_ub = infty
+
         self.weights = weights
         self.capacity_items = capacity_items
         self.capacity_weight = capacity_weight
 
+        self.values = values
+
         design_space = DesignSpace()
+
         design_space.add_variable(
             "x",
             size=n_items,
-            l_b=0,
-            u_b=items_ub,
-            var_type=DesignSpace.DesignVariableType.INTEGER,
+            lower_bound=0,
+            upper_bound=items_ub,
+            type_=DesignSpace.DesignVariableType.INTEGER,
         )
 
         if initial_guess is None or len(initial_guess) == n_items:

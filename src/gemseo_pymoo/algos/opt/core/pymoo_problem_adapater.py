@@ -28,17 +28,14 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import Union
 
-from gemseo.algos.design_space import DesignSpace
-from gemseo.algos.optimization_problem import OptimizationProblem
 from gemseo.algos.stop_criteria import TerminationCriterion
-from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from gemseo.core.parallel_execution.callable_parallel_execution import (
     CallableParallelExecution,
 )
 from numpy import allclose
+from numpy import array
 from numpy import atleast_1d
 from numpy import average
-from numpy import concatenate as np_concat
 from numpy import dtype as np_dtype
 from numpy import hstack
 from numpy import inf as np_inf
@@ -49,69 +46,17 @@ from numpy import vstack
 from numpy import zeros
 from pymoo.core.problem import Problem
 from pymoo.indicators.hv import Hypervolume
-from pymoo.problems import get_problem
 
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
 if TYPE_CHECKING:
     from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
+    from gemseo.algos.optimization_problem import OptimizationProblem
+    from gemseo.core.mdo_functions.mdo_function import MDOFunction
 
 LOGGER = logging.getLogger(__name__)
 OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
-
-
-def get_gemseo_opt_problem(
-    pymoo_pb: str | Problem,
-    **pymoo_pb_options: Any,
-) -> OptimizationProblem:
-    """Create a GEMSEO problem from a pymoo :class:`~pymoo.core.problem.Problem`.
-
-    If the pymoo problem's name is provided, it must be a valid name among the available
-    ones (see `pymoo problems <https://pymoo.org/problems/test_problems.html>`_).
-
-    Args:
-        pymoo_pb: The pymoo problem to be converted.
-        **pymoo_pb_options: The additional arguments to be passed to the
-            pymoo's problem ``getter`` ``get_problem``.
-
-    Returns:
-        An instance of a GEMSEO :class:`~gemseo.algos.opt_problem.OptimizationProblem`.
-
-    Raises:
-        TypeError: If ``pymoo_pb`` is not a valid string nor an instance of
-            :class:`~pymoo.core.problem.Problem`.
-    """
-    if isinstance(pymoo_pb, str):
-        pymoo_pb = get_problem(pymoo_pb, **pymoo_pb_options)
-
-    if not isinstance(pymoo_pb, Problem):
-        msg = f"Problem must be an instance of {Problem}!"
-        raise TypeError(msg)
-
-    design_space = DesignSpace()
-    design_space.add_variable(
-        "x",
-        l_b=pymoo_pb.xl,
-        u_b=pymoo_pb.xu,
-        var_type=pymoo_pb_options.pop("mask", "float"),
-        value=0.5 * (pymoo_pb.xl + pymoo_pb.xu),
-        size=pymoo_pb.n_var,
-    )
-
-    gemseo_pb = OptimizationProblem(
-        design_space,
-        differentiation_method=OptimizationProblem.ApproximationMode.FINITE_DIFFERENCES,
-    )
-    gemseo_pb.objective = MDOFunction(
-        lambda x: pymoo_pb.evaluate(x, return_as_dictionary=True)["F"], "F"
-    )
-    if pymoo_pb.n_constr > 0:
-        ineq = MDOFunction(
-            lambda x: pymoo_pb.evaluate(x, return_as_dictionary=True)["G"], "G"
-        )
-        gemseo_pb.add_constraint(ineq, constraint_type=MDOFunction.ConstraintType.INEQ)
-    return gemseo_pb
 
 
 class PymooProblem(Problem):
@@ -229,7 +174,7 @@ class PymooProblem(Problem):
             n_constr=sum(constr.dim for constr in self._ineq_constraints),
             xl=lower_bounds,
             xu=upper_bounds,
-            type_var=np_concat([
+            type_var=array([
                 design_space.get_type(var) for var in design_space.variable_names
             ]),
             **options,
@@ -371,7 +316,7 @@ class PymooProblem(Problem):
         """
         # No need to check subprocess name,
         # since it is set by the ParallelExecution class and must not change.
-        self._driver._deactivate_progress_bar()
+        self._driver._disable_progress_bar()
         self.opt_problem.database.clear_listeners()
         return self.opt_problem.evaluate_functions(
             design_vector=sample, design_vector_is_normalized=self.normalize_ds
