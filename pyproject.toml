@@ -1,7 +1,7 @@
 [project]
 name = "gemseo-pymoo"
 authors = [
-    {name = "Francois Gallard", email = "contact@gemseo.org"}
+    {name = "GEMSEO developers", email = "contact@gemseo.org"}
 ]
 description = "A GEMSEO wrapper for pymoo optimization algorithms."
 license = {text = "GNU Lesser General Public License v3"}
@@ -19,9 +19,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dynamic = ["version"]
-requires-python = ">=3.9, <3.12"
+requires-python = ">=3.9, <3.13"
 dependencies = [
-    "gemseo[all] >=5.1,<6",
+    "gemseo[all] >=6,<7",
     "h5py",
     "matplotlib",
     "numpy",
