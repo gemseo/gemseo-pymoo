@@ -22,57 +22,38 @@
 
 from __future__ import annotations
 
-import logging
 from math import ceil
 from math import sqrt
-from typing import TYPE_CHECKING
-from typing import Any
+from typing import ClassVar
 
 import matplotlib.pyplot as plt
-from gemseo.algos.pareto import ParetoFront
-from gemseo.post.opt_post_processor import OptPostProcessor
-from gemseo.third_party.prettytable import PrettyTable
+from gemseo.algos.pareto.pareto_front import ParetoFront
+from gemseo.post.base_post import BasePost
+from gemseo.third_party.prettytable.prettytable import PrettyTable
 from matplotlib.gridspec import GridSpec
-from numpy import atleast_2d
-from numpy import ndarray
-from numpy import vstack
-from pymoo.core.decomposition import Decomposition
+from numpy.core.shape_base import atleast_2d
+from pymoo.core.plot import Plot  # noqa: TCH002
 from pymoo.visualization.radar import Radar
 
-if TYPE_CHECKING:
-    from pymoo.core.plot import Plot
+from gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings import (
+    WeightedPostSettings,
+)
+from gemseo_pymoo.post.core.decomposition_application import _apply_decomposition
 
-LOGGER = logging.getLogger(__name__)
 
-
-class MultiObjectiveDiagram(OptPostProcessor):
+class MultiObjectiveDiagram(BasePost[WeightedPostSettings]):
     """Base class for post-processing of multi-objective problems."""
-
-    DEFAULT_FIG_SIZE = (10, 6)
-    """The default width and height of the figure, in inches."""
 
     font_size: int = 9
     """The font size for the plot texts."""
 
-    def _plot(
-        self,
-        visualization: type[Plot],
-        decomposition: Decomposition,
-        weights: ndarray,
-        normalize_each_objective: bool = True,
-        **scalar_options: Any,
-    ) -> None:
+    Settings: ClassVar[type[WeightedPostSettings]] = WeightedPostSettings
+
+    def _plot(self, visualization: type[Plot], settings: WeightedPostSettings) -> None:
         """Plot a multi-objective diagram for each set of weights.
 
         A `scalarization function <https://pymoo.org/misc/decomposition.html>`_ is used
         to transform the multi-objective functions into a single-objective.
-
-        Args:
-            visualization: The Pymoo visualization class to be used to create the plot.
-            decomposition: The instance of the scalarization function to use.
-            weights: The weights for the scalarization function.
-            normalize_each_objective: Whether the objectives should be normalized.
-            **scalar_options: The keyword arguments for the scalarization function.
 
         Raises:
             TypeError: If the scalarization function is not an instance of
@@ -81,22 +62,13 @@ class MultiObjectiveDiagram(OptPostProcessor):
                 of objectives, or if the diagram ``radar`` is used for problems with
                 less than 3 objectives.
         """
-        if not isinstance(decomposition, Decomposition):
-            msg = (
-                "The scalarization function must be an instance of "
-                "pymoo.core.Decomposition."
-            )
-            raise TypeError(msg)
-
-        # Ensure correct dimension and type.
-        weights = atleast_2d(weights).astype(float)
-
         # Objectives.
-        n_obj = self.opt_problem.objective.dim
-        obj_name = self.opt_problem.objective.name
+        n_obj = self.optimization_problem.objective.dim
+        obj_name = self.optimization_problem.objective.name
 
+        settings.weights = atleast_2d(settings.weights).astype(float)
         # Check weight's dimension.
-        if weights.shape[1] != n_obj:
+        if settings.weights.shape[1] != n_obj:
             msg = "You must provide exactly one weight for each objective function!"
             raise ValueError(msg)
 
@@ -109,33 +81,12 @@ class MultiObjectiveDiagram(OptPostProcessor):
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
         # Prepare points to plot.
         points, title = [], []
-        for weight in weights:
-            # Apply decomposition.
-            d_res = decomposition.do(
-                pareto.f_optima,
-                weight,
-                utopian_point=pareto.f_utopia,
-                nadir_point=pareto.f_anti_utopia,
-                **scalar_options,
-            )
-            d_min = d_res.min()
-            d_idx = d_res.argmin()
 
-            points.append(pareto.f_optima[d_idx])
-
-            float_format = ".2e" if abs(d_min) >= 1e3 else ".2f"
-            title.append(f"s({weight}) = {d_min:{float_format}}")
-
-        # Add anchor points (to test coherence of bounds).
-        # points.extend([anchor for anchor in pareto.anchor_front])
-        # title.extend([f"Anchor ({i + 1})" for i in range(len(pareto.anchor_front))])
-
-        # Concatenate points to plot.
-        points = vstack(points)
+        points, title = _apply_decomposition(points, title, pareto, settings)
 
         # Split in different rows depending on the number of points.
         n_plots = len(points)
@@ -149,11 +100,11 @@ class MultiObjectiveDiagram(OptPostProcessor):
         # Create plot.
         plot = visualization(
             bounds=[pareto.f_utopia, pareto.f_anti_utopia],
-            figsize=self.DEFAULT_FIG_SIZE,
+            figsize=settings.fig_size,
             title=title,
             tight_layout=False,
             labels=[f"$obj_{i + 1}$" for i in range(n_obj)],
-            normalize_each_objective=normalize_each_objective,
+            normalize_each_objective=settings.normalize_each_objective,
             close_on_destroy=False,  # Do not close figure when plot is destroyed.
         )
 
@@ -207,10 +158,10 @@ class MultiObjectiveDiagram(OptPostProcessor):
         ax_text.axis("off")
 
         # Set figure title with the scalarization function's name.
-        plot.fig.suptitle(f"s = {decomposition.__class__.__name__}")
+        plot.fig.suptitle(f"s = {settings.decomposition.__class__.__name__}")
 
         self._add_figure(
             plot.fig,
             file_name=f"{visualization.__class__.__name__}_"
-            f"{decomposition.__class__.__name__}_{len(self.figures) + 1}",
+            f"{settings.decomposition.__class__.__name__}_{len(self.figures) + 1}",
         )

@@ -26,11 +26,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from gemseo.algos.opt.opt_factory import OptimizersFactory
-from gemseo.post.post_factory import PostFactory
-from gemseo.problems.analytical.power_2 import Power2
+from gemseo.algos.opt.factory import OptimizationLibraryFactory
+from gemseo.post.factory import PostFactory
+from gemseo.problems.optimization.power_2 import Power2
 from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
+from pydantic import ValidationError
 from pymoo.decomposition.aasf import AASF
 from pymoo.decomposition.asf import ASF
 from pymoo.decomposition.pbi import PBI
@@ -43,10 +44,10 @@ from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
-    from gemseo.algos.opt_problem import OptimizationProblem
+    from gemseo.algos.optimization_problem import OptimizationProblem
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_1obj() -> OptimizationProblem:
     """Create an optimization problem with 1 objective ready to be post-processed.
 
@@ -54,12 +55,12 @@ def problem_1obj() -> OptimizationProblem:
         A :class:`.Power2` instance.
     """
     power2 = Power2()
-    power2.constraints = power2.get_ineq_constraints()
-    OptimizersFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
+    power2.constraints = list(power2.constraints.get_inequality_constraints())
+    OptimizationLibraryFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
     return power2
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_2obj() -> OptimizationProblem:
     """Create an optimization problem with 2 objectives ready to be post-processed.
 
@@ -67,11 +68,11 @@ def problem_2obj() -> OptimizationProblem:
         A :class:`.ChankongHaimes` instance.
     """
     problem = ChankongHaimes()
-    OptimizersFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizationLibraryFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
     return problem
 
 
-@pytest.fixture()
+@pytest.fixture
 def problem_3obj() -> OptimizationProblem:
     """Create an optimization problem with 3 objectives ready to be post-processed.
 
@@ -79,7 +80,7 @@ def problem_3obj() -> OptimizationProblem:
         A :class:`.Viennet` instance.
     """
     problem = Viennet()
-    OptimizersFactory().execute(
+    OptimizationLibraryFactory().execute(
         problem,
         algo_name="PYMOO_NSGA2",
         max_iter=1000,
@@ -88,7 +89,7 @@ def problem_3obj() -> OptimizationProblem:
     return problem
 
 
-@pytest.fixture()
+@pytest.fixture
 def post_factory() -> PostFactory:
     """Create a :class:`gemseo.post.post_factory.PostFactory` instance.
 
@@ -106,12 +107,20 @@ def test_saving(tmp_wd, post_factory, problem_2obj):
         post_factory: Fixture returning a post-processing factory.
         problem_2obj: Fixture returning the optimization problem to be post-processed.
     """
-    options = {"decomposition": ASF(), "weights": [0.3, 0.7], "plot_arrow": True}
+    settings = {
+        "decomposition": ASF(),
+        "weights": array([0.3, 0.7]),
+        "plot_arrow": True,
+    }
     post = post_factory.execute(
-        problem_2obj, "Compromise", save=True, file_path="compromise1", **options
+        problem_2obj,
+        post_name="Compromise",
+        save=True,
+        file_path="compromise1",
+        **settings,
     )
-    assert len(post.output_files) == 1
-    for file in post.output_files:
+    assert len(post.output_file_paths) == 1
+    for file in post.output_file_paths:
         assert Path(file).exists()
 
 
@@ -152,23 +161,23 @@ def test_post(
         problem_3obj: Fixture returning the optimization problem to be post-processed.
         diagram_name: The name of the diagram.
         decomposition: The instance of the scalarization function.
-        opts: The post-processing options.
+        opts: The post-processing settings.
         baseline_images: The reference images to be compared.
     """
-    options = dict(file_extension="png", save=False, **opts)
+    settings = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
-        options.update(
+        settings.update(
             decomposition=decomposition,
-            weights=[[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]],
+            weights=array([[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]]),
         )
 
     # Check "weights = None" option.
     if diagram_name == "Compromise" and isinstance(
         decomposition, PerpendicularDistance
     ):
-        options.pop("weights")
+        settings.pop("weights")
 
-    post = post_factory.execute(problem_3obj, diagram_name, **options)
+    post = post_factory.execute(problem_3obj, post_name=diagram_name, **settings)
 
     # Cover Arrow3D and Annotation3D draw methods.
     if diagram_name == "Compromise" and opts["plot_arrow"]:
@@ -179,30 +188,22 @@ def test_post(
 
 
 @pytest.mark.parametrize(
-    ("single_objective", "options", "expectation"),
+    ("single_objective", "settings", "expectation"),
     [
         (
             True,
             {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
-            pytest.raises(
-                ValueError,
-                match="This post-processing is only suitable for optimization "
-                "problems with 2 or 3 objective functions!",
-            ),
+            pytest.raises(ValidationError),
         ),
         (
             False,
             {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
-            pytest.raises(
-                ValueError,
-                match="You must provide either a single label for all points "
-                "or one label for each one!",
-            ),
+            pytest.raises(ValidationError),
         ),
     ],
 )
 def test_exceptions_scatter(
-    problem_1obj, problem_2obj, single_objective, options, expectation
+    problem_1obj, problem_2obj, single_objective, settings, expectation
 ):
     """Test different exceptions raised during the Scatter post-processing execution.
 
@@ -212,29 +213,35 @@ def test_exceptions_scatter(
         problem_2obj: Fixture returning the multi-objective
             optimization problem to be post-processed.
         single_objective: Whether to use the single-objective optimization problem.
-        options: The post-processing options.
+        settings: The post-processing settings.
         expectation: The expected exception to be raised.
     """
     problem = problem_1obj if single_objective else problem_2obj
 
     post = ScatterPareto(problem)
     with expectation:
-        post.execute(save=False, **options)
+        post.execute(save=False, **settings)
 
 
 @pytest.mark.parametrize(
-    ("options", "expectation"),
+    ("settings", "expectation"),
     [
         (
-            {"decomposition": "unknown", "weights": [1]},
+            {
+                "decomposition": "unknown",
+                "weights": array([1]),
+            },
             pytest.raises(
                 TypeError,
-                match="The scalarization function must be an instance of"
-                " pymoo.core.Decomposition.",
+                match="The scalarization function must be an instance of "
+                "pymoo.core.Decomposition.",
             ),
         ),
         (
-            {"decomposition": ASF(), "weights": [1, 2]},
+            {
+                "decomposition": ASF(),
+                "weights": array([1, 2]),
+            },
             pytest.raises(
                 ValueError,
                 match="You must provide exactly one weight for each objective function",
@@ -242,25 +249,30 @@ def test_exceptions_scatter(
         ),
     ],
 )
-def test_exceptions_compromise(post_factory, problem_1obj, options, expectation):
+def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation):
     """Test different exceptions raised during the Compromise post-processing execution.
 
     Args:
         post_factory: Fixture returning a post-processing factory.
         problem_1obj: Fixture returning the optimization problem to be post-processed.
-        options: The post-processing options.
+        settings: The post-processing settings.
         expectation: The expected exception to be raised.
     """
     with expectation:
-        post_factory.execute(problem_1obj, "Compromise", save=False, **options)
+        post_factory.execute(
+            problem_1obj, post_name="Compromise", save=False, **settings
+        )
 
 
 @pytest.mark.parametrize(
-    ("diagram", "options", "expectation"),
+    ("diagram", "settings", "expectation"),
     [
         (
             "Petal",
-            {"decomposition": "unknown", "weights": [1, 2]},
+            {
+                "decomposition": "unknown",
+                "weights": [1, 2],
+            },  # error unknown is not instance of Decomposition
             pytest.raises(
                 TypeError,
                 match="The scalarization function must be an instance of "
@@ -269,7 +281,10 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Petal",
-            {"decomposition": ASF(), "weights": [1, 2, 3]},
+            {
+                "decomposition": ASF(),
+                "weights": array([1, 2, 3]),
+            },
             pytest.raises(
                 ValueError,
                 match="provide exactly one weight for each objective",
@@ -277,7 +292,10 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
         (
             "Radar",
-            {"decomposition": ASF(), "weights": [1, 2]},
+            {
+                "decomposition": ASF(),
+                "weights": array([1, 2]),
+            },
             pytest.raises(
                 ValueError,
                 match="The Radar post-processing is only suitable for optimization "
@@ -286,15 +304,17 @@ def test_exceptions_compromise(post_factory, problem_1obj, options, expectation)
         ),
     ],
 )
-def test_exceptions_diagrams(post_factory, problem_2obj, diagram, options, expectation):
+def test_exceptions_diagrams(
+    post_factory, problem_2obj, diagram, settings, expectation
+):
     """Test different exceptions raised during the Diagrams post-processing execution.
 
     Args:
         post_factory: Fixture returning a post-processing factory.
         problem_2obj: Fixture returning the optimization problem to be post-processed.
         diagram: The type of diagram to be created.
-        options: The post-processing options.
+        settings: The post-processing settings.
         expectation: The expected exception to be raised.
     """
     with expectation:
-        post_factory.execute(problem_2obj, diagram, save=False, **options)
+        post_factory.execute(problem_2obj, post_name=diagram, save=False, **settings)

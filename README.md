@@ -7,35 +7,33 @@ http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative
 Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
+# gemseo-pymoo
+
+[![PyPI - License](https://img.shields.io/pypi/l/gemseo-pymoo)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gemseo-pymoo)](https://pypi.org/project/gemseo-pymoo/)
+[![PyPI](https://img.shields.io/pypi/v/gemseo-pymoo)](https://pypi.org/project/gemseo-pymoo/)
+[![Codecov branch](https://img.shields.io/codecov/c/gitlab/gemseo:dev/gemseo-pymoo/develop)](https://app.codecov.io/gl/gemseo:dev/gemseo-pymoo)
+
+## Overview
+
 A GEMSEO wrapper for pymoo optimization algorithms.
 
-# Documentation
+## Installation
 
-How to get the docs?
+Install the latest version with `pip install gemseo-pymoo`.
 
-# Bugs/Questions
+See [pip](https://pip.pypa.io/en/stable/getting-started/) for more information.
 
-Please use the gitlab issue tracker at
-<https://gitlab.com/gemseo/dev/gemseo-pymoo/-/issues>
+## Bugs and questions
+
+Please use the [gitlab issue tracker](https://gitlab.com/gemseo/dev/gemseo-pymoo/-/issues)
 to submit bugs or questions.
 
-# License
+## Contributing
 
-The **gemseo-pymoo** source code is distributed under the GNU LGPL v3.0 license.
-A copy of it can be found in the LICENSE.txt file.
-The GNU LGPL v3.0 license is an exception to the GNU GPL v3.0 license.
-A copy of the GNU GPL v3.0 license can be found in the LICENSES folder.
+See the [contributing section of GEMSEO](https://gemseo.readthedocs.io/en/stable/software/developing.html#dev).
 
-The **gemseo-pymoo** examples are distributed under the BSD 0-Clause, a permissive
-license that allows to copy paste the code of examples without preserving the
-copyright mentions.
-
-The **gemseo-pymoo** documentation is distributed under the CC BY-SA 4.0 license.
-
-The **gemseo-pymoo** product depends on other software which have various licenses.
-The list of dependencies with their licenses is given in the CREDITS.md file.
-
-# Contributors
+## Contributors
 
 - Gabriel Max DE MENDONCA ABRANTES
 - Francois GALLARD

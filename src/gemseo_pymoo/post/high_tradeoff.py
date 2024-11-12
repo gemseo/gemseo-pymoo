@@ -22,16 +22,14 @@
 
 from __future__ import annotations
 
-import logging
-from typing import Any
 from typing import ClassVar
 
-from gemseo.algos.pareto import ParetoFront
+from gemseo.algos.pareto.pareto_front import ParetoFront
 from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
 
+from gemseo_pymoo.post.high_tradeoff_settings import HighTradeOffPostSettings
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-
-LOGGER = logging.getLogger(__name__)
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
 
 
 class HighTradeOff(ScatterPareto):
@@ -52,43 +50,30 @@ class HighTradeOff(ScatterPareto):
         "zorder": 3,
     }
 
-    def _plot(
-        self,
-        plot_extra: bool = True,
-        plot_legend: bool = True,
-        plot_arrow: bool = False,
-        **high_tradeoff_options: Any,
-    ) -> None:
-        """Scatter plot of the pareto front along with the high trade-off points.
+    Settings: ClassVar[type[HighTradeOffPostSettings]] = HighTradeOffPostSettings
 
-        Args:
-            plot_extra: Whether to plot the extra pareto related points,
-                i.e. ``utopia``, ``nadir`` and ``anchor`` points.
-            plot_legend: Whether to show the legend.
-            plot_arrow: Whether to plot arrows connecting the utopia point to
-                the compromise points. The arrows are annotated with the ``2-norm`` (
-                `Euclidian distance <https://en.wikipedia.org/wiki/Euclidean_distance>`_
-                ) of the vector represented by the arrow.
-            **high_tradeoff_options: The keyword arguments for the class
-                :class:`pymoo.mcdm.high_tradeoff.HighTradeoffPoints`.
-        """
+    def _plot(self, settings: HighTradeOffPostSettings) -> None:
+        """Scatter plot of the pareto front along with the high trade-off points."""
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
+        settings_ = settings.model_dump()
         # Initialize decomposition function.
         decision_making = HighTradeoffPoints(
             ideal=pareto.f_utopia,
             nadir=pareto.f_anti_utopia,
-            **high_tradeoff_options,
+            **settings_,
         )
 
         # Indexes of the High Trade-Off points.
         indexes_dm = decision_making.do(pareto.f_optima)
 
         super()._plot(
-            pareto.f_optima[indexes_dm],
-            "High Trade-Offs",
-            plot_extra,
-            plot_legend,
-            plot_arrow,
+            settings=ScatterParetoPostSettings(
+                points=pareto.f_optima[indexes_dm],
+                points_labels=["High Trade-Offs"],
+                plot_extra=settings.plot_extra,
+                plot_legend=settings.plot_legend,
+                plot_arrow=settings.plot_arrow,
+            ),
         )

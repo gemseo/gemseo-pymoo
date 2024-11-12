@@ -29,7 +29,7 @@ from numpy.testing import assert_allclose
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 
 
-@pytest.fixture()
+@pytest.fixture
 def chankong_haimes() -> ChankongHaimes:
     """Create a :class:`.ChankongHaimes` optimization problem.
 

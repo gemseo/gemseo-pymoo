@@ -27,17 +27,20 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
 from typing import Final
 from typing import Union
 
-from gemseo.algos.opt.optimization_library import OptimizationAlgorithmDescription
-from gemseo.algos.opt.optimization_library import OptimizationLibrary
-from gemseo.algos.opt_problem import OptimizationProblem
-from gemseo.algos.opt_result import OptimizationResult
-from gemseo.algos.opt_result_multiobj import MultiObjectiveOptimizationResult
+from gemseo.algos.multiobjective_optimization_result import (
+    MultiObjectiveOptimizationResult,
+)
+from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
+from gemseo.algos.opt.base_optimization_library import OptimizationAlgorithmDescription
+from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
+from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TCH002
+from gemseo.algos.optimization_result import OptimizationResult
+from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TCH002
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -50,23 +53,27 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
+from pymoo.core.operator import Operator  # noqa: TCH002
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
 from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
+from pymoo.util.reference_direction import (
+    MultiLayerReferenceDirectionFactory,  # noqa: TCH002
+)
+from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TCH002
 
+from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
+from gemseo_pymoo.algos.opt._settings.ga_settings import GASettings
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import NSGA2Settings
+from gemseo_pymoo.algos.opt._settings.nsga3_settings import NSGA3Settings
+from gemseo_pymoo.algos.opt._settings.rnsga3_settings import RNSGA3Settings
+from gemseo_pymoo.algos.opt._settings.unsga3_settings import UNSGA3Settings
 from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
-
-if TYPE_CHECKING:
-    from gemseo.algos.stop_criteria import TerminationCriterion
-    from pymoo.core.operator import Operator
-    from pymoo.core.population import Population
-    from pymoo.util.reference_direction import MultiLayerReferenceDirectionFactory
-    from pymoo.util.reference_direction import ReferenceDirectionFactory
 
 LOGGER = logging.getLogger(__name__)
 
@@ -89,16 +96,19 @@ class PymooAlgorithmDescription(OptimizationAlgorithmDescription):
 
     positive_constraints: bool = False
 
-    problem_type: OptimizationProblem.ProblemType = (
-        OptimizationProblem.ProblemType.NON_LINEAR
-    )
+    for_linear_problems: bool = False
+
+    Settings: type[BasePymooSettings] = BasePymooSettings
+    """ "The option validation model for Gemseo Pymoo optimization library plugin."""
 
 
-class PymooOpt(OptimizationLibrary):
+class PymooOpt(BaseOptimizationLibrary):
     """Pymoo optimization library interface.
 
     See :class:`gemseo.algos.opt.optimization_library.OptimizationLibrary`.
     """
+
+    __DOC: Final[str] = "https://www.pymoo.org/algorithms/"
 
     N_PROCESSES: Final[str] = "n_processes"
     """The tag for the number of processes to use."""
@@ -114,9 +124,6 @@ class PymooOpt(OptimizationLibrary):
 
     STOP_CRIT_N_HV: Final[str] = "stop_crit_n_hv"
     """The tag for the number of generations to account for in the hypervolume check."""
-
-    __PYMOO_WEBPAGE: Final[str] = "https://www.pymoo.org"
-    """The pymoo webpage."""
 
     __PYMOO_PREFIX: Final[str] = "PYMOO_"
     """The prefix added to the internal algorithm's name."""
@@ -159,21 +166,6 @@ class PymooOpt(OptimizationLibrary):
 
     __PYMOO_ = "PYMOO_"
 
-    __PYMOO_METADATA: Final[dict[str, tuple[str, str]]] = {
-        PYMOO_GA: ("Genetic Algorithm", "soo/ga.html#GA:-Genetic-Algorithm"),
-        PYMOO_NSGA2: (
-            "Non-dominated Sorting Genetic Algorithm II",
-            "moo/nsga2.html#nb-nsga2",
-        ),
-        PYMOO_NSGA3: (
-            "Non-dominated Sorting Genetic Algorithm III",
-            "moo/nsga3.html#nb-nsga3",
-        ),
-        PYMOO_UNSGA3: ("Unified NSGA3", "moo/unsga3.html#nb-unsga3"),
-        PYMOO_RNSGA3: ("Reference Point Based NSGA3", "moo/rnsga3.html#nb-rnsga3"),
-    }
-    """The description and webpage link of the pymoo algorithms."""
-
     LIBRARY_NAME: Final[str] = "pymoo"
     """The library's name."""
 
@@ -189,7 +181,78 @@ class PymooOpt(OptimizationLibrary):
     _RESULT_CLASS: ClassVar[type[OptimizationResult]] = MultiObjectiveOptimizationResult
     """The class used to present the result of the optimization."""
 
-    def __init__(self) -> None:
+    ALGORITHM_INFOS: ClassVar[dict[str, PymooAlgorithmDescription]] = {
+        "PYMOO_GA": PymooAlgorithmDescription(
+            algorithm_name="GA",
+            description=("Genetic Algorithm (GA)implemented in the Pymoo library"),
+            handle_equality_constraints=False,
+            handle_inequality_constraints=True,
+            internal_algorithm_name="GA",
+            require_gradient=False,
+            positive_constraints=True,
+            handle_multiobjective=False,
+            website=f"{__DOC}/soo/ga.html",
+            Settings=GASettings,
+        ),
+        "PYMOO_NSGA2": PymooAlgorithmDescription(
+            algorithm_name="NSGA2",
+            description=(
+                "Non-Dominated Sorting Genetic Algorithm II (NSGA2)"
+                "implemented in the Pymoo library"
+            ),
+            handle_equality_constraints=False,
+            handle_inequality_constraints=True,
+            internal_algorithm_name="NSGA2",
+            require_gradient=False,
+            positive_constraints=True,
+            handle_multiobjective=True,
+            website=f"{__DOC}moo/nsga2.html",
+            Settings=NSGA2Settings,
+        ),
+        "PYMOO_NSGA3": PymooAlgorithmDescription(
+            algorithm_name="NSGA3",
+            description=(
+                "Non-Dominated Sorting Genetic Algorithm III (NSGA3)"
+                "implemented in the Pymoo library"
+            ),
+            handle_equality_constraints=False,
+            handle_inequality_constraints=True,
+            internal_algorithm_name="NSGA3",
+            require_gradient=False,
+            positive_constraints=True,
+            handle_multiobjective=True,
+            website=f"{__DOC}moo/nsga3.html",
+            Settings=NSGA3Settings,
+        ),
+        "PYMOO_UNSGA3": PymooAlgorithmDescription(
+            algorithm_name="UNSGA3",
+            description=("Unified NSGA III)implemented in the Pymoo library"),
+            handle_equality_constraints=False,
+            handle_inequality_constraints=True,
+            internal_algorithm_name="UNSGA3",
+            require_gradient=False,
+            positive_constraints=True,
+            handle_multiobjective=True,
+            website=f"{__DOC}moo/Unsga3.html",
+            Settings=UNSGA3Settings,
+        ),
+        "PYMOO_RNSGA3": PymooAlgorithmDescription(
+            algorithm_name="RNSGA3",
+            description=(
+                "Reference Point Based NSGA IIIimplemented in the Pymoo library"
+            ),
+            handle_equality_constraints=False,
+            handle_inequality_constraints=True,
+            internal_algorithm_name="RNSGA3",
+            require_gradient=False,
+            positive_constraints=True,
+            handle_multiobjective=True,
+            website=f"{__DOC}moo/rnsga3.html",
+            Settings=RNSGA3Settings,
+        ),
+    }
+
+    def __init__(self, algo_name: str) -> None:
         """Constructor.
 
         Generate the library dict, which contains the list
@@ -199,25 +262,13 @@ class PymooOpt(OptimizationLibrary):
         - does it handle equality constraints
         - does it handle inequality constraints
         """
-        super().__init__()
+        super().__init__(algo_name)
 
         # The design space size (useful for finite discrete problems).
         self._ds_size = inf
 
-        # See https://www.pymoo.org/misc/constraints.html for eq constraints.
-        for algo_name, algo_value in self.__PYMOO_METADATA.items():
-            internal_name = algo_name.replace(self.__PYMOO_, "")
-            self.descriptions[algo_name] = PymooAlgorithmDescription(
-                algorithm_name=internal_name,
-                internal_algorithm_name=internal_name,
-                description=algo_value[0],
-                website=f"{self.__PYMOO_WEBPAGE}/algorithms/{algo_value[1]}",
-                handle_multiobjective=internal_name != "GA",
-            )
-
     def _check_mo_handling(
         self,
-        algo_name: str,
         opt_problem: OptimizationProblem,
     ) -> None:
         """Check if the algorithm is capable of handling the optimization problem.
@@ -226,7 +277,6 @@ class PymooOpt(OptimizationLibrary):
         except the :class:`~pymoo.algorithms.soo.nonconvex.ga.GA` one.
 
         Args:
-            algo_name: The name of the algorithm.
             opt_problem: The problem to be solved.
 
         Raises:
@@ -234,169 +284,13 @@ class PymooOpt(OptimizationLibrary):
         """
         if (
             opt_problem.objective.dim > 1
-            and not self.descriptions[algo_name].handle_multiobjective
+            and not self.ALGORITHM_INFOS[self._algo_name].handle_multiobjective
         ):
             msg = (
-                f"Requested optimization algorithm {self.algo_name} can not handle "
+                f"Requested optimization algorithm {self._algo_name} can not handle "
                 "multiple objectives."
             )
             raise ValueError(msg)
-
-    def _get_options(
-        self,
-        max_iter: int = 999,
-        max_gen: int = 10000000,
-        ftol_rel: float = 1e-9,
-        ftol_abs: float = 1e-9,
-        xtol_rel: float = 1e-9,
-        xtol_abs: float = 1e-9,
-        hv_tol_rel: float = 1e-9,
-        hv_tol_abs: float = 1e-9,
-        stop_crit_n_x: int = 3,
-        stop_crit_n_hv: int = 5,
-        normalize_design_space: bool = True,
-        eq_tolerance: float = 1e-2,
-        ineq_tolerance: float = 1e-4,
-        ref_dirs: ndarray | None = None,
-        pop_size: int = 100,
-        sampling: Sampling | Population | None = None,
-        selection: Selection | None = None,
-        mutation: Mutation | None = None,
-        crossover: Crossover | None = None,
-        eliminate_duplicates: bool = True,
-        n_offsprings: int | None = None,
-        seed: int = 1,
-        pop_per_ref_point: int = 1,
-        mu: float = 0.1,
-        ref_points: ndarray | None = None,
-        n_partitions: int = 20,
-        n_points: int | None = None,
-        partitions: ndarray | None = None,
-        scaling_1: float | None = None,
-        scaling_2: float | None = None,
-        **options: Any,
-    ) -> dict[str, Any]:
-        r"""Set the options default values.
-
-        To get the best and up-to-date information about algorithms options, go to
-        pymoo's algorithms `documentation <https://pymoo.org/algorithms/index.html>`_
-
-        Args:
-            max_iter: The maximum number of iterations, i.e. unique calls to f(x).
-            max_gen: The maximum number of generations.
-            ftol_rel: A stop criterion, the relative tolerance on the objective
-                function. If abs(f(xk)-f(xk+1))/abs(f(xk))<= ftol_rel: stop.
-            ftol_abs: A stop criterion, the absolute tolerance on the objective
-                function. If abs(f(xk)-f(xk+1))<= ftol_rel: stop.
-            xtol_rel: A stop criterion, the relative tolerance on the design variables.
-                If norm(xk-xk+1)/norm(xk)<= xtol_rel: stop.
-            xtol_abs: A stop criterion, absolute tolerance on the design variables.
-                If norm(xk-xk+1)<= xtol_abs: stop.
-            hv_tol_rel: A stop criterion, the relative tolerance on the hypervolume
-                convergence check. If norm(xk-xk+1)/norm(xk)<= hv_tol_rel: stop.
-            hv_tol_abs: A stop criterion, absolute tolerance on the hypervolume
-                convergence check. If norm(xk-xk+1)<= hv_tol_abs: stop.
-            stop_crit_n_x: The number of design vectors to account for during the
-               criteria check.
-            stop_crit_n_hv: The number of generations to account for during the
-               criterion check on the hypervolume indicator.
-            normalize_design_space: If True, scale the variables to the range [0, 1].
-            eq_tolerance: The equality tolerance.
-            ineq_tolerance: The inequality tolerance.
-            ref_dirs: The reference directions.
-            pop_size: The population size.
-            sampling: The sampling process that generates the initial population.
-                If None, the algorithm's default is used.
-            selection: The mating selection operator.
-                If None, the algorithm's default is used.
-            mutation: The mutation operator.
-                If None, the algorithm's default is used.
-            crossover: The crossover operator used to create offsprings.
-                If None, the algorithm's default is used.
-            eliminate_duplicates: If True, eliminate duplicates after merging
-                the parent and the offspring population.
-            n_offsprings: Number of offspring that are created through mating.
-                If None, it will be set equal to the population size.
-            seed: The random seed to be used.
-            pop_per_ref_point: The size of the population used for each reference point.
-            mu: The scaling of the reference lines used during survival selection.
-                Increasing mu will generate solutions with a larger spread.
-            ref_points: The reference points (Aspiration Points) as a NumPy array
-                where each row represents a point and each column a variable.
-            n_partitions: The number of gaps between two consecutive points
-                along an objective axis.
-            n_points: The number of points on the unit simplex.
-            partitions: The custom partitions.
-            scaling_1: The scaling of the first simplex.
-            scaling_2: The scaling of the second simplex.
-            **options: The other algorithm options.
-
-        Notes:
-            The pymoo library allows the user to define custom operators
-            to manage the processes of sampling, crossover, mutation and selection.
-
-            In case no info regarding these operators is provided, pymoo's
-            default will be used. Nevertheless, be aware that they may not be
-            suitable for problems containing integer design variables.
-
-            For details about each operator's options,
-            refer to https://pymoo.org/operators/index.html
-
-        Example:
-            Let us consider an optimization problem where
-            all the design variables are discrete (integers).
-            The following operators could be provided among the options:
-
-            >>> from pymoo.operators.crossover.sbx import SBX
-            >>> from pymoo.operators.sampling.rnd import IntegerRandomSampling
-            >>> from pymoo.operators.selection.rnd import RandomSelection
-            >>> from pymoo.operators.repair.rounding import RoundingRepair
-            >>> class MyIntegerMutationOperator(Mutation):
-            ...
-            ...     def _do(self, problem, x, **kwargs_):
-            ...         # my integer mutation strategy
-            ...
-            ...
-            >>> operators = dict(
-            ...     selection=RandomSelection(),
-            ...     sampling=IntegerRandomSampling(),
-            ...     crossover=SBX(prob=0.9, eta=30, repair=RoundingRepair()),
-            ...     mutation=MyIntegerMutationOperator(),
-            ... )
-        """
-        return self._process_options(
-            max_iter=max_iter,
-            max_gen=max_gen,
-            ftol_rel=ftol_rel,
-            ftol_abs=ftol_abs,
-            xtol_rel=xtol_rel,
-            xtol_abs=xtol_abs,
-            hv_tol_rel=hv_tol_rel,
-            hv_tol_abs=hv_tol_abs,
-            stop_crit_n_x=stop_crit_n_x,
-            stop_crit_n_hv=stop_crit_n_hv,
-            normalize_design_space=normalize_design_space,
-            ineq_tolerance=ineq_tolerance,
-            eq_tolerance=eq_tolerance,
-            selection=selection,
-            sampling=sampling,
-            mutation=mutation,
-            crossover=crossover,
-            eliminate_duplicates=eliminate_duplicates,
-            n_offsprings=n_offsprings,
-            seed=seed,
-            mu=mu,
-            ref_points=ref_points,
-            pop_per_ref_point=pop_per_ref_point,
-            pop_size=pop_size,
-            ref_dirs=ref_dirs,
-            n_partitions=n_partitions,
-            n_points=n_points,
-            partitions=partitions,
-            scaling_1=scaling_1,
-            scaling_2=scaling_2,
-            **options,
-        )
 
     @staticmethod
     def _check_operator_suitable(
@@ -442,7 +336,7 @@ class PymooOpt(OptimizationLibrary):
     def _get_ref_dirs(
         self,
         ref_dirs_name: str,
-        **ref_dirs_options: dict[str, str],
+        **ref_dirs_settings: dict[str, str],
     ) -> ReferenceDirectionFactory | MultiLayerReferenceDirectionFactory:
         r"""Return the reference directions.
 
@@ -454,7 +348,7 @@ class PymooOpt(OptimizationLibrary):
 
         Args:
             ref_dirs_name: The reference directions name.
-            **ref_dirs_options: The reference directions options.
+            **ref_dirs_settings: The reference directions settings.
 
         Returns:
             The reference directions. If ``ref_dirs_name`` is unknown,
@@ -464,18 +358,18 @@ class PymooOpt(OptimizationLibrary):
             ValueError: If multiple partitions are provided
                 for a single-objective problem.
         """
-        n_obj = self.problem.objective.dim
+        n_obj = self._problem.objective.dim
 
         if ref_dirs_name == "das-dennis":
-            n_partitions = ref_dirs_options.pop("n_partitions")
+            n_partitions = ref_dirs_settings.pop("n_partitions")
             return get_reference_directions(
                 ref_dirs_name, n_obj, n_partitions=n_partitions
             )
 
         if ref_dirs_name == "multi-layer":
-            n_partitions = ref_dirs_options.pop("n_partitions")
-            scaling_1 = ref_dirs_options.pop("scaling_1")
-            scaling_2 = ref_dirs_options.pop("scaling_2")
+            n_partitions = ref_dirs_settings.pop("n_partitions")
+            scaling_1 = ref_dirs_settings.pop("scaling_1")
+            scaling_2 = ref_dirs_settings.pop("scaling_2")
             return get_reference_directions(
                 ref_dirs_name,
                 get_reference_directions(
@@ -487,7 +381,7 @@ class PymooOpt(OptimizationLibrary):
             )
 
         if ref_dirs_name == "layer-energy":
-            partitions = ref_dirs_options.pop("partitions")
+            partitions = ref_dirs_settings.pop("partitions")
             if n_obj == 1 and np_size(partitions) > 1:
                 msg = (
                     "For a single-objective problem, "
@@ -497,31 +391,27 @@ class PymooOpt(OptimizationLibrary):
             return get_reference_directions(ref_dirs_name, n_obj, partitions)
 
         # By default, return Riesz s-Energy (in case of an unknown name is provided).
-        n_points = ref_dirs_options.pop("n_points")
-        seed = ref_dirs_options.pop("seed")
+        n_points = ref_dirs_settings.pop("n_points")
+        seed = ref_dirs_settings.pop("seed")
         return get_reference_directions(ref_dirs_name, n_obj, n_points, seed=seed)
 
-    def _pre_run(
-        self, problem: OptimizationProblem, algo_name: str, **options: Any
-    ) -> None:
+    def _pre_run(self, problem: OptimizationProblem, **settings: Any) -> None:
         """Take into account a new check for multi-objectives handling.
 
         Args:
             problem: The problem to be solved.
             algo_name: The name of the algorithm.
-            **options: The options for the algorithm, see associated JSON file.
+            **settings: The settings for the algorithm, see associated JSON file.
         """
-        super()._pre_run(problem, algo_name, **options)
-        self._check_mo_handling(algo_name, problem)
-        self._stop_crit_n_hv = options.get(self.STOP_CRIT_N_HV)
+        super()._pre_run(problem, **settings)
+        self._check_mo_handling(problem)
+        self._stop_crit_n_hv = settings.get(self.STOP_CRIT_N_HV)
 
-    def _run(
-        self, **options: Any
-    ) -> OptimizationResult | MultiObjectiveOptimizationResult:
+    def _run(self, problem: OptimizationProblem, **settings: Any) -> tuple[str, Any]:
         """Run the algorithm.
 
         Args:
-            **options: The options for the algorithm.
+            **settings: The settings for the algorithm.
 
         Returns:
             The optimization result.
@@ -529,19 +419,16 @@ class PymooOpt(OptimizationLibrary):
         Raises:
             ValueError: If the algorithm's name is not valid.
         """
-        # Remove normalization from algorithm's options.
-        normalize_ds = options.pop(self.NORMALIZE_DESIGN_SPACE_OPTION, True)
-
         # Instantiate the pymoo Problem.
-        pymoo_problem_options = {
-            self.N_PROCESSES: options.pop(self.N_PROCESSES, 1),
-            self.MAX_GEN: options.pop(self.MAX_GEN),
-            self.HV_TOL_REL: options.pop(self.HV_TOL_REL),
-            self.HV_TOL_ABS: options.pop(self.HV_TOL_ABS),
-            self.STOP_CRIT_N_HV: options.pop(self.STOP_CRIT_N_HV),
+        pymoo_problem_settings = {
+            self.N_PROCESSES: settings.pop(self.N_PROCESSES, 1),
+            self.MAX_GEN: settings.pop(self.MAX_GEN),
+            self.HV_TOL_REL: settings.pop(self.HV_TOL_REL),
+            self.HV_TOL_ABS: settings.pop(self.HV_TOL_ABS),
+            self.STOP_CRIT_N_HV: settings.pop(self.STOP_CRIT_N_HV),
         }
         pymoo_problem = PymooProblem(
-            self.problem, normalize_ds, self, **pymoo_problem_options
+            problem, self._normalize_ds, self, **pymoo_problem_settings
         )
 
         # Problem type (continuous, discrete, mixed).
@@ -551,16 +438,19 @@ class PymooOpt(OptimizationLibrary):
         # It is required to avoid being stuck when dealing with discrete variables,
         # because GEMSEO does not count iterations already stored in database.
         if len(type_var_unique) == 1 and type_var_unique[0] == "integer":
-            l_b, u_b = pymoo_problem.bounds()
-            self._ds_size = int(np_prod(u_b - l_b + 1))
-            if self._ds_size < self.problem.max_iter:
-                self.problem.add_callback(self._check_design_space_exploration)
+            lower_bound, upper_bound = pymoo_problem.bounds()
+            self._ds_size = int(np_prod(upper_bound - lower_bound + 1))
+            if self._ds_size < problem.evaluation_counter.maximum:
+                problem.add_listener(self._check_design_space_exploration)
         else:
             self._ds_size = inf
 
+        # Filter settings to get only the ones of the global optimizer
+        settings = self._filter_settings(settings, BaseOptimizerSettings)
+
         evol_operators = {}
         for operator_name, operator_class in self.EVOLUTIONARY_OPERATORS.items():
-            operator_instance = options.pop(operator_name)
+            operator_instance = settings.pop(operator_name)
             if operator_instance is not None:
                 self._check_operator_suitable(
                     pymoo_problem.xl,
@@ -581,51 +471,57 @@ class PymooOpt(OptimizationLibrary):
                 LOGGER.warning(msg, operator_name)
 
         # Common GeneticAlgorithm parameters.
-        common_options = {
-            "eliminate_duplicates": options.pop("eliminate_duplicates"),
-            "n_offsprings": options.pop("n_offsprings"),
+        common_settings = {
+            "eliminate_duplicates": settings.pop("eliminate_duplicates"),
+            "n_offsprings": settings.pop("n_offsprings"),
         }
 
-        algo_name = self.__PYMOO_PREFIX + self.internal_algo_name
+        algo_name = (
+            self.__PYMOO_PREFIX
+            + self.ALGORITHM_INFOS[self._algo_name].internal_algorithm_name
+        )
         if algo_name == self.PYMOO_RNSGA3:
             algorithm = RNSGA3(
-                ref_points=options.pop("ref_points"),
-                pop_per_ref_point=options.pop("pop_per_ref_point"),
-                mu=options.pop("mu"),
+                ref_points=settings.pop("ref_points"),
+                pop_per_ref_point=settings.pop("pop_per_ref_point"),
+                mu=settings.pop("mu"),
                 **evol_operators,
-                **common_options,
+                **common_settings,
             )
         elif algo_name == self.PYMOO_UNSGA3:
-            ref_dirs_name = options.pop("ref_dirs_name")
-            directions = self._get_ref_dirs(ref_dirs_name, **options)
+            ref_dirs_name = settings.pop("ref_dirs_name")
+            directions = self._get_ref_dirs(ref_dirs_name, **settings)
             algorithm = UNSGA3(
                 ref_dirs=directions,
                 **evol_operators,
-                **common_options,
+                **common_settings,
             )
         elif algo_name == self.PYMOO_NSGA3:
-            ref_dirs_name = options.pop("ref_dirs_name")
-            directions = self._get_ref_dirs(ref_dirs_name, **options)
+            ref_dirs_name = settings.pop("ref_dirs_name")
+            directions = self._get_ref_dirs(ref_dirs_name, **settings)
             algorithm = NSGA3(
                 ref_dirs=directions,
                 **evol_operators,
-                **common_options,
+                **common_settings,
             )
         elif algo_name == self.PYMOO_NSGA2:
             algorithm = NSGA2(
-                pop_size=options.pop("pop_size"),
+                pop_size=settings.pop("pop_size"),
                 **evol_operators,
-                **common_options,
+                **common_settings,
             )
         elif algo_name == self.PYMOO_GA:
             algorithm = GA(
-                pop_size=options.pop("pop_size"),
+                pop_size=settings.pop("pop_size"),
                 **evol_operators,
-                **common_options,
+                **common_settings,
             )
         else:  # pragma: no cover
             # GEMSEO will check in advance if the algorithm is supported.
-            msg = f"Algorithm not supported : {self.internal_algo_name}"
+            msg = (
+                f"Algorithm not supported: "
+                f"{self.ALGORITHM_INFOS[self._algo_name].internal_algorithm_name}"
+            )
             raise ValueError(msg)
 
         res = minimize(
@@ -633,37 +529,45 @@ class PymooOpt(OptimizationLibrary):
             algorithm=algorithm,
             termination=("n_gen", self.pymoo_n_gen),
             return_least_infeasible=True,
-            **options,
+            **settings,
         )
 
-        return self.get_optimum_from_database(res.message, res.success)
+        # return self._get_optimization_result(problem, res.message, res.success)
 
-    def get_optimum_from_database(
-        self, message: str | None = None, status: int | None = None
+        return res.message, res.success
+
+    def _get_optimization_result(
+        self,
+        problem: OptimizationProblem,
+        message: str | None = None,
+        status: int | None = None,
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
-        """Retrieve the optimum from the database.
+        """Return the optimization result adapted to the dimmension of the problem.
 
-        Override the super class method in order to return an
+        Return an
         :class:`~gemseo.algos.opt_result.OptimizationResult` instance adapted for
         multi-objective results (see
         :class:`~gemseo_pymoo.algos.opt_result_mo.MultiObjectiveOptimizationResult`).
 
         Args:
-            message: The message from the optimizer.
-            status: The status from the optimizer.
+            problem: The problem to be solved.
+            message: The message associated with the termination criterion.
+            status: The status associated with the termination criterion.
 
         Returns:
             An optimization result object based on the optimum found.
         """
         # Single-objective problem.
-        if self.problem.objective.dim == 1:
+        if problem.objective.dim == 1:
             return OptimizationResult.from_optimization_problem(
-                self.problem,
+                problem,
                 message=message,
                 status=status,
                 optimizer_name=self.algo_name,
             )
-        return super().get_optimum_from_database(message, status)
+        return MultiObjectiveOptimizationResult.from_optimization_problem(
+            problem, message=message, status=status, optimizer_name=self.algo_name
+        )
 
     def _check_design_space_exploration(self, design_variables: ndarray) -> None:
         """Check on the design space exploration.
@@ -675,11 +579,11 @@ class PymooOpt(OptimizationLibrary):
             DesignSpaceExploredException: If the design space
                 has been completely explored.
         """
-        if self.problem.current_iter == self._ds_size:
+        if self._problem.evaluation_counter.current == self._ds_size:
             raise DesignSpaceExploredException
 
-    def _termination_criterion_raised(
-        self, error: TerminationCriterion
+    def _get_early_stopping_result(
+        self, problem: OptimizationProblem, termination_criterion: TerminationCriterion
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
         """Retrieve the best known iterate when max iter has been reached.
 
@@ -690,36 +594,38 @@ class PymooOpt(OptimizationLibrary):
             - :class:`~gemseo_pymoo.algos.stop_criteria.MaxGenerationsReached`.
 
         Args:
-            error: The obtained error from the algorithm.
+            problem: The problem to be solved.
+            termination_criterion: A termination criterion.
 
         Returns:
             An optimization result object.
         """
-        if isinstance(error, DesignSpaceExploredException):
+        if isinstance(termination_criterion, DesignSpaceExploredException):
             message = (
                 f"All {self._ds_size} points of the design space have been explored. "
                 f"GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimization_result(problem, message)
 
-        if isinstance(error, MaxGenerationsReached):
+        if isinstance(termination_criterion, MaxGenerationsReached):
             message = (
                 "Maximum number of generations reached. GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimization_result(problem, message)
 
-        if isinstance(error, HyperVolumeToleranceReached):
+        if isinstance(termination_criterion, HyperVolumeToleranceReached):
             message = (
                 f"{self._stop_crit_n_hv} successive iterates of the hypervolume "
                 "indicator are closer than hv_tol_rel or hv_tol_abs. "
                 "GEMSEO stopped the driver."
             )
-            return self.get_optimum_from_database(message)
+            return self._get_optimization_result(problem, message)
+        return super()._get_early_stopping_result(problem, termination_criterion)
 
-        return super()._termination_criterion_raised(error)
-
-    def _log_result(self) -> None:
-        if self.problem.objective.dim == 1:
-            super()._log_result()
+    def _log_result(
+        self, problem: OptimizationProblem, max_design_space_dimension_to_log: int
+    ) -> None:
+        if problem.objective.dim == 1:
+            super()._log_result(problem, max_design_space_dimension_to_log)
         else:
-            LOGGER.info("%s", self.problem.solution)
+            LOGGER.info("%s", problem.solution)

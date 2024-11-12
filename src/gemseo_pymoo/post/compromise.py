@@ -22,19 +22,15 @@
 
 from __future__ import annotations
 
-import logging
-from typing import Any
+from typing import ClassVar
 
-from gemseo.algos.pareto import ParetoFront
+from gemseo.algos.pareto.pareto_front import ParetoFront
 from numpy import atleast_2d
-from numpy import ndarray
-from numpy import vstack
-from pymoo.core.decomposition import Decomposition
-from pymoo.decomposition.weighted_sum import WeightedSum
 
+from gemseo_pymoo.post.compromise_settings import CompromisePostSettings
+from gemseo_pymoo.post.core.decomposition_application import _apply_decomposition
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-
-LOGGER = logging.getLogger(__name__)
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
 
 
 class Compromise(ScatterPareto):
@@ -48,34 +44,13 @@ class Compromise(ScatterPareto):
 
     fig_name_prefix = "compromise"
 
-    def _plot(
-        self,
-        decomposition: Decomposition | None = None,
-        weights: ndarray | None = None,
-        plot_extra: bool = True,
-        plot_legend: bool = True,
-        plot_arrow: bool = False,
-        **scalar_options: Any,
-    ) -> None:
+    Settings: ClassVar[type[CompromisePostSettings]] = CompromisePostSettings
+
+    def _plot(self, settings: CompromisePostSettings) -> None:
         """Scatter plot of the pareto front along with the compromise points.
 
         The compromise points are calculated using a
         `scalarization function <https://pymoo.org/misc/decomposition.html>`_).
-
-        Args:
-            decomposition: The instance of the scalarization function to use. If
-                ``None``, use a weighted sum.
-            weights: The weights for the scalarization function. If None, a normalized
-                array is used, e.g. [1./n, 1./n, ..., 1./n] for an optimization problem
-                with n-objectives.
-            plot_extra: Whether to plot the extra pareto related points,
-                i.e. ``utopia``, ``nadir`` and ``anchor`` points.
-            plot_legend: Whether to show the legend.
-            plot_arrow: Whether to plot arrows connecting the utopia point to
-                the compromise points. The arrows are annotated with the ``2-norm`` (
-                `Euclidian distance <https://en.wikipedia.org/wiki/Euclidean_distance>`_
-                ) of the vector represented by the arrow.
-            **scalar_options: The keyword arguments for the scalarization function.
 
         Raises:
             TypeError: If the scalarization function is not an instance of
@@ -83,66 +58,44 @@ class Compromise(ScatterPareto):
             ValueError: If the number of weights does not match the number
                  of objectives.
         """
-        if decomposition is None:
-            decomposition = WeightedSum()
-        elif not isinstance(decomposition, Decomposition):
-            msg = (
-                "The scalarization function must be an instance of "
-                "pymoo.core.Decomposition."
-            )
-            raise TypeError(msg)
-
         # Objectives.
-        n_obj = self.opt_problem.objective.dim
+        n_obj = self.optimization_problem.objective.dim
 
         # Default weights.
-        if weights is None:
-            weights = [1.0 / n_obj] * n_obj
+        if settings.weights is None:
+            settings.weights = [1.0 / n_obj] * n_obj
 
-        # Ensure correct dimension and type.
-        weights = atleast_2d(weights).astype(float)
-
+        settings.weights = atleast_2d(settings.weights).astype(float)
         # Check weight's dimension.
-        if weights.shape[1] != n_obj:
+        if settings.weights.shape[1] != n_obj:
             msg = "You must provide exactly one weight for each objective function!"
             raise ValueError(msg)
 
         # Create Pareto object.
-        pareto = ParetoFront.from_optimization_problem(self.opt_problem)
+        pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
 
         # Prepare points to plot.
-        points = []  # Points' coordinates.
-        point_labels = []  # Points' labels.
-        for weight in weights:
-            # Apply decomposition.
-            d_res = decomposition.do(
-                pareto.f_optima,
-                weight,
-                utopian_point=pareto.f_utopia,
-                nadir_point=pareto.f_anti_utopia,
-                **scalar_options,
-            )
+        points, points_labels = [], []  # Points' coordinates, # Points' labels.
 
-            # Best value according to the scalarization function.
-            d_min = d_res.min()
+        # apply decomposition
+        points, points_labels = _apply_decomposition(
+            points, points_labels, pareto, settings
+        )
 
-            # Index where the minimum value is located (at the pareto front).
-            d_idx = d_res.argmin()
-
-            # Point's coordinates.
-            points.append(pareto.f_optima[d_idx])
-
-            # Point's label.
-            float_format = ".2e" if abs(d_min) > 1e3 else ".2f"
-            point_labels.append(f"s({weight}) = {d_min:{float_format}}")
-
-        # Concatenate points to plot.
-        points = vstack(points)
-
-        # Extra figure options.
-        self.fig_title = f"{self.fig_title}\n(s = {decomposition.__class__.__name__})"
+        # Extra figure settings.
+        self.fig_title = (
+            f"{self.fig_title}\n(s = {settings.decomposition.__class__.__name__})"
+        )
 
         # Update name's prefix with current decomposition function's name.
-        self.fig_name_prefix += f"_{decomposition.__class__.__name__}"
+        self.fig_name_prefix += f"_{settings.decomposition.__class__.__name__}"
 
-        super()._plot(points, point_labels, plot_extra, plot_legend, plot_arrow)
+        super()._plot(
+            ScatterParetoPostSettings(
+                points=points,
+                points_labels=points_labels,
+                plot_extra=settings.plot_extra,
+                plot_legend=settings.plot_legend,
+                plot_arrow=settings.plot_arrow,
+            )
+        )

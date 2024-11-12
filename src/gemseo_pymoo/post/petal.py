@@ -22,19 +22,12 @@
 
 from __future__ import annotations
 
-import logging
-from typing import TYPE_CHECKING
-from typing import Any
+from typing import ClassVar
 
 from pymoo.visualization.petal import Petal as PymooPetal
 
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
-
-if TYPE_CHECKING:
-    from numpy import ndarray
-    from pymoo.core.decomposition import Decomposition
-
-LOGGER = logging.getLogger(__name__)
+from gemseo_pymoo.post.petal_settings import PetalPostSettings
 
 
 class Petal(MultiObjectiveDiagram):
@@ -45,21 +38,14 @@ class Petal(MultiObjectiveDiagram):
         pareto front.
     """
 
-    def _plot(
-        self,
-        decomposition: Decomposition,
-        weights: ndarray,
-        **scalar_options: Any,
-    ) -> None:
+    _TARGET_CLASS_NAME = "Petal"
+
+    Settings: ClassVar[type[PetalPostSettings]] = PetalPostSettings
+
+    def _plot(self, settings: PetalPostSettings) -> None:
         """Plot one petal diagram for each set of weights.
 
         A `scalarization function <https://pymoo.org/misc/decomposition.html>`_ is used
         to transform the multi-objective functions into a single-objective.
         """
-        super()._plot(
-            PymooPetal,
-            decomposition,
-            weights,
-            normalize_each_objective=False,
-            **scalar_options,
-        )
+        super()._plot(visualization=PymooPetal, settings=settings)
