@@ -32,7 +32,7 @@ from gemseo.post.base_post import BasePost
 from gemseo.third_party.prettytable.prettytable import PrettyTable
 from matplotlib.gridspec import GridSpec
 from numpy.core.shape_base import atleast_2d
-from pymoo.core.plot import Plot  # noqa: TCH002
+from pymoo.core.plot import Plot  # noqa: TC002
 from pymoo.visualization.radar import Radar
 
 from gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings import (

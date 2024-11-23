@@ -38,9 +38,9 @@ from gemseo.algos.multiobjective_optimization_result import (
 from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
 from gemseo.algos.opt.base_optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
-from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TCH002
+from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TC002
 from gemseo.algos.optimization_result import OptimizationResult
-from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TCH002
+from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TC002
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -53,16 +53,16 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
-from pymoo.core.operator import Operator  # noqa: TCH002
+from pymoo.core.operator import Operator  # noqa: TC002
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
 from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 from pymoo.util.reference_direction import (
-    MultiLayerReferenceDirectionFactory,  # noqa: TCH002
+    MultiLayerReferenceDirectionFactory,  # noqa: TC002
 )
-from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TCH002
+from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TC002
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 from gemseo_pymoo.algos.opt._settings.ga_settings import GASettings
