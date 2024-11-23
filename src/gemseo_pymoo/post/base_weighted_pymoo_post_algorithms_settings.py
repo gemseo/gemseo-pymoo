@@ -21,7 +21,7 @@ from typing import Any
 
 from gemseo.post.base_post_settings import BasePostSettings
 from gemseo.utils.pydantic import copy_field
-from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TCH002
+from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
 from pydantic import NonNegativeFloat
 from pydantic import PositiveFloat
