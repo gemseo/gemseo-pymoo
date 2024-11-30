@@ -49,7 +49,7 @@ fastjsonschema==2.20.0
     # via gemseo
 fonttools==4.55.0
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@07dac5f70ad7cc3ebd65d4e5e61c835f028aec59
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@a7481b1cc9f7d5b571b94b0409e3f806e7acd0da
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -148,7 +148,7 @@ mkdocs-gen-files==0.5.0
     # via gemseo-pymoo (pyproject.toml)
 mkdocs-get-deps==0.2.0
     # via mkdocs
-mkdocs-include-markdown-plugin==7.1.1
+mkdocs-include-markdown-plugin==7.1.2
     # via gemseo-pymoo (pyproject.toml)
 mkdocs-literate-nav==0.6.1
     # via gemseo-pymoo (pyproject.toml)
