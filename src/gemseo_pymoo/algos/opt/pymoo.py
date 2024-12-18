@@ -532,8 +532,6 @@ class PymooOpt(BaseOptimizationLibrary):
             **settings,
         )
 
-        # return self._get_optimization_result(problem, res.message, res.success)
-
         return res.message, res.success
 
     def _get_optimization_result(

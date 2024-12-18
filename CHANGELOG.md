@@ -21,10 +21,19 @@ Changelog titles are:
 
 All notable changes of this project will be documented here.
 
-The format is based on
-[Keep a Changelog](https://keepachangelog.com/en/1.0.0)
-and this project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+  The format is based on
+  [Keep a Changelog](https://keepachangelog.com/en/1.0.0)
+  and this project adheres to
+  [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+# Unreleased
+
+### Changed
+
+- The ``_new_generation_callback`` method of the class ``PymooProblem`` class no longer
+  computes the hypervolume for all the generations when there's a reference point change;
+  instead it computes just the necessary generations for the evaluation.
 
 # Version 4.0.0 (November 2024)
 
