@@ -1716,9 +1716,16 @@ Changelog titles are:
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
 <p>All notable changes of this project will be documented here.</p>
 <p>The format is based on
-<a href="https://keepachangelog.com/en/1.0.0">Keep a Changelog</a>
-and this project adheres to
-<a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+  <a href="https://keepachangelog.com/en/1.0.0">Keep a Changelog</a>
+  and this project adheres to
+  <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h1 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h1>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The <code>_new_generation_callback</code> method of the class <code>PymooProblem</code> class no longer
+  computes the hypervolume for all the generations when there's a reference point change;
+  instead it computes just the necessary generations for the evaluation.</li>
+</ul>
 <h1 id="version-400-november-2024">Version 4.0.0 (November 2024)<a class="headerlink" href="#version-400-november-2024" title="Permanent link">&para;</a></h1>
 <h2 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1730,7 +1737,7 @@ and this project adheres to
 <li>The function <code>get_gemseo_opt_problem</code> is no longer available.</li>
 </ul>
 <h1 id="version-300-march-2024">Version 3.0.0 (March 2024)<a class="headerlink" href="#version-300-march-2024" title="Permanent link">&para;</a></h1>
-<h1 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h1>
+<h1 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h1>
 <ul>
 <li>The <code>MultiObjectiveOptimizationResult</code> class was moved to <code>gemseo.algos.opt_result_multiobj</code>.</li>
 <li>The <code>MultiObjectiveOptimizationResult.pareto</code> was renamed to <code>MultiObjectiveOptimizationResult.pareto_front</code>.</li>
@@ -1754,7 +1761,7 @@ and this project adheres to
 <li>Support for Python 3.10 and 3.11.</li>
 <li>Support for pymoo 0.6.1.</li>
 </ul>
-<h2 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h2>
+<h2 id="changed_2">Changed<a class="headerlink" href="#changed_2" title="Permanent link">&para;</a></h2>
 <ul>
 <li>The <code>diagram</code> option of the <code>MultiObjectiveDiagram</code> is now called
   <code>visualization</code> to match Pymoo's naming.</li>
