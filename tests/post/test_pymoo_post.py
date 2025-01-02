@@ -22,6 +22,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -233,8 +234,10 @@ def test_exceptions_scatter(
             },
             pytest.raises(
                 TypeError,
-                match="The scalarization function must be an instance of "
-                "pymoo.core.Decomposition.",
+                match=re.escape(
+                    "The scalarization function must be an instance of "
+                    "pymoo.core.Decomposition."
+                ),
             ),
         ),
         (
@@ -244,7 +247,9 @@ def test_exceptions_scatter(
             },
             pytest.raises(
                 ValueError,
-                match="You must provide exactly one weight for each objective function",
+                match=re.escape(
+                    "You must provide exactly one weight for each objective function"
+                ),
             ),
         ),
     ],
@@ -275,8 +280,10 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             },  # error unknown is not instance of Decomposition
             pytest.raises(
                 TypeError,
-                match="The scalarization function must be an instance of "
-                "pymoo.core.Decomposition.",
+                match=re.escape(
+                    "The scalarization function must be an instance of "
+                    "pymoo.core.Decomposition."
+                ),
             ),
         ),
         (
@@ -287,7 +294,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             },
             pytest.raises(
                 ValueError,
-                match="provide exactly one weight for each objective",
+                match=re.escape("provide exactly one weight for each objective"),
             ),
         ),
         (
@@ -298,8 +305,10 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             },
             pytest.raises(
                 ValueError,
-                match="The Radar post-processing is only suitable for optimization "
-                "problems with at least 3 objective functions!",
+                match=re.escape(
+                    "The Radar post-processing is only suitable for optimization "
+                    "problems with at least 3 objective functions!"
+                ),
             ),
         ),
     ],
