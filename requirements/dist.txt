@@ -10,11 +10,11 @@ certifi==2024.12.14
     # via requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.4.0
+charset-normalizer==3.4.1
     # via requests
 check-wheel-contents==0.6.1
     # via -r requirements/dist.in
-click==8.1.7
+click==8.1.8
     # via check-wheel-contents
 cryptography==44.0.0
     # via secretstorage
@@ -32,7 +32,7 @@ jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
-keyring==25.5.0
+keyring==25.6.0
     # via twine
 markdown-it-py==3.0.0
     # via rich
@@ -83,7 +83,7 @@ typing-extensions==4.12.2
     # via
     #   pydantic
     #   pydantic-core
-urllib3==2.2.3
+urllib3==2.3.0
     # via
     #   requests
     #   twine

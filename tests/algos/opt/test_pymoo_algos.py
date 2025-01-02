@@ -26,6 +26,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -541,7 +542,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
         (
             Viennet(),
             {"algo_name": "PYMOO_GA"},
-            pytest.raises(ValueError, match="can not handle multiple objectives."),
+            pytest.raises(
+                ValueError, match=re.escape("can not handle multiple objectives.")
+            ),
         ),
         (
             Rosenbrock(l_b=0, u_b=0),
@@ -552,7 +555,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
             },
             pytest.raises(
                 ValueError,
-                match="PolynomialMutation cannot handle equal lower and upper bounds.",
+                match=re.escape(
+                    "PolynomialMutation cannot handle equal lower and upper bounds."
+                ),
             ),
         ),
         (
@@ -564,8 +569,10 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
             },
             pytest.raises(
                 ValueError,
-                match="For a single-objective problem, "
-                "the partitions array must be of size 1",
+                match=re.escape(
+                    "For a single-objective problem, "
+                    "the partitions array must be of size 1"
+                ),
             ),
         ),
         (
