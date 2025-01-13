@@ -136,7 +136,7 @@ mkdocs==1.6.1
     #   mkdocs-material
     #   mkdocs-section-index
     #   mkdocstrings
-mkdocs-autorefs==1.2.0
+mkdocs-autorefs==1.3.0
     # via
     #   mkdocstrings
     #   mkdocstrings-python
