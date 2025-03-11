@@ -2292,6 +2292,7 @@
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2341,6 +2342,7 @@
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2369,6 +2371,7 @@
     <div class="doc doc-contents ">
 
         <p>"The option validation model for Gemseo Pymoo optimization library plugin.</p>
+
     </div>
 
 </div>
@@ -2450,6 +2453,7 @@ of algorithms with their characteristics:</p>
 
 
 
+
                   <details class="quote">
                     <summary>Source code in <code>src/gemseo_pymoo/algos/opt/pymoo.py</code></summary>
                     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
@@ -2512,6 +2516,7 @@ of algorithms with their characteristics:</p>
     <div class="doc doc-contents ">
 
         <p>The crossover operator's name.</p>
+
     </div>
 
 </div>
@@ -2531,10 +2536,34 @@ of algorithms with their characteristics:</p>
 
 <a href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.EVOLUTIONARY_OPERATORS" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">EVOLUTIONARY_OPERATORS</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Final" href="https://docs.python.org/3/library/typing.html#typing.Final">Final</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n"><span title="pymoo.core.operator.Operator">Operator</span></span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n"><a class="autorefs autorefs-internal" title="gemseo_pymoo.algos.opt.pymoo.PymooOpt.CROSSOVER_OPERATOR" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.CROSSOVER_OPERATOR">CROSSOVER_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.crossover.Crossover">Crossover</span></span><span class="p">,</span>
-    <span class="n"><a class="autorefs autorefs-internal" title="gemseo_pymoo.algos.opt.pymoo.PymooOpt.MUTATION_OPERATOR" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.MUTATION_OPERATOR">MUTATION_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.mutation.Mutation">Mutation</span></span><span class="p">,</span>
-    <span class="n"><a class="autorefs autorefs-internal" title="gemseo_pymoo.algos.opt.pymoo.PymooOpt.SAMPLING_OPERATOR" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.SAMPLING_OPERATOR">SAMPLING_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.sampling.Sampling">Sampling</span></span><span class="p">,</span>
-    <span class="n"><a class="autorefs autorefs-internal" title="gemseo_pymoo.algos.opt.pymoo.PymooOpt.SELECTION_OPERATOR" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.SELECTION_OPERATOR">SELECTION_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.selection.Selection">Selection</span></span><span class="p">,</span>
+    <span class="n"><a class="autorefs autorefs-internal" title="            CROSSOVER_OPERATOR
+
+
+  
+      class-attribute
+      instance-attribute
+   (gemseo_pymoo.algos.opt.pymoo.PymooOpt.CROSSOVER_OPERATOR)" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.CROSSOVER_OPERATOR">CROSSOVER_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.crossover.Crossover">Crossover</span></span><span class="p">,</span>
+    <span class="n"><a class="autorefs autorefs-internal" title="            MUTATION_OPERATOR
+
+
+  
+      class-attribute
+      instance-attribute
+   (gemseo_pymoo.algos.opt.pymoo.PymooOpt.MUTATION_OPERATOR)" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.MUTATION_OPERATOR">MUTATION_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.mutation.Mutation">Mutation</span></span><span class="p">,</span>
+    <span class="n"><a class="autorefs autorefs-internal" title="            SAMPLING_OPERATOR
+
+
+  
+      class-attribute
+      instance-attribute
+   (gemseo_pymoo.algos.opt.pymoo.PymooOpt.SAMPLING_OPERATOR)" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.SAMPLING_OPERATOR">SAMPLING_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.sampling.Sampling">Sampling</span></span><span class="p">,</span>
+    <span class="n"><a class="autorefs autorefs-internal" title="            SELECTION_OPERATOR
+
+
+  
+      class-attribute
+      instance-attribute
+   (gemseo_pymoo.algos.opt.pymoo.PymooOpt.SELECTION_OPERATOR)" href="#gemseo_pymoo.algos.opt.pymoo.PymooOpt.SELECTION_OPERATOR">SELECTION_OPERATOR</a></span><span class="p">:</span> <span class="n"><span title="pymoo.core.selection.Selection">Selection</span></span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -2542,6 +2571,7 @@ of algorithms with their characteristics:</p>
 
         <p>A dictionary with all evolutionary operators available as keys and their Pymoo
 classes as values.</p>
+
     </div>
 
 </div>
@@ -2566,6 +2596,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The tag for the absolute tolerance used in the hypervolume convergence check.</p>
+
     </div>
 
 </div>
@@ -2590,6 +2621,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The tag for the relative tolerance used in the hypervolume convergence check.</p>
+
     </div>
 
 </div>
@@ -2614,6 +2646,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The library's name.</p>
+
     </div>
 
 </div>
@@ -2638,6 +2671,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The tag for the maximum number of generations allowed.</p>
+
     </div>
 
 </div>
@@ -2662,6 +2696,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The mutation operator's name.</p>
+
     </div>
 
 </div>
@@ -2686,6 +2721,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The tag for the number of processes to use.</p>
+
     </div>
 
 </div>
@@ -2710,6 +2746,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The GEMSEO alias for the Genetic Algorithm.</p>
+
     </div>
 
 </div>
@@ -2734,6 +2771,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The GEMSEO alias for the Non-dominated Sorting Genetic Algorithm II.</p>
+
     </div>
 
 </div>
@@ -2758,6 +2796,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The GEMSEO alias for the Non-dominated Sorting Genetic Algorithm III.</p>
+
     </div>
 
 </div>
@@ -2782,6 +2821,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The GEMSEO alias for the Reference Point Based NSGA-III.</p>
+
     </div>
 
 </div>
@@ -2806,6 +2846,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The GEMSEO alias for the Unified NSGA-III.</p>
+
     </div>
 
 </div>
@@ -2830,6 +2871,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The sampling operator's name.</p>
+
     </div>
 
 </div>
@@ -2854,6 +2896,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The selection operator's name.</p>
+
     </div>
 
 </div>
@@ -2878,6 +2921,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The tag for the number of generations to account for in the hypervolume check.</p>
+
     </div>
 
 </div>
@@ -2902,6 +2946,7 @@ classes as values.</p>
     <div class="doc doc-contents ">
 
         <p>The pymoo's termination criterion based on the number of generations.</p>
+
     </div>
 
 </div>
