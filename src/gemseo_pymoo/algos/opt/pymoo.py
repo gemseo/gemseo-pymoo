@@ -191,7 +191,7 @@ class PymooOpt(BaseOptimizationLibrary):
             require_gradient=False,
             positive_constraints=True,
             handle_multiobjective=False,
-            website=f"{__DOC}/soo/ga.html",
+            website=f"{__DOC}soo/ga.html",
             Settings=GASettings,
         ),
         "PYMOO_NSGA2": PymooAlgorithmDescription(
@@ -233,7 +233,7 @@ class PymooOpt(BaseOptimizationLibrary):
             require_gradient=False,
             positive_constraints=True,
             handle_multiobjective=True,
-            website=f"{__DOC}moo/Unsga3.html",
+            website=f"{__DOC}moo/unsga3.html",
             Settings=UNSGA3Settings,
         ),
         "PYMOO_RNSGA3": PymooAlgorithmDescription(
