@@ -61,7 +61,7 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.entry-points]
-gemseo_plugins = { gemseo-pymoo = "gemseo_pymoo"}
+gemseo_plugins = { gemseo-pymoo = "gemseo_pymoo" }
 
 [build-system]
 requires = [
