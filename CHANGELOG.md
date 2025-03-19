@@ -27,7 +27,7 @@ All notable changes of this project will be documented here.
   and this project adheres to
   [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# Unreleased
+## Version 4.0.1 (March 2025)
 
 ### Changed
 
@@ -35,20 +35,20 @@ All notable changes of this project will be documented here.
   computes the hypervolume for all the generations when there's a reference point change;
   instead it computes just the necessary generations for the evaluation.
 
-# Version 4.0.0 (November 2024)
+## Version 4.0.0 (November 2024)
 
-## Added
+### Added
 
 - Support GEMSEO v6.
 - Support for Python 3.12.
 
-# Removed
+### Removed
 
 - The function `get_gemseo_opt_problem` is no longer available.
 
-# Version 3.0.0 (March 2024)
+## Version 3.0.0 (March 2024)
 
-# Changed
+### Changed
 
 - The ``MultiObjectiveOptimizationResult`` class was moved to ``gemseo.algos.opt_result_multiobj``.
 - The ``MultiObjectiveOptimizationResult.pareto`` was renamed to ``MultiObjectiveOptimizationResult.pareto_front``.
@@ -66,14 +66,14 @@ All notable changes of this project will be documented here.
 - ``ParetoFront.min_norm`` was renamed to ``ParetoFront.distance_from_utopia``.
 - ``ParetoFront.df_interest`` was renamed and is now a protected field ``ParetoFront._anchors_neighbors``.
 
-# Version 2.0.0 (January 2024)
+## Version 2.0.0 (January 2024)
 
-## Added
+### Added
 
 - Support for Python 3.10 and 3.11.
 - Support for pymoo 0.6.1.
 
-## Changed
+### Changed
 
 - The ``diagram`` option of the ``MultiObjectiveDiagram`` is now called
   ``visualization`` to match Pymoo's naming.
@@ -95,7 +95,7 @@ All notable changes of this project will be documented here.
   ``crossover`` must now be instantiated by the user and then passed to the
   driver when the problem is executed.
 
-## Removed
+### Removed
 
 - Support for Python 3.8.
 - Support for pymoo <0.6.1.
@@ -105,32 +105,32 @@ All notable changes of this project will be documented here.
 - The ``EvolutionaryOperatorOptionsType`` was removed.
 - The ``EvolutionaryMixedOperatorTypes`` was removed.
 
-## Fixed
+### Fixed
 
 - A typo in the ``Knapsack`` docstring was corrected.
 
-# Version 1.1.3 (October 2023)
+## Version 1.1.3 (October 2023)
 
 Update to GEMSEO 5.1.
 
-# Version 1.1.2 (June 2023)
+## Version 1.1.2 (June 2023)
 
 Update to GEMSEO 5.
 
-# Version 1.1.1 (February 2023)
+## Version 1.1.1 (February 2023)
 
-## Fixed
+### Fixed
 
 - The missing json file to validate the post processor options.
 - The link to the Genetic Algorithm documentation.
 
-# Version 1.1.0 (October 2022)
+## Version 1.1.0 (October 2022)
 
-## Fixed
+### Fixed
 
 - The termination criterion `HyperVolumeToleranceReached` is now also
     taken into account for single-objective problems.
 
-# Version 1.0.0 (July 2022)
+## Version 1.0.0 (July 2022)
 
 First release.
