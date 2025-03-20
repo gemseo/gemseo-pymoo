@@ -42,7 +42,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.56.0
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@a69f56044824ebb27d87b69867f071d5cb4155ca
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@1a7496b8d3a2020cdd9dd25855ca885b09a26578
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -58,7 +58,7 @@ h5py==3.13.0
     #   gemseo
 idna==3.10
     # via requests
-iniconfig==2.0.0
+iniconfig==2.1.0
     # via pytest
 jinja2==3.1.5
     # via gemseo
