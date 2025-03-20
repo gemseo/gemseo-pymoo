@@ -184,7 +184,7 @@ class PymooOpt(BaseOptimizationLibrary):
     ALGORITHM_INFOS: ClassVar[dict[str, PymooAlgorithmDescription]] = {
         "PYMOO_GA": PymooAlgorithmDescription(
             algorithm_name="GA",
-            description=("Genetic Algorithm (GA)implemented in the Pymoo library"),
+            description=("Genetic Algorithm (GA) implemented in the Pymoo library"),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
             internal_algorithm_name="GA",
@@ -197,7 +197,7 @@ class PymooOpt(BaseOptimizationLibrary):
         "PYMOO_NSGA2": PymooAlgorithmDescription(
             algorithm_name="NSGA2",
             description=(
-                "Non-Dominated Sorting Genetic Algorithm II (NSGA2)"
+                "Non-Dominated Sorting Genetic Algorithm II (NSGA2) "
                 "implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
@@ -212,7 +212,7 @@ class PymooOpt(BaseOptimizationLibrary):
         "PYMOO_NSGA3": PymooAlgorithmDescription(
             algorithm_name="NSGA3",
             description=(
-                "Non-Dominated Sorting Genetic Algorithm III (NSGA3)"
+                "Non-Dominated Sorting Genetic Algorithm III (NSGA3) "
                 "implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
@@ -226,7 +226,7 @@ class PymooOpt(BaseOptimizationLibrary):
         ),
         "PYMOO_UNSGA3": PymooAlgorithmDescription(
             algorithm_name="UNSGA3",
-            description=("Unified NSGA III)implemented in the Pymoo library"),
+            description=("Unified NSGA III implemented in the Pymoo library"),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
             internal_algorithm_name="UNSGA3",
@@ -239,7 +239,7 @@ class PymooOpt(BaseOptimizationLibrary):
         "PYMOO_RNSGA3": PymooAlgorithmDescription(
             algorithm_name="RNSGA3",
             description=(
-                "Reference Point Based NSGA IIIimplemented in the Pymoo library"
+                "Reference Point Based NSGA III implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
