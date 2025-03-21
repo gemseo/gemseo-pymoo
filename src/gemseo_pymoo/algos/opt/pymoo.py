@@ -38,9 +38,9 @@ from gemseo.algos.multiobjective_optimization_result import (
 from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
 from gemseo.algos.opt.base_optimization_library import OptimizationAlgorithmDescription
 from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
-from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TCH002
+from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TC002
 from gemseo.algos.optimization_result import OptimizationResult
-from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TCH002
+from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TC002
 from numpy import inf
 from numpy import ndarray
 from numpy import prod as np_prod
@@ -53,16 +53,16 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
-from pymoo.core.operator import Operator  # noqa: TCH002
+from pymoo.core.operator import Operator  # noqa: TC002
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
 from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 from pymoo.util.reference_direction import (
-    MultiLayerReferenceDirectionFactory,  # noqa: TCH002
+    MultiLayerReferenceDirectionFactory,  # noqa: TC002
 )
-from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TCH002
+from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TC002
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 from gemseo_pymoo.algos.opt._settings.ga_settings import GASettings
@@ -184,20 +184,20 @@ class PymooOpt(BaseOptimizationLibrary):
     ALGORITHM_INFOS: ClassVar[dict[str, PymooAlgorithmDescription]] = {
         "PYMOO_GA": PymooAlgorithmDescription(
             algorithm_name="GA",
-            description=("Genetic Algorithm (GA)implemented in the Pymoo library"),
+            description=("Genetic Algorithm (GA) implemented in the Pymoo library"),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
             internal_algorithm_name="GA",
             require_gradient=False,
             positive_constraints=True,
             handle_multiobjective=False,
-            website=f"{__DOC}/soo/ga.html",
+            website=f"{__DOC}soo/ga.html",
             Settings=GASettings,
         ),
         "PYMOO_NSGA2": PymooAlgorithmDescription(
             algorithm_name="NSGA2",
             description=(
-                "Non-Dominated Sorting Genetic Algorithm II (NSGA2)"
+                "Non-Dominated Sorting Genetic Algorithm II (NSGA2) "
                 "implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
@@ -212,7 +212,7 @@ class PymooOpt(BaseOptimizationLibrary):
         "PYMOO_NSGA3": PymooAlgorithmDescription(
             algorithm_name="NSGA3",
             description=(
-                "Non-Dominated Sorting Genetic Algorithm III (NSGA3)"
+                "Non-Dominated Sorting Genetic Algorithm III (NSGA3) "
                 "implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
@@ -226,20 +226,20 @@ class PymooOpt(BaseOptimizationLibrary):
         ),
         "PYMOO_UNSGA3": PymooAlgorithmDescription(
             algorithm_name="UNSGA3",
-            description=("Unified NSGA III)implemented in the Pymoo library"),
+            description=("Unified NSGA III implemented in the Pymoo library"),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
             internal_algorithm_name="UNSGA3",
             require_gradient=False,
             positive_constraints=True,
             handle_multiobjective=True,
-            website=f"{__DOC}moo/Unsga3.html",
+            website=f"{__DOC}moo/unsga3.html",
             Settings=UNSGA3Settings,
         ),
         "PYMOO_RNSGA3": PymooAlgorithmDescription(
             algorithm_name="RNSGA3",
             description=(
-                "Reference Point Based NSGA IIIimplemented in the Pymoo library"
+                "Reference Point Based NSGA III implemented in the Pymoo library"
             ),
             handle_equality_constraints=False,
             handle_inequality_constraints=True,
@@ -531,8 +531,6 @@ class PymooOpt(BaseOptimizationLibrary):
             return_least_infeasible=True,
             **settings,
         )
-
-        # return self._get_optimization_result(problem, res.message, res.success)
 
         return res.message, res.success
 

@@ -16,7 +16,7 @@
 
 from __future__ import annotations
 
-from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TCH002
+from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
 from pydantic import NonNegativeFloat
 from pydantic import PositiveInt

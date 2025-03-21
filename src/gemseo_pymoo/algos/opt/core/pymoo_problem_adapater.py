@@ -104,6 +104,9 @@ class PymooProblem(Problem):
     _ineq_constraints: list[MDOFunction]
     """The problem's inequality constraints."""
 
+    _has_hv_ref_point_changed: bool
+    """Whether there is a change in the hypervolume reference point."""
+
     def __init__(
         self,
         opt_problem: OptimizationProblem,
@@ -126,6 +129,7 @@ class PymooProblem(Problem):
         self.opt_problem = opt_problem
         self.normalize_ds = normalize_ds
         self._driver = driver
+        self._has_hv_ref_point_changed = False
 
         # Track the number of generations.
         self._n_gen = 0
@@ -366,22 +370,31 @@ class PymooProblem(Problem):
         if self._n_gen == 1:
             self._hv_ref_point = new_hv_ref_point
 
-        # If the reference point has changed,
-        # we must recalculate the hypervolume history for all the past generations.
-        if not all(new_hv_ref_point == self._hv_ref_point):
+        # Recalculates the hypervolume history for the last stop_crit_n_hv-generations
+        # if the reference point has changed.
+        if not all(new_hv_ref_point == self._hv_ref_point[-self._stop_crit_n_hv :]):
             LOGGER.debug(
                 "The hypervolume reference point changed from %s to %s",
                 self._hv_ref_point,
                 new_hv_ref_point,
             )
+            self._has_hv_ref_point_changed = True
             self._hv_ref_point = new_hv_ref_point
             hyper_volume = Hypervolume(ref_point=new_hv_ref_point, nds=True)
 
-            for gen_i in range(self._n_gen - 1):
+            for gen_i in range(
+                max(0, self._n_gen - self._stop_crit_n_hv), self._n_gen - 1
+            ):
                 obj_history = self._hv_obj_hist_feasible[gen_i]
                 self._hv_history[gen_i] = hyper_volume.do(obj_history)
+                LOGGER.debug(
+                    "Updating the hypervolume value for the %s ith-generation", gen_i
+                )
 
-            LOGGER.debug("The hypervolume history has been updated.")
+            LOGGER.debug(
+                "The hypervolume history has been updated for the last %s generations.",
+                self._stop_crit_n_hv,
+            )
 
         # Compute the hypervolume indicator for the current generation.
         hyper_volume = Hypervolume(ref_point=self._hv_ref_point, nds=True)
@@ -407,6 +420,18 @@ class PymooProblem(Problem):
                 self._stop_crit_n_hv,
             )
             return
+
+        # If the reference point has changed,
+        # we must recalculate the hypervolume history for all the past generations.
+        if allclose(
+            n_last_hv, hv_average, atol=self._hv_tol_abs, rtol=self._hv_tol_rel
+        ) or self._n_gen == (self.max_gen - 1):
+            if self._has_hv_ref_point_changed:
+                for gen_i in range(self._n_gen - 1):
+                    self._hv_history[gen_i] = hyper_volume.do(
+                        self._hv_obj_hist_feasible[gen_i]
+                    )
+            LOGGER.debug("Hypervolume history updated due to reference point change.")
 
         # Termination criterion based on the convergence of the pareto front.
         if allclose(

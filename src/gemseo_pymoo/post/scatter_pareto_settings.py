@@ -25,9 +25,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence  # noqa: TCH003
+from collections.abc import Sequence  # noqa: TC003
 
-from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TCH002
+from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
 from pydantic import field_validator
 

@@ -26,6 +26,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -46,6 +47,7 @@ from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.operators.repair.rounding import RoundingRepair
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import NSGA2Settings
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.viennet import Viennet
@@ -272,6 +274,34 @@ def test_so_hypervolume(opt_factory, pow2_ineq, settings, caplog):
     assert abs(f_opt - res.f_opt) < 1e-1
 
     assert "successive iterates of the hypervolume indicator are closer" in caplog.text
+
+
+def test_hv_ref_point_change(opt_factory, caplog):
+    """Test the hypervolume evaluations for reference point changes.
+
+    Based on the Viennet problem for which there are constant changes of the reference
+    point of the hypervolume.
+
+    The amount of hypervolume recalculated generations per reference point change must
+    be lower than the hypervolume criterion.
+
+    Args:
+        opt_factory: Fixture returning an optimizer factory.
+        caplog: Fixture to access and control log capturing.
+    """
+    settings = NSGA2Settings(max_iter=1000, stop_crit_n_hv=5, pop_size=50, **tolerances)
+    problem = Viennet()
+    algo_name = "PYMOO_NSGA2"
+    opt_lib = opt_factory.create(algo_name=algo_name)
+
+    with caplog.at_level(logging.DEBUG):
+        opt_lib.execute(problem, settings_model=settings)
+
+    hv_update_count = caplog.text.count("Updating the hypervolume value for the")
+    ref_point_change_count = caplog.text.count(
+        "The hypervolume reference point changed from"
+    )
+    assert hv_update_count / ref_point_change_count < settings.stop_crit_n_hv
 
 
 @pytest.mark.parametrize(
@@ -512,7 +542,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
         (
             Viennet(),
             {"algo_name": "PYMOO_GA"},
-            pytest.raises(ValueError, match="can not handle multiple objectives."),
+            pytest.raises(
+                ValueError, match=re.escape("can not handle multiple objectives.")
+            ),
         ),
         (
             Rosenbrock(l_b=0, u_b=0),
@@ -523,7 +555,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
             },
             pytest.raises(
                 ValueError,
-                match="PolynomialMutation cannot handle equal lower and upper bounds.",
+                match=re.escape(
+                    "PolynomialMutation cannot handle equal lower and upper bounds."
+                ),
             ),
         ),
         (
@@ -535,8 +569,10 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
             },
             pytest.raises(
                 ValueError,
-                match="For a single-objective problem, "
-                "the partitions array must be of size 1",
+                match=re.escape(
+                    "For a single-objective problem, "
+                    "the partitions array must be of size 1"
+                ),
             ),
         ),
         (
