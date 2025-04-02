@@ -193,12 +193,18 @@ def test_post(
     [
         (
             True,
-            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
-            pytest.raises(ValidationError),
+            {
+                "points": array([[0.0, 1.0], [2.0, 3.0], [4.0, 5.0]]),
+                "points_labels": ["a", "b", "c"],
+            },
+            pytest.raises(ValueError),
         ),
         (
             False,
-            {"points": array([[0, 1], [2, 3], [4, 5]]), "point_labels": ["a", "b"]},
+            {
+                "points": array([[0.0, 1.0], [2.0, 3.0], [4.0, 5.0]]),
+                "points_labels": ["a", "b"],
+            },
             pytest.raises(ValidationError),
         ),
     ],
