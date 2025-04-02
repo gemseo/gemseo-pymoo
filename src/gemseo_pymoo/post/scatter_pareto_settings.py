@@ -46,7 +46,7 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
         "front is plot along with extra point (depending on ``"
         "plot_extra`` value).",
     )
-    points_labels: Sequence[str] = Field(
+    points_labels: Sequence[str] | str = Field(
         default="points",
         description="The label of the points of interest. If a list is provided, "
         "it must contain as many labels as the points of interest. "
@@ -64,7 +64,7 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
 
     @field_validator("points_labels")
     @classmethod
-    def __check_labels_size(cls, points_labels: Sequence[str], points):
+    def __check_labels_size(cls, points_labels: Sequence[str] | str, points):
         """Check that the number of labels corresponds to the number of points."""
         if not isinstance(points_labels, str) and len(points_labels) != len(
             points.data["points"]

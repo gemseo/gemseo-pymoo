@@ -71,7 +71,7 @@ class HighTradeOff(ScatterPareto):
         super()._plot(
             settings=ScatterParetoPostSettings(
                 points=pareto.f_optima[indexes_dm],
-                points_labels=["High Trade-Offs"],
+                points_labels="High Trade-Offs",
                 plot_extra=settings.plot_extra,
                 plot_legend=settings.plot_legend,
                 plot_arrow=settings.plot_arrow,
