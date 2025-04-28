@@ -50,7 +50,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.57.0
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@f5d64a8ad8e1335401109059b92cd1ef11d2d67f
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@fe2a3527cd7fe5ff505ff9337e51ed3c4b027a33
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -74,7 +74,7 @@ h5py==3.13.0
     #   gemseo
 idna==3.10
     # via requests
-importlib-metadata==8.6.1
+importlib-metadata==8.7.0
     # via
     #   gemseo
     #   markdown
@@ -241,7 +241,7 @@ pygments==2.19.1
     #   pygments-ansi-color
 pygments-ansi-color==0.3.0
     # via markdown-exec
-pymdown-extensions==10.14.3
+pymdown-extensions==10.15
     # via
     #   markdown-exec
     #   mkdocs-material
@@ -292,7 +292,7 @@ scipy==1.13.1
     #   pydoe3
     #   pymoo
     #   scikit-learn
-setuptools==79.0.1
+setuptools==80.0.0
     # via mkdocs-bibtex
 six==1.17.0
     # via
