@@ -2,170 +2,170 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/changelog/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/credits/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/licenses/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/SUMMARY/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/stop_criteria/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/pymoo/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/ga_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/nsga2_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/nsga3_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/rnsga3_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/_settings/unsga3_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/core/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/core/pymoo_problem_adapater/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/base_pymoo_plot_post_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/base_pymoo_post_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/base_weighted_pymoo_post_algorithms_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/compromise/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/compromise_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/high_tradeoff/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/high_tradeoff_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/petal/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/petal_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/radar/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/radar_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/scatter_pareto/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/scatter_pareto_settings/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/core/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/core/decomposition_application/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/core/multi_objective_diagram/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/core/plot_features/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/problems/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/problems/analytical/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/problems/analytical/chankong_haimes/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/problems/analytical/knapsack/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/problems/analytical/viennet/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
     <url>
          <loc>https://gemseo.gitlab.io/gemseo-pymoo/latest/user_guide/</loc>
-         <lastmod>2025-05-07</lastmod>
+         <lastmod>2025-05-08</lastmod>
     </url>
 </urlset>
