@@ -42,7 +42,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.58.0
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@b7560c255d1286619082522291c6236c366956b7
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@b6fc0c8b1e426ad7c55363fe04e725c1805c6284
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -73,6 +73,8 @@ matplotlib==3.10.1
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
     #   pymoo
+minisom==2.3.5
+    # via gemseo
 mpmath==1.3.0
     # via sympy
 networkx==3.4.2
@@ -138,7 +140,7 @@ pytest==8.3.5
     #   pytest-xdist
 pytest-cov==6.1.1
     # via gemseo-pymoo (pyproject.toml)
-pytest-xdist==3.6.1
+pytest-xdist==3.7.0
     # via gemseo-pymoo (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via
