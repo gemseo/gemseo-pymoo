@@ -343,7 +343,7 @@ xdsmjs==2.0.0
     # via gemseo
 xxhash==3.5.0
     # via gemseo
-zipp==3.22.0
+zipp==3.23.0
     # via
     #   importlib-metadata
     #   importlib-resources
