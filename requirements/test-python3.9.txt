@@ -44,7 +44,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.58.4
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@8bc9a8b00e555499e36d3129d7cff8635213f592
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@58a539d9991956fe058c0577340db66c84714c8d
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -143,7 +143,7 @@ pymoo==0.6.1
     # via gemseo-pymoo (pyproject.toml)
 pyparsing==3.2.3
     # via matplotlib
-pytest==8.4.0
+pytest==8.4.1
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   pytest-cov
@@ -194,7 +194,7 @@ typing-extensions==4.14.0
     #   pydantic-core
 tzdata==2025.2
     # via pandas
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
 wcwidth==0.2.13
     # via prettytable
