@@ -24,7 +24,7 @@ click==8.1.8
     # via
     #   black
     #   mkdocs
-cma==3.2.2
+cma==4.2.0
     # via pymoo
 colorama==0.4.6
     # via
@@ -50,7 +50,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.58.4
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@fbcbd1c3f16025e39dfb1b44593a6586a79b301b
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@7af413471381b6e0bf53c45aedb9e91d7fb4575f
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -60,7 +60,7 @@ ghp-import==2.1.0
     # via mkdocs
 grapheme==0.6.0
     # via alive-progress
-graphviz==0.20.3
+graphviz==0.21
     # via gemseo
 griffe==1.7.3
     # via
@@ -68,7 +68,7 @@ griffe==1.7.3
     #   mkdocstrings-python
 griffe-inherited-docstrings==1.1.1
     # via gemseo-pymoo (pyproject.toml)
-h5py==3.13.0
+h5py==3.14.0
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
@@ -144,7 +144,7 @@ mkdocs-autorefs==1.4.2
     # via
     #   mkdocstrings
     #   mkdocstrings-python
-mkdocs-bibtex==4.2.10
+mkdocs-bibtex==4.4.0
     # via gemseo-pymoo (pyproject.toml)
 mkdocs-gallery==0.10.4
     # via gemseo-pymoo (pyproject.toml)
@@ -156,7 +156,7 @@ mkdocs-include-markdown-plugin==7.1.6
     # via gemseo-pymoo (pyproject.toml)
 mkdocs-literate-nav==0.6.2
     # via gemseo-pymoo (pyproject.toml)
-mkdocs-material==9.6.14
+mkdocs-material==9.6.15
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   mkdocs-gallery
@@ -176,9 +176,9 @@ mypy-extensions==1.1.0
     # via black
 networkx==3.2.1
     # via gemseo
-nlopt==2.7.1
+nlopt==2.9.1
     # via gemseo
-numpy==1.26.4
+numpy==2.0.2
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   autograd
@@ -198,7 +198,7 @@ openpyxl==3.1.5
     # via gemseo
 openturns==1.24
     # via gemseo
-packaging==24.2
+packaging==25.0
     # via
     #   black
     #   gemseo
@@ -208,7 +208,7 @@ packaging==24.2
     #   plotly
 paginate==0.5.7
     # via mkdocs-material
-pandas==2.2.3
+pandas==2.3.0
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
@@ -216,7 +216,7 @@ pathspec==0.12.1
     # via
     #   black
     #   mkdocs
-pillow==11.1.0
+pillow==11.2.1
     # via
     #   gemseo
     #   matplotlib
@@ -226,17 +226,17 @@ platformdirs==4.3.8
     #   mkdocs-get-deps
 plotly==5.24.1
     # via gemseo
-prettytable==3.15.1
+prettytable==3.16.0
     # via gemseo
 psutil==7.0.0
     # via openturns
 pybtex==0.25.1
     # via mkdocs-bibtex
-pydantic==2.10.6
+pydantic==2.11.7
     # via gemseo
-pydantic-core==2.27.2
+pydantic-core==2.33.2
     # via pydantic
-pydoe3==1.0.4
+pydoe3==1.0.5
     # via gemseo
 pygments==2.19.2
     # via
@@ -249,7 +249,7 @@ pymdown-extensions==10.16
     #   markdown-exec
     #   mkdocs-material
     #   mkdocstrings
-pymoo==0.6.1
+pymoo==0.6.1.5
     # via gemseo-pymoo (pyproject.toml)
 pypandoc==1.15
     # via mkdocs-bibtex
@@ -301,7 +301,7 @@ six==1.17.0
     # via python-dateutil
 strenum==0.4.15
     # via gemseo
-sympy==1.13.3
+sympy==1.14.0
     # via gemseo
 tenacity==9.1.2
     # via plotly
@@ -320,6 +320,9 @@ typing-extensions==4.14.0
     #   mkdocstrings-python
     #   pydantic
     #   pydantic-core
+    #   typing-inspection
+typing-inspection==0.4.1
+    # via pydantic
 tzdata==2025.2
     # via pandas
 urllib3==2.5.0
