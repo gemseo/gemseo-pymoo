@@ -24,7 +24,7 @@ click==8.1.8
     # via
     #   black
     #   mkdocs
-cma==3.2.2
+cma==4.2.0
     # via pymoo
 colorama==0.4.6
     # via
@@ -50,7 +50,7 @@ fastjsonschema==2.21.1
     # via gemseo
 fonttools==4.58.4
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@bb3d917b8b669bfceece9091d41cdcadd2d30f53
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@7af413471381b6e0bf53c45aedb9e91d7fb4575f
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -249,7 +249,7 @@ pymdown-extensions==10.16
     #   markdown-exec
     #   mkdocs-material
     #   mkdocstrings
-pymoo==0.6.1
+pymoo==0.6.1.5
     # via gemseo-pymoo (pyproject.toml)
 pypandoc==1.15
     # via mkdocs-bibtex

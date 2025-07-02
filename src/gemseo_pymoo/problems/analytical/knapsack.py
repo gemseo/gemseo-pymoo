@@ -62,11 +62,11 @@ from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
 from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from numpy import atleast_1d
+from numpy import inf
 from numpy import ndarray
 from numpy import ones
 from numpy import sum as np_sum
 from numpy import zeros
-from numpy.core.numeric import infty
 from numpy.random import default_rng
 
 LOGGER = logging.getLogger(__name__)
@@ -182,7 +182,7 @@ class Knapsack(OptimizationProblem):
                 )
 
         if items_ub is None:
-            items_ub = infty
+            items_ub = inf
 
         self.weights = weights
         self.capacity_items = capacity_items

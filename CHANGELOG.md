@@ -27,6 +27,12 @@ All notable changes of this project will be documented here.
   and this project adheres to
   [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Support for NumPy v2.
+
 ## Version 4.0.1 (March 2025)
 
 ### Changed
