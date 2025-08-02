@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/algos/opt/index.html">
+        <link rel="canonical" href="https://gemseo.gitlab.io/gemseo-pymoo/latest/reference/gemseo_pymoo/post/radar.html">
       
       
-        <link rel="prev" href="../stop_criteria.html">
+        <link rel="prev" href="petal_settings.html">
       
       
-        <link rel="next" href="pymoo.html">
+        <link rel="next" href="radar_settings.html">
       
       
-      <link rel="icon" href="../../../../images/favicon.ico">
+      <link rel="icon" href="../../../images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
-        <title>Opt - gemseo-pymoo</title>
+        <title>Radar - gemseo-pymoo</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e37652d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,21 +48,21 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_pyodide.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_pyodide.css">
     
-      <link rel="stylesheet" href="../../../../assets/_markdown_exec_ansi.css">
+      <link rel="stylesheet" href="../../../assets/_markdown_exec_ansi.css">
     
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../../sg_gallery-binder.css">
+      <link rel="stylesheet" href="../../../sg_gallery-binder.css">
     
-      <link rel="stylesheet" href="../../../../sg_gallery.css">
+      <link rel="stylesheet" href="../../../sg_gallery.css">
     
-      <link rel="stylesheet" href="../../../../sg_gallery-rendered-html.css">
+      <link rel="stylesheet" href="../../../sg_gallery-rendered-html.css">
     
-      <link rel="stylesheet" href="../../../../sg_gallery-dataframe.css">
+      <link rel="stylesheet" href="../../../sg_gallery-dataframe.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gemseo_pymoo.algos.opt" class="md-skip">
+        <a href="#gemseo_pymoo.post.radar" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="gemseo-pymoo" class="md-header__button md-logo" aria-label="gemseo-pymoo" data-md-component="logo">
+    <a href="../../.." title="gemseo-pymoo" class="md-header__button md-logo" aria-label="gemseo-pymoo" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Opt
+              Radar
             
           </span>
         </div>
@@ -239,7 +239,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../../index.html" class="md-tabs__link">
+        <a href="../../../index.html" class="md-tabs__link">
           
   
   
@@ -259,7 +259,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../user_guide/index.html" class="md-tabs__link">
+      <a href="../../../user_guide/index.html" class="md-tabs__link">
         
   
   
@@ -280,7 +280,7 @@
   
   
     <li class="md-tabs__item md-tabs__item--active">
-      <a href="../../index.html" class="md-tabs__link">
+      <a href="../index.html" class="md-tabs__link">
         
   
   
@@ -315,7 +315,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="gemseo-pymoo" class="md-nav__button md-logo" aria-label="gemseo-pymoo" data-md-component="logo">
+    <a href="../../.." title="gemseo-pymoo" class="md-nav__button md-logo" aria-label="gemseo-pymoo" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -372,7 +372,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../../index.html" class="md-nav__link ">
+            <a href="../../../index.html" class="md-nav__link ">
               
   
   
@@ -407,7 +407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../changelog.html" class="md-nav__link">
+      <a href="../../../changelog.html" class="md-nav__link">
         
   
   
@@ -430,7 +430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../credits.html" class="md-nav__link">
+      <a href="../../../credits.html" class="md-nav__link">
         
   
   
@@ -453,7 +453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../licenses.html" class="md-nav__link">
+      <a href="../../../licenses.html" class="md-nav__link">
         
   
   
@@ -483,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../user_guide/index.html" class="md-nav__link">
+      <a href="../../../user_guide/index.html" class="md-nav__link">
         
   
   
@@ -533,7 +533,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../index.html" class="md-nav__link ">
+            <a href="../index.html" class="md-nav__link ">
               
   
   
@@ -563,10 +563,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -581,15 +579,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../index.html" class="md-nav__link ">
+            <a href="../algos/index.html" class="md-nav__link ">
               
   
   
@@ -608,7 +606,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             Algos
@@ -622,7 +620,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stop_criteria.html" class="md-nav__link">
+      <a href="../algos/stop_criteria.html" class="md-nav__link">
         
   
   
@@ -642,10 +640,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -662,15 +658,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="index.html" class="md-nav__link md-nav__link--active">
+            <a href="../algos/opt/index.html" class="md-nav__link ">
               
   
   
@@ -683,13 +679,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3_1_2" id="__nav_3_1_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3_1_2" id="__nav_3_1_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1_2">
             <span class="md-nav__icon md-icon"></span>
             Opt
@@ -703,7 +699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pymoo.html" class="md-nav__link">
+      <a href="../algos/opt/pymoo.html" class="md-nav__link">
         
   
   
@@ -753,7 +749,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="_settings/index.html" class="md-nav__link ">
+            <a href="../algos/opt/_settings/index.html" class="md-nav__link ">
               
   
   
@@ -786,7 +782,7 @@
   
   
     <li class="md-nav__item">
-      <a href="_settings/ga_settings.html" class="md-nav__link">
+      <a href="../algos/opt/_settings/ga_settings.html" class="md-nav__link">
         
   
   
@@ -809,7 +805,7 @@
   
   
     <li class="md-nav__item">
-      <a href="_settings/nsga2_settings.html" class="md-nav__link">
+      <a href="../algos/opt/_settings/nsga2_settings.html" class="md-nav__link">
         
   
   
@@ -832,7 +828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="_settings/nsga3_settings.html" class="md-nav__link">
+      <a href="../algos/opt/_settings/nsga3_settings.html" class="md-nav__link">
         
   
   
@@ -855,7 +851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="_settings/rnsga3_settings.html" class="md-nav__link">
+      <a href="../algos/opt/_settings/rnsga3_settings.html" class="md-nav__link">
         
   
   
@@ -878,7 +874,7 @@
   
   
     <li class="md-nav__item">
-      <a href="_settings/unsga3_settings.html" class="md-nav__link">
+      <a href="../algos/opt/_settings/unsga3_settings.html" class="md-nav__link">
         
   
   
@@ -928,7 +924,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="core/index.html" class="md-nav__link ">
+            <a href="../algos/opt/core/index.html" class="md-nav__link ">
               
   
   
@@ -961,7 +957,7 @@
   
   
     <li class="md-nav__item">
-      <a href="core/pymoo_problem_adapater.html" class="md-nav__link">
+      <a href="../algos/opt/core/pymoo_problem_adapater.html" class="md-nav__link">
         
   
   
@@ -1005,8 +1001,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -1045,15 +1043,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../post/index.html" class="md-nav__link ">
+            <a href="index.html" class="md-nav__link ">
               
   
   
@@ -1072,7 +1070,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             Post
@@ -1086,7 +1084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/base_pymoo_plot_post_settings.html" class="md-nav__link">
+      <a href="base_pymoo_plot_post_settings.html" class="md-nav__link">
         
   
   
@@ -1109,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/base_pymoo_post_settings.html" class="md-nav__link">
+      <a href="base_pymoo_post_settings.html" class="md-nav__link">
         
   
   
@@ -1132,7 +1130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/base_weighted_pymoo_post_algorithms_settings.html" class="md-nav__link">
+      <a href="base_weighted_pymoo_post_algorithms_settings.html" class="md-nav__link">
         
   
   
@@ -1155,7 +1153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/compromise.html" class="md-nav__link">
+      <a href="compromise.html" class="md-nav__link">
         
   
   
@@ -1178,7 +1176,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/compromise_settings.html" class="md-nav__link">
+      <a href="compromise_settings.html" class="md-nav__link">
         
   
   
@@ -1201,7 +1199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/high_tradeoff.html" class="md-nav__link">
+      <a href="high_tradeoff.html" class="md-nav__link">
         
   
   
@@ -1224,7 +1222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/high_tradeoff_settings.html" class="md-nav__link">
+      <a href="high_tradeoff_settings.html" class="md-nav__link">
         
   
   
@@ -1247,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/petal.html" class="md-nav__link">
+      <a href="petal.html" class="md-nav__link">
         
   
   
@@ -1270,7 +1268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/petal_settings.html" class="md-nav__link">
+      <a href="petal_settings.html" class="md-nav__link">
         
   
   
@@ -1290,10 +1288,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../post/radar.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Radar
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="radar.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1304,6 +1322,93 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;radar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" radar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Radar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Radar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar.font_size" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;font_size
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1316,7 +1421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/radar_settings.html" class="md-nav__link">
+      <a href="radar_settings.html" class="md-nav__link">
         
   
   
@@ -1339,7 +1444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/scatter_pareto.html" class="md-nav__link">
+      <a href="scatter_pareto.html" class="md-nav__link">
         
   
   
@@ -1362,7 +1467,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/scatter_pareto_settings.html" class="md-nav__link">
+      <a href="scatter_pareto_settings.html" class="md-nav__link">
         
   
   
@@ -1408,7 +1513,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../post/core/index.html" class="md-nav__link ">
+            <a href="core/index.html" class="md-nav__link ">
               
   
   
@@ -1441,7 +1546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/core/decomposition_application.html" class="md-nav__link">
+      <a href="core/decomposition_application.html" class="md-nav__link">
         
   
   
@@ -1464,7 +1569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/core/multi_objective_diagram.html" class="md-nav__link">
+      <a href="core/multi_objective_diagram.html" class="md-nav__link">
         
   
   
@@ -1487,7 +1592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../post/core/plot_features.html" class="md-nav__link">
+      <a href="core/plot_features.html" class="md-nav__link">
         
   
   
@@ -1545,7 +1650,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../problems/index.html" class="md-nav__link ">
+            <a href="../problems/index.html" class="md-nav__link ">
               
   
   
@@ -1601,7 +1706,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../problems/analytical/index.html" class="md-nav__link ">
+            <a href="../problems/analytical/index.html" class="md-nav__link ">
               
   
   
@@ -1634,7 +1739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../problems/analytical/chankong_haimes.html" class="md-nav__link">
+      <a href="../problems/analytical/chankong_haimes.html" class="md-nav__link">
         
   
   
@@ -1657,7 +1762,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../problems/analytical/knapsack.html" class="md-nav__link">
+      <a href="../problems/analytical/knapsack.html" class="md-nav__link">
         
   
   
@@ -1680,7 +1785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../problems/analytical/viennet.html" class="md-nav__link">
+      <a href="../problems/analytical/viennet.html" class="md-nav__link">
         
   
   
@@ -1744,11 +1849,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gemseo_pymoo.algos.opt" class="md-nav__link">
+  <a href="#gemseo_pymoo.post.radar" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;opt
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;radar
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label=" radar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Radar
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Radar">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Attributes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gemseo_pymoo.post.radar.Radar.font_size" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;font_size
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1771,22 +1936,21 @@
   
 
 
-  <h1>Opt</h1>
+  <h1>Radar</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<h2 id="gemseo_pymoo.algos.opt" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">opt</span>
+<h2 id="gemseo_pymoo.post.radar" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">radar</span>
 
 
-<a href="#gemseo_pymoo.algos.opt" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#gemseo_pymoo.post.radar" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents first">
 
-        <p>Pymoo optimization algorithms package.</p>
-<p>Contains wrappers to pymoo library.</p>
+        <p>Radar plot.</p>
 
 
 
@@ -1803,7 +1967,83 @@
 
 
 
+<h3 id="gemseo_pymoo.post.radar-classes">Classes<a href="#gemseo_pymoo.post.radar-classes" class="headerlink" title="Permanent link">&para;</a></h3>
 
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="gemseo_pymoo.post.radar.Radar" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Radar</span>
+
+
+<a href="#gemseo_pymoo.post.radar.Radar" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            MultiObjectiveDiagram (gemseo_pymoo.post.core.multi_objective_diagram.MultiObjectiveDiagram)" href="core/multi_objective_diagram.html#gemseo_pymoo.post.core.multi_objective_diagram.MultiObjectiveDiagram">MultiObjectiveDiagram</a></code></p>
+
+
+        <p><code>Radar plots &lt;https://pymoo.org/visualization/radar.html&gt;</code>_.</p>
+
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>This post-processor assumes the optimization has converged to a well-defined
+pareto front.</p>
+</details>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+<h5 id="gemseo_pymoo.post.radar.Radar-attributes">Attributes<a href="#gemseo_pymoo.post.radar.Radar-attributes" class="headerlink" title="Permanent link">&para;</a></h5>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="gemseo_pymoo.post.radar.Radar.font_size" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">font_size</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#gemseo_pymoo.post.radar.Radar.font_size" class="headerlink" title="Permanent link">&para;</a></h6>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">font_size</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">=</span> <span class="mi">9</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The font size for the plot texts.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
@@ -1861,14 +2101,14 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.instant", "navigation.indexes"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.50899def.min.js"></script>
       
-        <script src="../../../../assets/_markdown_exec_pyodide.js"></script>
+        <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
-        <script src="../../../../javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
