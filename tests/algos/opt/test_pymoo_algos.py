@@ -35,6 +35,8 @@ from gemseo.algos.opt.factory import OptimizationLibraryFactory
 from gemseo.problems.multiobjective_optimization.binh_korn import BinhKorn
 from gemseo.problems.optimization.power_2 import Power2
 from gemseo.problems.optimization.rosenbrock import Rosenbrock
+from numpy import all as np_all
+from numpy import any as np_any
 from numpy import array
 from numpy import hstack as np_hstack
 from numpy import min as np_min
@@ -485,16 +487,16 @@ def test_mo_integer(opt_factory, mo_knapsack):
     res = lib.execute(mo_knapsack, **settings)
 
     # Known solution (one of the anchor points).
-    anchor_x = array([0, 1, 1, 1, 0, 0, 0, 1, 1, 1])
-    anchor_f = array([-295.0, 6])
-    assert anchor_x in res.pareto_front.x_optima
-    assert anchor_f in res.pareto_front.f_optima
+    anchor_x = array([0, 1, 0, 0, 0, 1, 0, 1, 1, 1])
+    anchor_f = array([-293.0, 5.0])
+    assert np_any(np_all(anchor_x == res.pareto_front.x_optima, axis=1))
+    assert np_any(np_all(anchor_f == res.pareto_front.f_optima, axis=1))
 
     # Best compromise.
     comp_x = array([0, 1, 0, 0, 0, 1, 0, 1, 1, 1])
     comp_f = array([-293.0, 5])
-    assert comp_x in res.pareto_front.x_optima
-    assert comp_f in res.pareto_front.f_optima
+    assert np_any(np_all(comp_x == res.pareto_front.x_utopia_neighbors, axis=1))
+    assert np_any(np_all(comp_f == res.pareto_front.f_utopia_neighbors, axis=1))
 
 
 @pytest.mark.parametrize("normalize", [True, False])
@@ -621,6 +623,12 @@ def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
 def test_log_integer_problem(opt_factory, mo_knapsack, caplog):
     """Test the warning message for integer problems with default operators.
 
+    Here we only check the ``_run`` method, not the results. Only one iteration is used
+    to ensure that the initial point of the design space is evaluated because it
+    corresponds to an integer value. If more iterations are used, floating values will
+    be proposed by Pymoo's default sampling operator and an exception will be raised
+    when the database is exported to a dataset.
+
     Args:
         opt_factory: Fixture returning an optimizer factory.
         mo_knapsack: Fixture returning the problem to be optimized.
@@ -634,7 +642,11 @@ def test_log_integer_problem(opt_factory, mo_knapsack, caplog):
         "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
     }
     opt_factory.execute(
-        mo_knapsack, algo_name="PYMOO_NSGA2", **operators, **integer_settings
+        mo_knapsack,
+        algo_name="PYMOO_NSGA2",
+        max_iter=1,
+        **operators,
+        **integer_settings,
     )
     assert (
         "gemseo_pymoo.algos.opt.pymoo",
