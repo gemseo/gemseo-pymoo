@@ -62,7 +62,7 @@ graphemeu==0.7.2
     # via alive-progress
 graphviz==0.21
     # via gemseo
-griffe==1.11.0
+griffe==1.11.1
     # via
     #   griffe-fieldz
     #   griffe-inherited-docstrings
