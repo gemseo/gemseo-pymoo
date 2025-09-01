@@ -40,8 +40,8 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
 
     _TARGET_CLASS_NAME = "ScatterPareto"
 
-    points: NDArrayPydantic[float] | NDArrayPydantic[NDArrayPydantic[float]] = Field(
-        default_factory=list,
+    points: NDArrayPydantic[float] | None = Field(
+        default=None,
         description="The points of interest to be plotted. If None, only the pareto "
         "front is plot along with extra point (depending on ``"
         "plot_extra`` value).",
@@ -56,9 +56,7 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
 
     @field_validator("points")
     @classmethod
-    def __check_points(
-        cls, points: NDArrayPydantic | NDArrayPydantic[NDArrayPydantic] | None
-    ):
+    def __check_points(cls, points: NDArrayPydantic | None):
         """Check the size of the points setting arrays."""
         return _array_validation_function(points)
 
