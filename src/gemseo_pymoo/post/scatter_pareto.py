@@ -165,7 +165,7 @@ class ScatterPareto(BasePost[ScatterParetoPostSettings]):
         plot.do()
 
         # Create arrows.
-        if settings.plot_arrow:
+        if settings.plot_arrow and settings.points is not None:
             for point in settings.points:
                 # Arrow vector.
                 vect = point - pareto.f_utopia
