@@ -29,9 +29,9 @@ All notable changes of this project will be documented here.
 
 ## Version 4.0.3 (September 2025)
 
-### Fixed
+### Changed
 
-- The default value of the setting `points`.
+- The default value of [ScatterParetoPostSettings.points][gemseo_pymoo.post.scatter_pareto_settings.ScatterParetoPostSettings.points]` is `None`.
 
 ## Version 4.0.2 (August 2025)
 

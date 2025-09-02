@@ -47,11 +47,12 @@ class WeightedPostSettings(BasePymooPostSettings):
         "If ``None``, use a weighted sum.",
     )
 
-    weights: NDArrayPydantic | None = Field(
+    weights: NDArrayPydantic[float] | None = Field(
         default=None,
-        description="The weights for the scalarization function. If None, a "
-        "normalized array is used, e.g. [1./n, 1./n, ..., 1./n] "
-        "for an optimization problem with n-objectives.",
+        description="The weights for the scalarization function. If `None`, a "
+        "normalized array is used, "
+        "e.g. $[1./n, 1./n, ..., 1./n]$ "
+        "for an optimization problem with $n$ objectives.",
     )
 
     # scalar opts
@@ -71,7 +72,7 @@ class WeightedPostSettings(BasePymooPostSettings):
 
     @field_validator("weights")
     @classmethod
-    def __check_weights(cls, weights: NDArrayPydantic | None):
+    def __check_weights(cls, weights: NDArrayPydantic[float] | None):
         """Check the size of the weights setting arrays."""
         return _array_validation_function(weights)
 
