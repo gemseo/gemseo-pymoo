@@ -25,7 +25,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence  # noqa: TC003
+from typing import TYPE_CHECKING
 
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
@@ -33,6 +33,9 @@ from pydantic import field_validator
 
 from gemseo_pymoo.post.base_pymoo_plot_post_settings import BasePlotPostSettings
 from gemseo_pymoo.post.base_pymoo_post_settings import _array_validation_function
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class ScatterParetoPostSettings(BasePlotPostSettings):
@@ -56,13 +59,19 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
 
     @field_validator("points")
     @classmethod
-    def __check_points(cls, points: NDArrayPydantic[float] | None):
+    def __check_points(
+        cls, points: NDArrayPydantic[float] | None
+    ) -> NDArrayPydantic[float] | None:
         """Check the size of the points setting arrays."""
         return _array_validation_function(points)
 
     @field_validator("points_labels")
     @classmethod
-    def __check_labels_size(cls, points_labels: Sequence[str] | str, points):
+    def __check_labels_size(
+        cls,
+        points_labels: Sequence[str] | str,
+        points: NDArrayPydantic[float] | None,
+    ) -> Sequence[str] | str:
         """Check that the number of labels corresponds to the number of points."""
         if not isinstance(points_labels, str) and len(points_labels) != len(
             points.data["points"]

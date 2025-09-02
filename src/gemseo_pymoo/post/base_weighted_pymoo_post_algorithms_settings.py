@@ -17,7 +17,6 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Any
 
 from gemseo.post.base_post_settings import BasePostSettings
 from gemseo.utils.pydantic import copy_field
@@ -41,7 +40,7 @@ class WeightedPostSettings(BasePymooPostSettings):
     classes.
     """
 
-    decomposition: Any | None = Field(
+    decomposition: Decomposition | None = Field(
         default=None,
         description="The instance of the scalarization function to use. "
         "If ``None``, use a weighted sum.",
@@ -72,13 +71,17 @@ class WeightedPostSettings(BasePymooPostSettings):
 
     @field_validator("weights")
     @classmethod
-    def __check_weights(cls, weights: NDArrayPydantic[float] | None):
+    def __check_weights(
+        cls, weights: NDArrayPydantic[float] | None
+    ) -> NDArrayPydantic[float] | None:
         """Check the size of the weights setting arrays."""
         return _array_validation_function(weights)
 
     @field_validator("decomposition", mode="before")
     @classmethod
-    def __check_decomposition(cls, decomposition: Decomposition | None):
+    def __check_decomposition(
+        cls, decomposition: Decomposition | None
+    ) -> Decomposition:
         """Check for the type of the decomposition setting."""
         if decomposition is None:
             decomposition = WeightedSum()
