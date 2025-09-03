@@ -32,9 +32,7 @@ def _array_validation_function(
     if isinstance(setting, ndarray):
         if setting.shape[-1] < 2:
             message = (
-                f"{setting} setting must be an 1D array of at least 2 items "
-                f"or a 2D array where each individual line contains a "
-                f"minimum 2 items."
+                f"{setting} setting must be an array with at least 2 items on its last dimension."
             )
             raise ValueError(message)
 
