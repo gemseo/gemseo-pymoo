@@ -43,7 +43,7 @@ class WeightedPostSettings(BasePymooPostSettings):
     decomposition: Decomposition | None = Field(
         default=None,
         description="The instance of the scalarization function to use. "
-        "If ``None``, use a weighted sum.",
+        "If `None`, use a weighted sum.",
     )
 
     weights: NDArrayPydantic[float] | None = Field(
@@ -84,8 +84,9 @@ class WeightedPostSettings(BasePymooPostSettings):
     ) -> Decomposition:
         """Check for the type of the decomposition setting."""
         if decomposition is None:
-            decomposition = WeightedSum()
-        elif not isinstance(decomposition, Decomposition):
+            return WeightedSum()
+
+        if not isinstance(decomposition, Decomposition):
             msg = (
                 "The scalarization function must be an instance of "
                 "pymoo.core.Decomposition."
