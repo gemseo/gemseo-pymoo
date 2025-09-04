@@ -236,7 +236,7 @@ def test_exceptions_scatter(
         (
             {
                 "decomposition": "unknown",
-                "weights": array([1]),
+                "weights": array([1.0]),
             },
             pytest.raises(
                 TypeError,
@@ -249,7 +249,7 @@ def test_exceptions_scatter(
         (
             {
                 "decomposition": ASF(),
-                "weights": array([1, 2]),
+                "weights": array([1.0, 2.0]),
             },
             pytest.raises(
                 ValueError,
@@ -282,7 +282,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             "Petal",
             {
                 "decomposition": "unknown",
-                "weights": [1, 2],
+                "weights": [1.0, 2.0],
             },  # error unknown is not instance of Decomposition
             pytest.raises(
                 TypeError,
@@ -296,7 +296,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             "Petal",
             {
                 "decomposition": ASF(),
-                "weights": array([1, 2, 3]),
+                "weights": array([1.0, 2.0, 3.0]),
             },
             pytest.raises(
                 ValueError,
@@ -307,7 +307,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
             "Radar",
             {
                 "decomposition": ASF(),
-                "weights": array([1, 2]),
+                "weights": array([1.0, 2.0]),
             },
             pytest.raises(
                 ValueError,
