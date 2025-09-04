@@ -32,7 +32,7 @@ def _array_validation_function(
     if isinstance(setting, ndarray):
         if setting.shape[-1] < 2:
             message = (
-                f"{setting} setting must be an array with at least"
+                "The given value must be an array with at least"
                 " 2 items on its last dimension."
             )
             raise ValueError(message)
