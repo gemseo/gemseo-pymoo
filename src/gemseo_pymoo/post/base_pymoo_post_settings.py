@@ -17,6 +17,7 @@
 from __future__ import annotations
 
 from gemseo.post.base_post_settings import BasePostSettings
+from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from numpy import atleast_2d
 from numpy import ndarray
 
@@ -25,20 +26,16 @@ class BasePymooPostSettings(BasePostSettings):
     """The settings common to all the gemseo-pymoo post-processing classes."""
 
 
-def _array_validation_function(setting_to_validate):
-    message = (
-        f"{setting_to_validate} setting must be an array of at least 2 items "
-        f"or an array of arrays where each individual arrays contains "
-        f"minimum 2 items."
-    )
-    if isinstance(setting_to_validate, ndarray) and all(
-        isinstance(item, ndarray) for item in setting_to_validate
-    ):
-        if all(len(item) < 2 for item in setting_to_validate):
+def _array_validation_function(
+    setting: NDArrayPydantic[float] | None,
+) -> NDArrayPydantic[float] | None:
+    if isinstance(setting, ndarray):
+        if setting.shape[-1] < 2:
+            message = (
+                "The given value must be an array with at least"
+                " 2 items on its last dimension."
+            )
             raise ValueError(message)
-        setting_to_validate = atleast_2d(setting_to_validate)
-    elif isinstance(setting_to_validate, ndarray):
-        if len(setting_to_validate) < 2:
-            raise ValueError(message)
-        setting_to_validate = atleast_2d(setting_to_validate)
-    return setting_to_validate
+
+        setting = atleast_2d(setting)
+    return setting

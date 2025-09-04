@@ -29,6 +29,7 @@ from collections.abc import Sequence  # noqa: TC003
 
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
+from pydantic import ValidationInfo
 from pydantic import field_validator
 
 from gemseo_pymoo.post.base_pymoo_plot_post_settings import BasePlotPostSettings
@@ -40,12 +41,13 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
 
     _TARGET_CLASS_NAME = "ScatterPareto"
 
-    points: NDArrayPydantic[float] | NDArrayPydantic[NDArrayPydantic[float]] = Field(
-        default_factory=list,
-        description="The points of interest to be plotted. If None, only the pareto "
-        "front is plot along with extra point (depending on ``"
-        "plot_extra`` value).",
+    points: NDArrayPydantic[float] | None = Field(
+        default=None,
+        description="The points of interest to be plotted. If `None`, only the pareto "
+        "front is plot along with extra point (depending on "
+        "`plot_extra` value).",
     )
+
     points_labels: Sequence[str] | str = Field(
         default="points",
         description="The label of the points of interest. If a list is provided, "
@@ -57,17 +59,21 @@ class ScatterParetoPostSettings(BasePlotPostSettings):
     @field_validator("points")
     @classmethod
     def __check_points(
-        cls, points: NDArrayPydantic | NDArrayPydantic[NDArrayPydantic] | None
-    ):
+        cls, points: NDArrayPydantic[float] | None
+    ) -> NDArrayPydantic[float] | None:
         """Check the size of the points setting arrays."""
         return _array_validation_function(points)
 
     @field_validator("points_labels")
     @classmethod
-    def __check_labels_size(cls, points_labels: Sequence[str] | str, points):
+    def __check_labels_size(
+        cls,
+        points_labels: Sequence[str] | str,
+        info: ValidationInfo,
+    ) -> Sequence[str] | str:
         """Check that the number of labels corresponds to the number of points."""
         if not isinstance(points_labels, str) and len(points_labels) != len(
-            points.data["points"]
+            info.data["points"]
         ):
             msg = (
                 "You must provide either a single label for all points "

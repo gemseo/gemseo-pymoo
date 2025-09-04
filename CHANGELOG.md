@@ -27,6 +27,12 @@ All notable changes of this project will be documented here.
   and this project adheres to
   [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 4.0.3 (September 2025)
+
+### Changed
+
+- The default value of [ScatterParetoPostSettings.points][gemseo_pymoo.post.scatter_pareto_settings.ScatterParetoPostSettings.points]` is `None`.
+
 ## Version 4.0.2 (August 2025)
 
 ### Added
