@@ -154,7 +154,7 @@ class ScatterPareto(BasePost[ScatterParetoPostSettings]):
             plot.add(pareto.f_anti_utopia, label=nadir_label, **self.prop_extra)
 
         # Plot points of interest.
-        if len(settings.points) > 0:
+        if settings.points is not None:
             if isinstance(settings.points_labels, str):
                 plot.add(
                     settings.points, label=settings.points_labels, **self.prop_interest
@@ -165,7 +165,7 @@ class ScatterPareto(BasePost[ScatterParetoPostSettings]):
         plot.do()
 
         # Create arrows.
-        if settings.plot_arrow:
+        if settings.plot_arrow and settings.points is not None:
             for point in settings.points:
                 # Arrow vector.
                 vect = point - pareto.f_utopia
