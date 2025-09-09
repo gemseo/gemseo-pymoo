@@ -102,7 +102,7 @@ class PymooAlgorithmDescription(OptimizationAlgorithmDescription):
     """ "The option validation model for Gemseo Pymoo optimization library plugin."""
 
 
-class PymooOpt(BaseOptimizationLibrary):
+class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
     """Pymoo optimization library interface.
 
     See :class:`gemseo.algos.opt.optimization_library.OptimizationLibrary`.
@@ -395,23 +395,18 @@ class PymooOpt(BaseOptimizationLibrary):
         seed = ref_dirs_settings.pop("seed")
         return get_reference_directions(ref_dirs_name, n_obj, n_points, seed=seed)
 
-    def _pre_run(self, problem: OptimizationProblem, **settings: Any) -> None:
+    def _pre_run(self, problem: OptimizationProblem) -> None:
         """Take into account a new check for multi-objectives handling.
 
         Args:
             problem: The problem to be solved.
-            algo_name: The name of the algorithm.
-            **settings: The settings for the algorithm, see associated JSON file.
         """
-        super()._pre_run(problem, **settings)
+        super()._pre_run(problem)
         self._check_mo_handling(problem)
-        self._stop_crit_n_hv = settings.get(self.STOP_CRIT_N_HV)
+        self._stop_crit_n_hv = self._settings.stop_crit_n_hv
 
-    def _run(self, problem: OptimizationProblem, **settings: Any) -> tuple[str, Any]:
+    def _run(self, problem: OptimizationProblem) -> tuple[str, Any]:
         """Run the algorithm.
-
-        Args:
-            **settings: The settings for the algorithm.
 
         Returns:
             The optimization result.
@@ -419,16 +414,20 @@ class PymooOpt(BaseOptimizationLibrary):
         Raises:
             ValueError: If the algorithm's name is not valid.
         """
+        settings_ = self._settings.model_dump()
         # Instantiate the pymoo Problem.
         pymoo_problem_settings = {
-            self.N_PROCESSES: settings.pop(self.N_PROCESSES, 1),
-            self.MAX_GEN: settings.pop(self.MAX_GEN),
-            self.HV_TOL_REL: settings.pop(self.HV_TOL_REL),
-            self.HV_TOL_ABS: settings.pop(self.HV_TOL_ABS),
-            self.STOP_CRIT_N_HV: settings.pop(self.STOP_CRIT_N_HV),
+            self.N_PROCESSES: settings_.pop(self.N_PROCESSES, 1),
+            self.MAX_GEN: settings_.pop(self.MAX_GEN),
+            self.HV_TOL_REL: settings_.pop(self.HV_TOL_REL),
+            self.HV_TOL_ABS: settings_.pop(self.HV_TOL_ABS),
+            self.STOP_CRIT_N_HV: settings_.pop(self.STOP_CRIT_N_HV),
         }
         pymoo_problem = PymooProblem(
-            problem, self._normalize_ds, self, **pymoo_problem_settings
+            problem,
+            self._settings.normalize_design_space,
+            self,
+            **pymoo_problem_settings,
         )
 
         # Problem type (continuous, discrete, mixed).
@@ -446,7 +445,7 @@ class PymooOpt(BaseOptimizationLibrary):
             self._ds_size = inf
 
         # Filter settings to get only the ones of the global optimizer
-        settings = self._filter_settings(settings, BaseOptimizerSettings)
+        settings = self._filter_settings(settings_, BaseOptimizerSettings)
 
         evol_operators = {}
         for operator_name, operator_class in self.EVOLUTIONARY_OPERATORS.items():
@@ -540,7 +539,7 @@ class PymooOpt(BaseOptimizationLibrary):
         message: str | None = None,
         status: int | None = None,
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
-        """Return the optimization result adapted to the dimmension of the problem.
+        """Return the optimization result adapted to the dimension of the problem.
 
         Return an
         :class:`~gemseo.algos.opt_result.OptimizationResult` instance adapted for
