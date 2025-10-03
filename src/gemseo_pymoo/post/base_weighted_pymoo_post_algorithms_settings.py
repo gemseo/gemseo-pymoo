@@ -17,19 +17,22 @@
 from __future__ import annotations
 
 from functools import partial
+from typing import TYPE_CHECKING
 
 from gemseo.post.base_post_settings import BasePostSettings
 from gemseo.utils.pydantic import copy_field
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
-from pydantic import NonNegativeFloat
-from pydantic import PositiveFloat
 from pydantic import field_validator
 from pymoo.core.decomposition import Decomposition
 from pymoo.decomposition.weighted_sum import WeightedSum
 
 from gemseo_pymoo.post.base_pymoo_post_settings import BasePymooPostSettings
 from gemseo_pymoo.post.base_pymoo_post_settings import _array_validation_function
+
+if TYPE_CHECKING:
+    from pydantic import NonNegativeFloat
+    from pydantic import PositiveFloat
 
 copy_field_opt = partial(copy_field, model=BasePostSettings)
 

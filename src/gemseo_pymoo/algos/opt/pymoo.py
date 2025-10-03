@@ -27,10 +27,10 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
 from typing import Final
-from typing import Union
 
 from gemseo.algos.multiobjective_optimization_result import (
     MultiObjectiveOptimizationResult,
@@ -42,7 +42,6 @@ from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TC002
 from gemseo.algos.optimization_result import OptimizationResult
 from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TC002
 from numpy import inf
-from numpy import ndarray
 from numpy import prod as np_prod
 from numpy import size as np_size
 from numpy import unique as np_unique
@@ -75,9 +74,12 @@ from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 
+if TYPE_CHECKING:
+    from numpy import ndarray
+
 LOGGER = logging.getLogger(__name__)
 
-EvolutionaryOperatorTypes = Union[Crossover, Mutation, Sampling, Selection]
+EvolutionaryOperatorTypes = Crossover | Mutation | Sampling | Selection
 
 
 @dataclass
