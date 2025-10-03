@@ -17,7 +17,6 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Union
 
 from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
 from gemseo.utils.pydantic import copy_field
@@ -32,7 +31,7 @@ from strenum import StrEnum
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 
-EvolutionaryOperatorTypes = Union[Crossover, Mutation, Sampling, Selection]
+EvolutionaryOperatorTypes = Crossover | Mutation | Sampling | Selection
 copy_field_opt = partial(copy_field, model=BaseOptimizerSettings)
 
 
@@ -69,5 +68,5 @@ class BaseScaledPymooAlgorithmsSettings(BasePymooSettings):
     )
 
     ref_dirs_name: RefDirsNames | None = Field(
-        default="", description="The reference directions."
+        default=None, description="The reference directions."
     )

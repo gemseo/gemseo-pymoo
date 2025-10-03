@@ -15,10 +15,16 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Method to apply decomposition to the different post options."""
 
-from gemseo.algos.pareto.pareto_front import ParetoFront
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from numpy import vstack
 
-from gemseo_pymoo.post.base_pymoo_post_settings import BasePymooPostSettings
+if TYPE_CHECKING:
+    from gemseo.algos.pareto.pareto_front import ParetoFront
+
+    from gemseo_pymoo.post.base_pymoo_post_settings import BasePymooPostSettings
 
 
 def _apply_decomposition(
