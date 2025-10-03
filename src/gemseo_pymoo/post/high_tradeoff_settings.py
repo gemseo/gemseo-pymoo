@@ -25,14 +25,10 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from pydantic import Field
+from pydantic import NonNegativeFloat
 
 from gemseo_pymoo.post.base_pymoo_plot_post_settings import BasePlotPostSettings
-
-if TYPE_CHECKING:
-    from pydantic import NonNegativeFloat
 
 
 class HighTradeOffPostSettings(BasePlotPostSettings):

@@ -296,7 +296,7 @@ def test_hv_ref_point_change(opt_factory, caplog):
     algo_name = "PYMOO_NSGA2"
     opt_lib = opt_factory.create(algo_name=algo_name)
 
-    with caplog.at_level(logging.DEBUG):
+    with caplog.at_level(logging.DEBUG, "gemseo_pymoo"):
         opt_lib.execute(problem, settings_model=settings)
 
     hv_update_count = caplog.text.count("Updating the hypervolume value for the")
@@ -605,10 +605,10 @@ def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
         mo_knapsack: Fixture returning the problem to be optimized.
         caplog: Fixture to access and control log capturing.
     """
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, "gemseo_pymoo")
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    # logger = logging.getLogger(__name__)
+    # logger.setLevel(logging.DEBUG)
 
     # Set the knapsack problem to be unfeasible.
     mo_knapsack.capacity_items = -1

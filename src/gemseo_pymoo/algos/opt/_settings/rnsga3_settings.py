@@ -16,16 +16,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
+from pydantic import NonNegativeFloat
+from pydantic import PositiveInt
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
-
-if TYPE_CHECKING:
-    from pydantic import NonNegativeFloat
-    from pydantic import PositiveInt
 
 
 class RNSGA3Settings(BasePymooSettings):

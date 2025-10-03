@@ -17,12 +17,12 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING
 
 from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
 from gemseo.utils.pydantic import copy_field
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
+from pydantic import PositiveInt
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
 from pymoo.core.sampling import Sampling
@@ -30,9 +30,6 @@ from pymoo.core.selection import Selection
 from strenum import StrEnum
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
-
-if TYPE_CHECKING:
-    from pydantic import PositiveInt
 
 EvolutionaryOperatorTypes = Crossover | Mutation | Sampling | Selection
 copy_field_opt = partial(copy_field, model=BaseOptimizerSettings)
@@ -71,5 +68,5 @@ class BaseScaledPymooAlgorithmsSettings(BasePymooSettings):
     )
 
     ref_dirs_name: RefDirsNames | None = Field(
-        default="", description="The reference directions."
+        default=None, description="The reference directions."
     )

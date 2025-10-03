@@ -125,6 +125,10 @@ runtime-evaluated-base-classes = [
     "gemseo.algos.opt.base_milp_settings.BaseMILPSettings",
     "gemseo.algos.opt.base_gradient_based_algorithm_settings.BaseGradientBasedAlgorithmSettings",
     "gemseo.algos.opt.scipy_milp.settings.scipy_milp_settings.SciPyMILP_Settings",
+    "gemseo_pymoo.algos.opt._base_pymoo_settings.BasePymooSettings",
+    "gemseo_pymoo.post.base_pymoo_plot_post_settings.BasePlotPostSettings",
+    "gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings.WeightedPostSettings",
+    "gemseo_pymoo.post.base_pymoo_post_settings.BasePymooPostSettings",
 ]
 
 [lint.isort]
