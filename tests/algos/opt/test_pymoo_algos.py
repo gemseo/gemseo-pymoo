@@ -40,7 +40,6 @@ from numpy import any as np_any
 from numpy import array
 from numpy import hstack as np_hstack
 from numpy import min as np_min
-from numpy import ndarray
 from numpy.testing import assert_allclose
 from pydantic import ValidationError
 from pymoo.core.problem import Problem
@@ -56,6 +55,7 @@ from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
     from gemseo.algos.optimization_problem import OptimizationProblem
+    from numpy import ndarray
 
 tolerances = {"ftol_rel": 0.0, "ftol_abs": 0.0, "xtol_rel": 0.0, "xtol_abs": 0.0}
 integer_settings = {"normalize_design_space": False, "stop_crit_n_x": 99}
@@ -296,7 +296,7 @@ def test_hv_ref_point_change(opt_factory, caplog):
     algo_name = "PYMOO_NSGA2"
     opt_lib = opt_factory.create(algo_name=algo_name)
 
-    with caplog.at_level(logging.DEBUG):
+    with caplog.at_level(logging.DEBUG, "gemseo_pymoo"):
         opt_lib.execute(problem, settings_model=settings)
 
     hv_update_count = caplog.text.count("Updating the hypervolume value for the")
@@ -605,10 +605,10 @@ def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
         mo_knapsack: Fixture returning the problem to be optimized.
         caplog: Fixture to access and control log capturing.
     """
-    caplog.set_level(logging.DEBUG)
+    caplog.set_level(logging.DEBUG, "gemseo_pymoo")
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    # logger = logging.getLogger(__name__)
+    # logger.setLevel(logging.DEBUG)
 
     # Set the knapsack problem to be unfeasible.
     mo_knapsack.capacity_items = -1

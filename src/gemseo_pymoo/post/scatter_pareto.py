@@ -24,7 +24,6 @@ from __future__ import annotations
 
 from math import degrees
 from typing import ClassVar
-from typing import Union
 
 import matplotlib.pyplot as plt
 from gemseo.algos.pareto.pareto_front import ParetoFront
@@ -40,7 +39,7 @@ from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
 from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
 
-PlotPropertiesType = dict[str, Union[str, int, float, bool]]
+PlotPropertiesType = dict[str, str | int | float | bool]
 
 
 class ScatterPareto(BasePost[ScatterParetoPostSettings]):
@@ -160,7 +159,9 @@ class ScatterPareto(BasePost[ScatterParetoPostSettings]):
                     settings.points, label=settings.points_labels, **self.prop_interest
                 )
             else:
-                for point, label in zip(settings.points, settings.points_labels):
+                for point, label in zip(
+                    settings.points, settings.points_labels, strict=False
+                ):
                     plot.add(point, label=label, **self.prop_interest)
         plot.do()
 

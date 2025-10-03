@@ -30,10 +30,10 @@ from matplotlib.patches import FancyArrowPatch
 from matplotlib.text import Annotation
 from mpl_toolkits.mplot3d import proj3d
 from numpy import arctan
-from numpy import ndarray
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
+    from numpy import ndarray
 
 
 class Arrow3D(FancyArrowPatch):

@@ -26,7 +26,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Union
 
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.parallel_execution.callable_parallel_execution import (
@@ -56,7 +55,7 @@ if TYPE_CHECKING:
     from gemseo.core.mdo_functions.mdo_function import MDOFunction
 
 LOGGER = logging.getLogger(__name__)
-OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
+OPTLibraryOutputType = tuple[dict[str, float | ndarray], dict[str, ndarray]]
 
 
 class PymooProblem(Problem):

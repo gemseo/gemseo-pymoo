@@ -18,7 +18,6 @@ from __future__ import annotations
 
 from functools import partial
 from typing import Any
-from typing import Union
 
 from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
 from gemseo.utils.pydantic import copy_field
@@ -31,7 +30,7 @@ from pymoo.core.mutation import Mutation
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
 
-EvolutionaryOperatorTypes = Union[Crossover, Mutation, Sampling, Selection]
+EvolutionaryOperatorTypes = Crossover | Mutation | Sampling | Selection
 copy_field_opt = partial(copy_field, model=BaseOptimizerSettings)
 
 

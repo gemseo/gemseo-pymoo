@@ -26,14 +26,17 @@
 from __future__ import annotations
 
 from collections.abc import Sequence  # noqa: TC003
+from typing import TYPE_CHECKING
 
 from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
 from pydantic import Field
-from pydantic import ValidationInfo
 from pydantic import field_validator
 
 from gemseo_pymoo.post.base_pymoo_plot_post_settings import BasePlotPostSettings
 from gemseo_pymoo.post.base_pymoo_post_settings import _array_validation_function
+
+if TYPE_CHECKING:
+    from pydantic import ValidationInfo
 
 
 class ScatterParetoPostSettings(BasePlotPostSettings):
