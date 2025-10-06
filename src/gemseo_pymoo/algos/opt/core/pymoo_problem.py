@@ -100,7 +100,7 @@ class PymooProblem(Problem):
     _parallel: CallableParallelExecution | None
     """The object handling the parallel execution."""
 
-    _ineq_constraints: list[MDOFunction]
+    _ineq_constraints: tuple[MDOFunction]
     """The problem's inequality constraints."""
 
     _has_hv_ref_point_changed: bool
@@ -169,7 +169,7 @@ class PymooProblem(Problem):
             upper_bounds = design_space.get_upper_bounds()
 
         # Constraints.
-        self._ineq_constraints = list(
+        self._ineq_constraints = tuple(
             self.optimization_problem.constraints.get_inequality_constraints()
         )
 
