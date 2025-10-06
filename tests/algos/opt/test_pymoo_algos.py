@@ -38,7 +38,6 @@ from numpy import all as np_all
 from numpy import any as np_any
 from numpy import array
 from numpy import hstack as np_hstack
-from numpy import min as np_min
 from numpy.testing import assert_allclose
 from pydantic import ValidationError
 from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
@@ -53,7 +52,6 @@ from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
     from gemseo.algos.optimization_problem import OptimizationProblem
-    from numpy import ndarray
 
 tolerances = {"ftol_rel": 0.0, "ftol_abs": 0.0, "xtol_rel": 0.0, "xtol_abs": 0.0}
 integer_settings = {"normalize_design_space": False, "stop_crit_n_x": 99}
