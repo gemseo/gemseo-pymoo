@@ -28,7 +28,6 @@ from __future__ import annotations
 import logging
 import re
 from typing import TYPE_CHECKING
-from typing import Any
 
 import pytest
 from gemseo.algos.opt.factory import OptimizationLibraryFactory
@@ -42,7 +41,6 @@ from numpy import hstack as np_hstack
 from numpy import min as np_min
 from numpy.testing import assert_allclose
 from pydantic import ValidationError
-from pymoo.core.problem import Problem
 from pymoo.operators.crossover.sbx import SimulatedBinaryCrossover
 from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.operators.repair.rounding import RoundingRepair
@@ -64,21 +62,6 @@ integer_operators = {
     "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
     "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
 }
-
-
-class MixedVariablesProblem(Problem):
-    """Very simple single-objective, constrained MIP problem."""
-
-    def __init__(self) -> None:
-        """Constructor."""
-        super().__init__(n_var=2, n_obj=1, n_constr=1, xl=0, xu=10)
-
-    def _evaluate(
-        self, x: ndarray, out: dict[str, ndarray], *args: Any, **kwargs: Any
-    ) -> None:
-        """Evaluate functions for the given input vector ``x``."""
-        out["F"] = -np_min(x * [3, 1], axis=1)
-        out["G"] = x[:, 0] + x[:, 1] - 10
 
 
 class DummyMutation:
