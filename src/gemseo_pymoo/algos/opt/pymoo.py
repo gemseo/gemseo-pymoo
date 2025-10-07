@@ -69,7 +69,7 @@ from gemseo_pymoo.algos.opt._settings.nsga2_settings import NSGA2Settings
 from gemseo_pymoo.algos.opt._settings.nsga3_settings import NSGA3Settings
 from gemseo_pymoo.algos.opt._settings.rnsga3_settings import RNSGA3Settings
 from gemseo_pymoo.algos.opt._settings.unsga3_settings import UNSGA3Settings
-from gemseo_pymoo.algos.opt.core.pymoo_problem_adapater import PymooProblem
+from gemseo_pymoo.algos.opt.core.pymoo_problem import PymooProblem
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
 from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached

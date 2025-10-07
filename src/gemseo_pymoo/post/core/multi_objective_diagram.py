@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 from gemseo.algos.pareto.pareto_front import ParetoFront
 from gemseo.post.base_post import BasePost
 from matplotlib.gridspec import GridSpec
-from numpy.core.shape_base import atleast_2d
+from numpy import atleast_2d
 from prettytable import PrettyTable
 from pymoo.core.plot import Plot  # noqa: TC002
 from pymoo.visualization.radar import Radar
