@@ -27,6 +27,18 @@ All notable changes of this project will be documented here.
   and this project adheres to
   [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- ``PymooProblem`` class must now be imported from
+``gemseo_pymoo.algos.opt.core.pymoo_problem``
+(instead of ``gemseo_pymoo.algos.opt.core.pymoo_problem_adapater``).
+- Some ``PymooProblem`` class attributes are changed:
+  - ``optimization_problem`` instead of ``opt_problem``
+  - ``normalize_design_space`` instead of ``normalize_ds``
+  - ``max_generations`` instead of ``max_gen``
+
 ## Version 4.0.3 (September 2025)
 
 ### Changed
