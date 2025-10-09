@@ -321,7 +321,7 @@ class PymooProblem(Problem):
         """
         # No need to check subprocess name,
         # since it is set by the ParallelExecution class and must not change.
-        self._driver._disable_progress_bar()
+        self._driver._progress_bar = None
         self.optimization_problem.database.clear_listeners()
         return self.optimization_problem.evaluate_functions(
             design_vector=sample,
