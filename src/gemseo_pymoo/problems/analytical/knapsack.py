@@ -57,17 +57,20 @@ in which the following new objective function is added to previous formulation:
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
 from gemseo.core.mdo_functions.mdo_function import MDOFunction
 from numpy import atleast_1d
 from numpy import inf
-from numpy import ndarray
 from numpy import ones
 from numpy import sum as np_sum
 from numpy import zeros
 from numpy.random import default_rng
+
+if TYPE_CHECKING:
+    from numpy import ndarray
 
 LOGGER = logging.getLogger(__name__)
 

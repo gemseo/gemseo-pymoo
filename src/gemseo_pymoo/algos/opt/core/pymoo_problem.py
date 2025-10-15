@@ -26,7 +26,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Union
 
 from gemseo.algos.stop_criteria import TerminationCriterion
 from gemseo.core.parallel_execution.callable_parallel_execution import (
@@ -56,7 +55,7 @@ if TYPE_CHECKING:
     from gemseo.core.mdo_functions.mdo_function import MDOFunction
 
 LOGGER = logging.getLogger(__name__)
-OPTLibraryOutputType = tuple[dict[str, Union[float, ndarray]], dict[str, ndarray]]
+OPTLibraryOutputType = tuple[dict[str, float | ndarray], dict[str, ndarray]]
 
 
 class PymooProblem(Problem):
@@ -65,19 +64,19 @@ class PymooProblem(Problem):
     It supports multiprocessing.
     """
 
-    opt_problem: OptimizationProblem
+    optimization_problem: OptimizationProblem
     """The GEMSEO optimization problem."""
 
-    normalize_ds: bool
+    normalize_design_space: bool
     """Whether the design space is normalized."""
 
-    max_gen: int
+    max_generations: int
     """The maximum number of generations allowed."""
 
     _driver: BaseOptimizationLibrary
     """The optimization library currently handling the problem."""
 
-    _n_gen: int
+    _n_generations: int
     """A counter to track the number of generations evaluated."""
 
     _hv_tol_rel: float
@@ -101,7 +100,7 @@ class PymooProblem(Problem):
     _parallel: CallableParallelExecution | None
     """The object handling the parallel execution."""
 
-    _ineq_constraints: list[MDOFunction]
+    _ineq_constraints: tuple[MDOFunction]
     """The problem's inequality constraints."""
 
     _has_hv_ref_point_changed: bool
@@ -109,31 +108,31 @@ class PymooProblem(Problem):
 
     def __init__(
         self,
-        opt_problem: OptimizationProblem,
-        normalize_ds: bool,
+        optimization_problem: OptimizationProblem,
+        normalize_design_space: bool,
         driver: BaseOptimizationLibrary,
         **options: Any,
     ) -> None:
-        """Initialize a pymoo :class:`~pymoo.core.problem.Problem` from a GEMSEO one.
+        """Initialize from a GEMSEO optimization problem.
 
         It also sets up a parallel object
         :class:`~gemseo.core.parallel_execution.ParallelExecution` for
         multiprocessing purposes.
 
         Args:
-            opt_problem: The GEMSEO problem to convert to a pymoo problem.
-            normalize_ds: Whether to normalize the design variables.
+            optimization_problem: The GEMSEO problem to convert to a pymoo problem.
+            normalize_design_space: Whether to normalize the design variables.
             driver: The optimization library used to handle the problem.
             **options: The other algorithm options.
         """
-        self.opt_problem = opt_problem
-        self.normalize_ds = normalize_ds
+        self.optimization_problem = optimization_problem
+        self.normalize_design_space = normalize_design_space
         self._driver = driver
         self._has_hv_ref_point_changed = False
 
         # Track the number of generations.
-        self._n_gen = 0
-        self.max_gen = options.pop("max_gen")
+        self._n_generations = 0
+        self.max_generations = options.pop("max_gen")
 
         # Track the hypervolume indicator.
         self._hv_tol_rel = options.pop("hv_tol_rel", 1e-9)
@@ -141,7 +140,9 @@ class PymooProblem(Problem):
         self._stop_crit_n_hv = options.pop("stop_crit_n_hv", 5)
         self._hv_obj_hist_feasible = []
         self._hv_history = []
-        self._hv_ref_point = -np_inf * ones(opt_problem.objective.dim, dtype=float)
+        self._hv_ref_point = -np_inf * ones(
+            optimization_problem.objective.dim, dtype=float
+        )
 
         # Set up for parallel execution.
         n_processes = options.pop("n_processes")
@@ -158,9 +159,9 @@ class PymooProblem(Problem):
             self._parallel = None
 
         # Design variables.
-        design_space = opt_problem.design_space
+        design_space = optimization_problem.design_space
         n_var = design_space.dimension
-        if normalize_ds:
+        if normalize_design_space:
             lower_bounds = zeros(n_var)
             upper_bounds = ones(n_var)
         else:
@@ -168,13 +169,13 @@ class PymooProblem(Problem):
             upper_bounds = design_space.get_upper_bounds()
 
         # Constraints.
-        self._ineq_constraints = list(
-            self.opt_problem.constraints.get_inequality_constraints()
+        self._ineq_constraints = tuple(
+            self.optimization_problem.constraints.get_inequality_constraints()
         )
 
         super().__init__(
             n_var=n_var,
-            n_obj=opt_problem.objective.dim,
+            n_obj=optimization_problem.objective.dim,
             n_constr=sum(constr.dim for constr in self._ineq_constraints),
             xl=lower_bounds,
             xu=upper_bounds,
@@ -220,14 +221,14 @@ class PymooProblem(Problem):
                             atleast_1d(g.evaluate(x_i)) for g in self._ineq_constraints
                         ])
                     )
-                obj.append(self.opt_problem.objective.evaluate(x_i))
+                obj.append(self.optimization_problem.objective.evaluate(x_i))
 
         output_data["F"] = vstack(obj)
         if self.n_constr:
             output_data["G"] = vstack(cstrs)
 
         # Update the generation number.
-        self._n_gen += 1
+        self._n_generations += 1
 
         # Check for termination criteria.
         self._new_generation_callback(obj)
@@ -247,14 +248,14 @@ class PymooProblem(Problem):
         Returns:
             The objectives and the constraints evaluations.
         """
-        sample_to_design = self.opt_problem.design_space.untransform_vect
-        round_vect = self.opt_problem.design_space.round_vect
-        database = self.opt_problem.database
+        sample_to_design = self.optimization_problem.design_space.untransform_vect
+        round_vect = self.optimization_problem.design_space.round_vect
+        database = self.optimization_problem.database
 
         # Initialize the order as it is not necessarily guaranteed
         # when using parallel execution.
         for x_i in design_variables:
-            if self.normalize_ds:
+            if self.normalize_design_space:
                 x_u = sample_to_design(x_i)
                 x_r = round_vect(x_u)
                 database.store(x_r, {})
@@ -274,7 +275,7 @@ class PymooProblem(Problem):
                 outputs: The outputs of the parallel execution.
             """
             outs, _ = outputs
-            if self.normalize_ds:
+            if self.normalize_design_space:
                 x_u_ = sample_to_design(design_variables[index])
                 x_r_ = round_vect(x_u_)
             else:
@@ -293,7 +294,7 @@ class PymooProblem(Problem):
         obj, cstrs = [], []
         for x_i in design_variables:
             # Unormalize vector to access the right key in the database.
-            if self.normalize_ds:
+            if self.normalize_design_space:
                 x_u = sample_to_design(x_i)
                 x_i = round_vect(x_u)
 
@@ -305,7 +306,7 @@ class PymooProblem(Problem):
                     atleast_1d(funcs.get(g.name)) for g in self._ineq_constraints
                 ]
                 cstrs.append(hstack(c_values))
-            obj.append(funcs.get(self.opt_problem.objective.name))
+            obj.append(funcs.get(self.optimization_problem.objective.name))
 
         return obj, cstrs
 
@@ -320,10 +321,11 @@ class PymooProblem(Problem):
         """
         # No need to check subprocess name,
         # since it is set by the ParallelExecution class and must not change.
-        self._driver._disable_progress_bar()
-        self.opt_problem.database.clear_listeners()
-        return self.opt_problem.evaluate_functions(
-            design_vector=sample, design_vector_is_normalized=self.normalize_ds
+        self._driver._progress_bar = None
+        self.optimization_problem.database.clear_listeners()
+        return self.optimization_problem.evaluate_functions(
+            design_vector=sample,
+            design_vector_is_normalized=self.normalize_design_space,
         )
 
     def _new_generation_callback(self, obj: list[ndarray]) -> None:
@@ -340,23 +342,23 @@ class PymooProblem(Problem):
         # It is important to avoid being stuck when dealing with discrete variables,
         # because max_iter may take too long to be reached given the modus operandi
         # of GAs and the way GEMSEO counts the number of iterations.
-        if self._n_gen == self.max_gen:
+        if self._n_generations == self.max_generations:
             raise MaxGenerationsReached
 
-        obj_name = self.opt_problem.objective.name
+        obj_name = self.optimization_problem.objective.name
 
         # Filter only the feasible points because this is not done by pymoo.
         # Nevertheless, pymoo will check and select the non-dominated points
         # thanks to the attribute 'nds'. In this way, we do not have to calculate
         # the pareto front at every generation.
-        _, f_hist_feasible = self.opt_problem.history.feasible_points
+        _, f_hist_feasible = self.optimization_problem.history.feasible_points
         if f_hist_feasible:
             obj_hist_feasible = vstack([f_val[obj_name] for f_val in f_hist_feasible])
         else:
             LOGGER.debug(
                 "Generation %d does not yield any feasible solution. "
                 "Current hypervolume set to 0!",
-                self._n_gen,
+                self._n_generations,
             )
             # Give an infinity value to the objective(s)
             # will lead to a hypervolume of 0.
@@ -367,7 +369,7 @@ class PymooProblem(Problem):
         new_hv_ref_point = np_max(vstack([self._hv_ref_point, *obj]), axis=0)
 
         # At the first generation, the reference point is not yet well-defined.
-        if self._n_gen == 1:
+        if self._n_generations == 1:
             self._hv_ref_point = new_hv_ref_point
 
         # Recalculates the hypervolume history for the last stop_crit_n_hv-generations
@@ -383,7 +385,8 @@ class PymooProblem(Problem):
             hyper_volume = Hypervolume(ref_point=new_hv_ref_point, nds=True)
 
             for gen_i in range(
-                max(0, self._n_gen - self._stop_crit_n_hv), self._n_gen - 1
+                max(0, self._n_generations - self._stop_crit_n_hv),
+                self._n_generations - 1,
             ):
                 obj_history = self._hv_obj_hist_feasible[gen_i]
                 self._hv_history[gen_i] = hyper_volume.do(obj_history)
@@ -400,11 +403,13 @@ class PymooProblem(Problem):
         hyper_volume = Hypervolume(ref_point=self._hv_ref_point, nds=True)
         self._hv_history.append(hyper_volume.do(obj_hist_feasible))
         LOGGER.debug(
-            "Hypervolume at generation %d: %g", self._n_gen, self._hv_history[-1]
+            "Hypervolume at generation %d: %g",
+            self._n_generations,
+            self._hv_history[-1],
         )
 
         # Run for at least 'stop_crit_n_hv' generations.
-        if self._n_gen < self._stop_crit_n_hv:
+        if self._n_generations < self._stop_crit_n_hv:
             return
 
         # Get last 'stop_crit_n_hv' hypervolume values and average it.
@@ -425,9 +430,9 @@ class PymooProblem(Problem):
         # we must recalculate the hypervolume history for all the past generations.
         if allclose(
             n_last_hv, hv_average, atol=self._hv_tol_abs, rtol=self._hv_tol_rel
-        ) or self._n_gen == (self.max_gen - 1):
+        ) or self._n_generations == (self.max_generations - 1):
             if self._has_hv_ref_point_changed:
-                for gen_i in range(self._n_gen - 1):
+                for gen_i in range(self._n_generations - 1):
                     self._hv_history[gen_i] = hyper_volume.do(
                         self._hv_obj_hist_feasible[gen_i]
                     )
