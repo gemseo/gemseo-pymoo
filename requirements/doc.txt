@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.60.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@31a6c94b6ff071b7b20668988c8e7fdc9deb9b8f
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@bc4471fdaf6e1813218547629d8c546a6bc56b24
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -150,7 +150,7 @@ mkdocs-include-markdown-plugin==7.2.0
     # via gemseo-pymoo (pyproject.toml:doc)
 mkdocs-literate-nav==0.6.2
     # via gemseo-pymoo (pyproject.toml:doc)
-mkdocs-material==9.6.21
+mkdocs-material==9.6.22
     # via
     #   gemseo-pymoo (pyproject.toml:doc)
     #   mkdocs-gallery
@@ -265,7 +265,7 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-dotenv==1.1.1
     # via pydantic-settings
-pytokens==0.1.10
+pytokens==0.2.0
     # via black
 pytz==2025.2
     # via pandas
