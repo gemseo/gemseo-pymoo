@@ -29,6 +29,22 @@ All notable changes of this project will be documented here.
 
 ## Unreleased
 
+### Fixed
+
+- The Pymoo library now correctly overloads the ``BaseOptimizationLibrary._get_result()`` method, which allows it to
+  return either an ``OptimizationResult`` or a ``MultiObjectiveOptimizationResult`` depending on the type of problem
+  that was solved.
+
+## Version 5.0.0 (October 2025)
+
+### Added
+
+- Support for Python 3.13.
+
+### Removed
+
+- Support for Python 3.9.
+
 ### Changed
 
 - ``PymooProblem`` class must now be imported from
