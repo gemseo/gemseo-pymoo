@@ -535,11 +535,12 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
 
         return res.message, res.success
 
-    def _get_optimization_result(
+    def _get_result(
         self,
         problem: OptimizationProblem,
         message: str | None = None,
         status: int | None = None,
+        *args: Any,
     ) -> OptimizationResult | MultiObjectiveOptimizationResult:
         """Return the optimization result adapted to the dimension of the problem.
 
@@ -604,13 +605,13 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
                 f"All {self._ds_size} points of the design space have been explored. "
                 f"GEMSEO stopped the driver."
             )
-            return self._get_optimization_result(problem, message)
+            return self._get_result(problem, message)
 
         if isinstance(termination_criterion, MaxGenerationsReached):
             message = (
                 "Maximum number of generations reached. GEMSEO stopped the driver."
             )
-            return self._get_optimization_result(problem, message)
+            return self._get_result(problem, message)
 
         if isinstance(termination_criterion, HyperVolumeToleranceReached):
             message = (
@@ -618,7 +619,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
                 "indicator are closer than hv_tol_rel or hv_tol_abs. "
                 "GEMSEO stopped the driver."
             )
-            return self._get_optimization_result(problem, message)
+            return self._get_result(problem, message)
         return super()._get_early_stopping_result(problem, termination_criterion)
 
     def _log_result(

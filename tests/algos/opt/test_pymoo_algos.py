@@ -30,6 +30,10 @@ import re
 from typing import TYPE_CHECKING
 
 import pytest
+from gemseo.algos.design_space import DesignSpace
+from gemseo.algos.multiobjective_optimization_result import (
+    MultiObjectiveOptimizationResult,
+)
 from gemseo.algos.opt.factory import OptimizationLibraryFactory
 from gemseo.problems.multiobjective_optimization.binh_korn import BinhKorn
 from gemseo.problems.optimization.power_2 import Power2
@@ -210,6 +214,7 @@ def test_so(opt_factory, settings, problem_class, x_opt, f_opt):
 
     assert_allclose(x_opt, res.x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
+    assert not isinstance(res, MultiObjectiveOptimizationResult)
 
 
 @pytest.mark.parametrize(
@@ -317,8 +322,18 @@ def test_so_integer(opt_factory, settings, problem_class, args, kwargs, x_opt, f
         f_opt: The objective value at the optimum point.
     """
     problem = problem_class(*args, **kwargs)
-    ds_dim = problem.design_space.dimension
-    problem.design_space.variable_types["x"] = array(["integer"] * ds_dim)
+    size = problem.design_space.get_size("x")
+    lower_bound = problem.design_space.get_lower_bound("x")
+    upper_bound = problem.design_space.get_upper_bound("x")
+    integer_design_space = DesignSpace()
+    integer_design_space.add_variable(
+        "x",
+        size=size,
+        lower_bound=lower_bound,
+        upper_bound=upper_bound,
+        type_=DesignSpace.DesignVariableType.INTEGER,
+    )
+    problem.design_space = integer_design_space
 
     # Only inequality constraints are considered.
     problem.constraints = list(problem.constraints.get_inequality_constraints())
