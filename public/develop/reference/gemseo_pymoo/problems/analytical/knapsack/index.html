@@ -2759,19 +2759,19 @@ in which the following new objective function is added to previous formulation:<
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">Knapsack</span><span class="p">(</span>
-    <span class="n">values</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-    <span class="n">weights</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-    <span class="n">items_ub</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">binary</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">capacity_items</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">initial_guess</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+    <span class="n">items_ub</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">binary</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">capacity_items</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">initial_guess</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-external" title="gemseo.algos.optimization_problem.OptimizationProblem" href="https://gemseo.readthedocs.io/en/stable/modules/gemseo.algos.optimization_problem.html#gemseo.algos.optimization_problem.OptimizationProblem">OptimizationProblem</a></code></p>
+              Bases: <code><span title="gemseo.algos.optimization_problem.OptimizationProblem">OptimizationProblem</span></code></p>
 
 
 
@@ -2815,7 +2815,7 @@ objective and constraint functions.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>values</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The items' values.</p>
@@ -2823,7 +2823,7 @@ objective and constraint functions.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>weights</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The items' weights.</p>
@@ -2831,7 +2831,7 @@ objective and constraint functions.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>items_ub</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> | None</code>, default:
+              (<code><span title="numpy.ndarray">ndarray</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -2842,7 +2842,7 @@ If None, an unlimited number of each item is allowed.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>binary</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>, default:
+              (<code><span title="bool">bool</span></code>, default:
                   <code>True</code>
 )
           –
@@ -2852,7 +2852,7 @@ If None, an unlimited number of each item is allowed.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>capacity_weight</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a> | None</code>, default:
+              (<code><span title="float">float</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -2863,7 +2863,7 @@ If None, the knapsack will have an unlimited weight capacity.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>capacity_items</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a> | None</code>, default:
+              (<code><span title="int">int</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -2874,7 +2874,7 @@ If None, the knapsack will accept an unlimited total number of items.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>initial_guess</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> | None</code>, default:
+              (<code><span title="numpy.ndarray">ndarray</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -2889,7 +2889,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 <p><span class="doc-section-title">Raises:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></code>
+              <code><span title="ValueError">ValueError</span></code>
             –
           <div class="doc-md-description">
             <p>Either if the provided arrays do not have the same length or
@@ -3196,7 +3196,7 @@ if no capacity is provided.</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.capacity_items" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_items</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_items)">capacity_items</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_items</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_items)">capacity_items</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3220,7 +3220,7 @@ if no capacity is provided.</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.capacity_weight" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_weight)">capacity_weight</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_weight)">capacity_weight</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3244,7 +3244,7 @@ if no capacity is provided.</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.values" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">values</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(values)">values</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">values</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(values)">values</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3268,7 +3268,7 @@ if no capacity is provided.</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.weights" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">weights</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(weights)">weights</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">weights</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(weights)">weights</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3295,8 +3295,8 @@ if no capacity is provided.</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.compute_knapsack_items" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_items</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3308,7 +3308,7 @@ if no capacity is provided.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -3320,7 +3320,7 @@ if no capacity is provided.</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total number of items.</p>
@@ -3367,8 +3367,8 @@ if no capacity is provided.</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.compute_knapsack_value" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_value</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3380,7 +3380,7 @@ if no capacity is provided.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -3392,7 +3392,7 @@ if no capacity is provided.</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total value.</p>
@@ -3437,8 +3437,8 @@ if no capacity is provided.</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack.compute_knapsack_weight" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_weight</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3450,7 +3450,7 @@ if no capacity is provided.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -3462,7 +3462,7 @@ if no capacity is provided.</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total weight.</p>
@@ -3516,13 +3516,13 @@ if no capacity is provided.</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">MultiObjectiveKnapsack</span><span class="p">(</span>
-    <span class="n">values</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-    <span class="n">weights</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-    <span class="n">items_ub</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">binary</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">capacity_items</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">initial_guess</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+    <span class="n">items_ub</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">binary</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">capacity_items</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">initial_guess</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -3550,7 +3550,7 @@ constraint functions.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>values</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The items' values.</p>
@@ -3558,7 +3558,7 @@ constraint functions.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>weights</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The items' weights.</p>
@@ -3566,7 +3566,7 @@ constraint functions.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>items_ub</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> | None</code>, default:
+              (<code><span title="numpy.ndarray">ndarray</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -3577,7 +3577,7 @@ If None, an unlimited number of each item is allowed.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>binary</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>, default:
+              (<code><span title="bool">bool</span></code>, default:
                   <code>True</code>
 )
           –
@@ -3587,7 +3587,7 @@ If None, an unlimited number of each item is allowed.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>capacity_weight</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a> | None</code>, default:
+              (<code><span title="float">float</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -3598,7 +3598,7 @@ If None, the knapsack will have an unlimited weight capacity.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>capacity_items</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a> | None</code>, default:
+              (<code><span title="int">int</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -3609,7 +3609,7 @@ If None, the knapsack will accept an unlimited total number of items.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>initial_guess</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> | None</code>, default:
+              (<code><span title="numpy.ndarray">ndarray</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -3762,7 +3762,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.capacity_items" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_items</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_items)">capacity_items</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_items</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_items)">capacity_items</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3786,7 +3786,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.capacity_weight" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_weight)">capacity_weight</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">capacity_weight</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(capacity_weight)">capacity_weight</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3810,7 +3810,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.values" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">values</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(values)">values</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">values</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(values)">values</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3834,7 +3834,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
   </span>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.weights" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">weights</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(weights)">weights</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">weights</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">=</span> <span class="n"><span title="gemseo_pymoo.problems.analytical.knapsack.Knapsack(weights)">weights</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3861,8 +3861,8 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.compute_knapsack_items" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_items</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3874,7 +3874,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -3886,7 +3886,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total number of items.</p>
@@ -3933,8 +3933,8 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.compute_knapsack_value" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_value</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3946,7 +3946,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -3958,7 +3958,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total value.</p>
@@ -4003,8 +4003,8 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack.compute_knapsack_weight" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">compute_knapsack_weight</span><span class="p">(</span>
-    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span>
+    <span class="n">design_variables</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4016,7 +4016,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>design_variables</code></b>
-              (<code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>)
+              (<code><span title="numpy.ndarray">ndarray</span></code>)
           –
           <div class="doc-md-description">
             <p>The design variables vector.</p>
@@ -4028,7 +4028,7 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 <p><span class="doc-section-title">Returns:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" title="numpy.ndarray" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></code>
+              <code><span title="numpy.ndarray">ndarray</span></code>
           –
           <div class="doc-md-description">
             <p>The knapsack total weight.</p>
@@ -4082,10 +4082,10 @@ If None, the initial guess will be an empty knapsack (0, 0, ..., 0).</p>
 
 <a href="#gemseo_pymoo.problems.analytical.knapsack.create_random_knapsack_problem" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">create_random_knapsack_problem</span><span class="p">(</span>
-    <span class="n">n_items</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span><span class="p">,</span>
-    <span class="n">capacity_level</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">binary</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">obj_variant</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;single&quot;</span><span class="p">,</span>
+    <span class="n">n_items</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+    <span class="n">capacity_level</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">binary</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">obj_variant</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;single&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Knapsack (gemseo_pymoo.problems.analytical.knapsack.Knapsack)" href="#gemseo_pymoo.problems.analytical.knapsack.Knapsack">Knapsack</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            MultiObjectiveKnapsack (gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack)" href="#gemseo_pymoo.problems.analytical.knapsack.MultiObjectiveKnapsack">MultiObjectiveKnapsack</a></span>
 </code></pre></div>
 
@@ -4102,7 +4102,7 @@ between 1 and 100.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>n_items</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></code>)
+              (<code><span title="int">int</span></code>)
           –
           <div class="doc-md-description">
             <p>The size of the set of items.</p>
@@ -4110,7 +4110,7 @@ between 1 and 100.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>capacity_level</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#float">float</a></code>, default:
+              (<code><span title="float">float</span></code>, default:
                   <code>0.1</code>
 )
           –
@@ -4121,7 +4121,7 @@ corresponding to the knapsack capacity.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>binary</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#bool">bool</a></code>, default:
+              (<code><span title="bool">bool</span></code>, default:
                   <code>True</code>
 )
           –
@@ -4131,7 +4131,7 @@ corresponding to the knapsack capacity.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>obj_variant</code></b>
-              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>, default:
+              (<code><span title="str">str</span></code>, default:
                   <code>&#39;single&#39;</code>
 )
           –
@@ -4158,7 +4158,7 @@ corresponding to the knapsack capacity.</p>
 <p><span class="doc-section-title">Raises:</span></p>
     <ul>
         <li class="doc-section-item field-body">
-              <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/exceptions.html#ValueError">ValueError</a></code>
+              <code><span title="ValueError">ValueError</span></code>
             –
           <div class="doc-md-description">
             <p>Either if the number of items is not a positive integer or if the
