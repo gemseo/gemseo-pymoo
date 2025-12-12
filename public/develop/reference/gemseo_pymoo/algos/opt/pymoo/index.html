@@ -2796,17 +2796,6 @@
         <p>Pymoo optimization library interface.</p>
 <p>See :class:<code>gemseo.algos.opt.optimization_library.OptimizationLibrary</code>.</p>
 
-
-<details class="notes" open>
-  <summary>Notes</summary>
-  <p>The missing current values
-of the [DesignSpace][gemseo.algos.design_space.DesignSpace]
-attached to the
-[OptimizationProblem][gemseo.algos.optimization_problem.OptimizationProblem]
-are automatically initialized
-with the method
-[DesignSpace.initialize_missing_current_values()][gemseo.algos.design_space.DesignSpace.initialize_missing_current_values].</p>
-</details>
         <p>Constructor.</p>
 <p>Generate the library dict, which contains the list
 of algorithms with their characteristics:</p>
@@ -2815,31 +2804,6 @@ of algorithms with their characteristics:</p>
 <li>does it handle equality constraints</li>
 <li>does it handle inequality constraints</li>
 </ul>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <ul>
-        <li class="doc-section-item field-body">
-            <b><code>algo_name</code></b>
-              (<code><span title="str">str</span></code>)
-          –
-          <div class="doc-md-description">
-            <p>The algorithm name.</p>
-          </div>
-        </li>
-    </ul>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <ul>
-        <li class="doc-section-item field-body">
-              <code><span title="KeyError">KeyError</span></code>
-            –
-          <div class="doc-md-description">
-            <p>When the algorithm is not in the library.</p>
-          </div>
-        </li>
-    </ul>
 
 
 
