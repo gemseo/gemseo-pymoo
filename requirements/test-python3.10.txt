@@ -42,7 +42,7 @@ fastjsonschema==2.21.2
     # via gemseo
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@ecc0c864b6d0845f021e890a39f60b9d6037fed8
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@f02b72e52f831610e71b5cd32c4628a4da480be6
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -52,7 +52,7 @@ graphemeu==0.7.2
     # via alive-progress
 graphviz==0.21
     # via gemseo
-h5py==3.14.0
+h5py==3.15.1
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
@@ -68,7 +68,7 @@ kiwisolver==1.4.9
     # via matplotlib
 markupsafe==3.0.3
     # via jinja2
-matplotlib==3.10.6
+matplotlib==3.10.8
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
@@ -110,7 +110,7 @@ packaging==25.0
     #   matplotlib
     #   plotly
     #   pytest
-pandas==2.3.2
+pandas==2.3.3
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   gemseo
