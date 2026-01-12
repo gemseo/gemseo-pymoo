@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@154b8b2ebdb410266610f25c17d81f427bfcc9c5
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@346a5b032fadf1c5e66e584581674baa00c43eb6
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -221,7 +221,7 @@ platformdirs==4.5.1
     # via
     #   black
     #   mkdocs-get-deps
-plotly==6.5.0
+plotly==6.5.1
     # via gemseo
 prettytable==3.17.0
     # via gemseo
