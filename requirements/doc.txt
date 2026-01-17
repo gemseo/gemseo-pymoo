@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@da5feb783f445d7097e21b7db4785ad43cd8cd88
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@3d543290255e50325df230f64faedae75f33ba37
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -174,7 +174,7 @@ networkx==3.6.1
     # via gemseo
 nlopt==2.10.0
     # via gemseo
-numpy==2.3.5
+numpy==2.4.1
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   autograd
