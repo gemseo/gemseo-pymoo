@@ -391,7 +391,7 @@ class MultiObjectiveKnapsack(Knapsack):
             The objective functions value.
         """
         obj = zeros(2)
-        obj[0] = -self.compute_knapsack_value(design_variables)
+        obj[0] = -self.compute_knapsack_value(design_variables)[0]
         obj[1] = self.compute_knapsack_items(design_variables)
         return obj
 
