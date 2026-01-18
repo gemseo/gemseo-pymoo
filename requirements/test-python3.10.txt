@@ -42,7 +42,7 @@ fastjsonschema==2.21.2
     # via gemseo
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@da5feb783f445d7097e21b7db4785ad43cd8cd88
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@613a1fa043438bbbea494bbf8ef47c1eea15cc34
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -136,7 +136,7 @@ pydantic-core==2.41.5
     # via pydantic
 pydantic-settings==2.12.0
     # via gemseo
-pydoe3==1.6.1
+pydoe3==1.6.2
     # via gemseo
 pygments==2.19.2
     # via pytest
