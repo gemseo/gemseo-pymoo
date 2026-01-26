@@ -18,7 +18,7 @@ contourpy==1.3.3
     # via matplotlib
 covdefaults==2.3.0
     # via gemseo-pymoo (pyproject.toml:dev)
-coverage==7.13.1
+coverage==7.13.2
     # via
     #   covdefaults
     #   pytest-cov
@@ -40,7 +40,7 @@ fastjsonschema==2.21.2
     # via gemseo
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@f3e9c02424e55eebe5629667d1e3292b6056dcce
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@fb321b03ce269cf4e73f4f243824046743420d13
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -199,7 +199,7 @@ tzdata==2025.3
     # via pandas
 urllib3==2.6.3
     # via requests
-wcwidth==0.3.5
+wcwidth==0.4.0
     # via prettytable
 wrapt==2.0.1
     # via deprecated
