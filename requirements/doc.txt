@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@ee3de8efa8ac6a365adeba15825625b2620ab8f3
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@eb0c111277e2bf94da19f257367dad5b5980111e
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -265,7 +265,7 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-dotenv==1.2.1
     # via pydantic-settings
-pytokens==0.4.0
+pytokens==0.4.1
     # via black
 pytz==2025.2
     # via pandas
@@ -343,7 +343,7 @@ watchdog==6.0.0
     # via mkdocs
 wcmatch==10.1
     # via mkdocs-include-markdown-plugin
-wcwidth==0.5.0
+wcwidth==0.5.2
     # via prettytable
 wrapt==2.0.1
     # via deprecated
