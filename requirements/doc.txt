@@ -345,7 +345,7 @@ wcmatch==10.1
     # via mkdocs-include-markdown-plugin
 wcwidth==0.5.3
     # via prettytable
-wrapt==2.0.1
+wrapt==2.1.0
     # via deprecated
 xdsmjs==2.0.0
     # via gemseo
