@@ -8,7 +8,7 @@ annotated-types==0.7.0
     # via pydantic
 autograd==1.8.0
     # via pymoo
-babel==2.17.0
+babel==2.18.0
     # via mkdocs-material
 backrefs==6.1
     # via mkdocs-material
@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@9afbe86bb3a04c5700e811d7000b0f208abfd881
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@5d4a9e60d67a8d336dbaefaae9f5d15be94401c3
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -195,7 +195,7 @@ openpyxl==3.1.5
     # via gemseo
 openturns==1.26
     # via gemseo
-packaging==25.0
+packaging==26.0
     # via
     #   black
     #   gemseo
