@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@5d4a9e60d67a8d336dbaefaae9f5d15be94401c3
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@478faa940db40d2444fa68f6406c2a17c2a7b590
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -168,7 +168,7 @@ mpmath==1.3.0
     # via sympy
 mypy-extensions==1.1.0
     # via black
-narwhals==2.15.0
+narwhals==2.16.0
     # via plotly
 networkx==3.6.1
     # via gemseo
@@ -345,7 +345,7 @@ wcmatch==10.1
     # via mkdocs-include-markdown-plugin
 wcwidth==0.5.3
     # via prettytable
-wrapt==2.1.0
+wrapt==2.1.1
     # via deprecated
 xdsmjs==2.0.0
     # via gemseo

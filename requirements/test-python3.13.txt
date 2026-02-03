@@ -40,7 +40,7 @@ fastjsonschema==2.21.2
     # via gemseo
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@5d4a9e60d67a8d336dbaefaae9f5d15be94401c3
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@478faa940db40d2444fa68f6406c2a17c2a7b590
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -75,7 +75,7 @@ minisom==2.3.5
     # via gemseo
 mpmath==1.3.0
     # via sympy
-narwhals==2.15.0
+narwhals==2.16.0
     # via plotly
 networkx==3.6.1
     # via gemseo
@@ -201,7 +201,7 @@ urllib3==2.6.3
     # via requests
 wcwidth==0.5.3
     # via prettytable
-wrapt==2.1.0
+wrapt==2.1.1
     # via deprecated
 xdsmjs==2.0.0
     # via gemseo
