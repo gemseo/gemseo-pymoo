@@ -10,7 +10,7 @@ autograd==1.8.0
     # via pymoo
 babel==2.18.0
     # via mkdocs-material
-backrefs==6.1
+backrefs==6.2
     # via mkdocs-material
 black==26.1.0
     # via gemseo-pymoo (pyproject.toml:doc)
@@ -28,7 +28,7 @@ cma==4.4.2
     # via pymoo
 colorama==0.4.6
     # via
-    #   griffe
+    #   griffecli
     #   mkdocs-material
 contourpy==1.3.3
     # via matplotlib
@@ -50,7 +50,7 @@ fieldz==0.1.3
     # via griffe-fieldz
 fonttools==4.61.1
     # via matplotlib
-gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@e54dd7e5b5b9b504e8ec0929e2432dfdb9250fc5
+gemseo @ git+https://gitlab.com/gemseo/dev/gemseo.git@bf57c956ce04a0970db088469777dcc89a8ac6db
     # via
     #   -c requirements/test-constraints.in
     #   gemseo-pymoo (pyproject.toml)
@@ -62,7 +62,7 @@ graphemeu==0.7.2
     # via alive-progress
 graphviz==0.21
     # via gemseo
-griffe==1.15.0
+griffe==2.0.0
     # via
     #   griffe-fieldz
     #   griffe-inherited-docstrings
@@ -71,6 +71,12 @@ griffe-fieldz==0.4.0
     # via gemseo-pymoo (pyproject.toml:doc)
 griffe-inherited-docstrings==1.1.2
     # via gemseo-pymoo (pyproject.toml:doc)
+griffecli==2.0.0
+    # via griffe
+griffelib==2.0.0
+    # via
+    #   griffe
+    #   griffecli
 h5py==3.15.1
     # via
     #   gemseo-pymoo (pyproject.toml)
@@ -94,7 +100,7 @@ kiwisolver==1.4.9
     # via matplotlib
 latexcodec==3.0.1
     # via pybtex
-markdown==3.10.1
+markdown==3.10.2
     # via
     #   mkdocs
     #   mkdocs-autorefs
@@ -120,7 +126,7 @@ mergedeep==1.3.4
     #   mkdocs-get-deps
 mike==2.1.3
     # via gemseo-pymoo (pyproject.toml:doc)
-minisom==2.3.5
+minisom==2.3.6
     # via gemseo
 mkdocs==1.6.1
     # via
@@ -134,7 +140,7 @@ mkdocs==1.6.1
     #   mkdocs-material
     #   mkdocs-section-index
     #   mkdocstrings
-mkdocs-autorefs==1.4.3
+mkdocs-autorefs==1.4.4
     # via
     #   mkdocstrings
     #   mkdocstrings-python
@@ -158,11 +164,11 @@ mkdocs-material-extensions==1.3.1
     # via mkdocs-material
 mkdocs-section-index==0.3.10
     # via gemseo-pymoo (pyproject.toml:doc)
-mkdocstrings==1.0.2
+mkdocstrings==1.0.3
     # via
     #   gemseo-pymoo (pyproject.toml:doc)
     #   mkdocstrings-python
-mkdocstrings-python==2.0.1
+mkdocstrings-python==2.0.2
     # via mkdocstrings
 mpmath==1.3.0
     # via sympy
@@ -174,7 +180,7 @@ networkx==3.6.1
     # via gemseo
 nlopt==2.10.0
     # via gemseo
-numpy==2.4.1
+numpy==2.4.2
     # via
     #   gemseo-pymoo (pyproject.toml)
     #   autograd
@@ -217,7 +223,7 @@ pillow==12.1.0
     # via
     #   gemseo
     #   matplotlib
-platformdirs==4.5.1
+platformdirs==4.9.2
     # via
     #   black
     #   mkdocs-get-deps
@@ -245,7 +251,7 @@ pygments==2.19.2
     #   pygments-ansi-color
 pygments-ansi-color==0.3.0
     # via markdown-exec
-pymdown-extensions==10.20.1
+pymdown-extensions==10.21
     # via
     #   markdown-exec
     #   mkdocs-material
@@ -294,14 +300,14 @@ responses==0.25.8
     # via mkdocs-bibtex
 scikit-learn==1.8.0
     # via gemseo
-scipy==1.16.3
+scipy==1.17.0
     # via
     #   gemseo
     #   pydoe3
     #   pymoo
     #   scikit-learn
     #   spgl1
-setuptools==80.10.2
+setuptools==82.0.0
     # via mkdocs-bibtex
 six==1.17.0
     # via python-dateutil
@@ -313,7 +319,7 @@ sympy==1.14.0
     # via gemseo
 threadpoolctl==3.6.0
     # via scikit-learn
-tqdm==4.67.1
+tqdm==4.67.3
     # via
     #   gemseo
     #   mkdocs-gallery
@@ -343,7 +349,7 @@ watchdog==6.0.0
     # via mkdocs
 wcmatch==10.1
     # via mkdocs-include-markdown-plugin
-wcwidth==0.5.3
+wcwidth==0.6.0
     # via prettytable
 wrapt==2.1.1
     # via deprecated
