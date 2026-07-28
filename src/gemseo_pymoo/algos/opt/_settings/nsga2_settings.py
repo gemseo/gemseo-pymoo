@@ -17,7 +17,7 @@
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 
 
-class NSGA2Settings(BasePymooSettings):
+class PYMOO_NSGA2_Settings(BasePymooSettings):  # ruff: ignore[invalid-class-name]
     """The settings for the PYMOO NSGA2 algorithm."""
 
     _TARGET_CLASS_NAME = "PYMOO_NSGA2"

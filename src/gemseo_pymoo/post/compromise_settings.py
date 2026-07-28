@@ -22,7 +22,7 @@ from gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings import (
 )
 
 
-class CompromisePostSettings(BasePlotPostSettings, WeightedPostSettings):  # noqa: D101
+class Compromise_Settings(BasePlotPostSettings, WeightedPostSettings):  # noqa: D101, N801
     """The settings for the Compromise gemseo-pymoo post-processing class."""
 
     _TARGET_CLASS_NAME = "Compromise"

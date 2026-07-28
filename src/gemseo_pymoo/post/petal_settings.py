@@ -30,7 +30,7 @@ from gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings import (
 )
 
 
-class PetalPostSettings(WeightedPostSettings):
+class Petal_Settings(WeightedPostSettings):  # ruff: ignore[invalid-class-name]
     """The settings for the Petal gemseo-pymoo post-processing class."""
 
     _TARGET_CLASS_NAME = "Petal"

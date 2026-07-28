@@ -49,7 +49,7 @@ from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.operators.repair.rounding import RoundingRepair
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
-from gemseo_pymoo.algos.opt._settings.nsga2_settings import NSGA2Settings
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import PYMOO_NSGA2_Settings
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.viennet import Viennet
@@ -277,7 +277,9 @@ def test_hv_ref_point_change(opt_factory, caplog):
         opt_factory: Fixture returning an optimizer factory.
         caplog: Fixture to access and control log capturing.
     """
-    settings = NSGA2Settings(max_iter=1000, stop_crit_n_hv=5, pop_size=50, **tolerances)
+    settings = PYMOO_NSGA2_Settings(
+        max_iter=1000, stop_crit_n_hv=5, pop_size=50, **tolerances
+    )
     problem = Viennet()
     algo_name = "PYMOO_NSGA2"
     opt_lib = opt_factory.create(algo_name=algo_name)

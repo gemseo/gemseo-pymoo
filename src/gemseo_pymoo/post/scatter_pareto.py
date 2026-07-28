@@ -37,12 +37,12 @@ from pymoo.visualization.scatter import Scatter as PymooScatter
 
 from gemseo_pymoo.post.core.plot_features import Annotation3D
 from gemseo_pymoo.post.core.plot_features import Arrow3D
-from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterPareto_Settings
 
 PlotPropertiesType = dict[str, str | int | float | bool]
 
 
-class ScatterPareto(BasePost[ScatterParetoPostSettings]):
+class ScatterPareto(BasePost[ScatterPareto_Settings]):
     """Scatter plot with pareto points and points of interest.
 
     See `Scatter <https://pymoo.org/visualization/scatter.html>`_.
@@ -92,9 +92,9 @@ class ScatterPareto(BasePost[ScatterParetoPostSettings]):
     }
     """The properties for the annotations."""
 
-    Settings: ClassVar[type[ScatterParetoPostSettings]] = ScatterParetoPostSettings
+    Settings: ClassVar[type[ScatterPareto_Settings]] = ScatterPareto_Settings
 
-    def _plot(self, settings: ScatterParetoPostSettings) -> None:
+    def _plot(self, settings: ScatterPareto_Settings) -> None:
         """Scatter plot of the pareto front along with the points of interest.
 
         Raises:

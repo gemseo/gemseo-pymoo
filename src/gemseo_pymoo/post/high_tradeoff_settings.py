@@ -31,7 +31,7 @@ from pydantic import NonNegativeFloat
 from gemseo_pymoo.post.base_pymoo_plot_post_settings import BasePlotPostSettings
 
 
-class HighTradeOffPostSettings(BasePlotPostSettings):
+class HighTradeOff_Settings(BasePlotPostSettings):  # ruff: ignore[invalid-class-name]
     """The settings for  the High Tradeoff gemseo-pymoo post-processing class."""
 
     _TARGET_CLASS_NAME = "HighTradeOff"

@@ -23,22 +23,22 @@
 import pytest
 from numpy import array
 
-from gemseo_pymoo.post.compromise_settings import CompromisePostSettings
-from gemseo_pymoo.post.petal_settings import PetalPostSettings
-from gemseo_pymoo.post.radar_settings import RadarPostSettings
-from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
+from gemseo_pymoo.post.compromise_settings import Compromise_Settings
+from gemseo_pymoo.post.petal_settings import Petal_Settings
+from gemseo_pymoo.post.radar_settings import Radar_Settings
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterPareto_Settings
 
 
 @pytest.mark.parametrize(
     ("settings_model", "setting_name"),
     [
         (
-            ScatterParetoPostSettings,
+            ScatterPareto_Settings,
             "points",
         ),
-        (RadarPostSettings, "weights"),
-        (PetalPostSettings, "weights"),
-        (CompromisePostSettings, "weights"),
+        (Radar_Settings, "weights"),
+        (Petal_Settings, "weights"),
+        (Compromise_Settings, "weights"),
     ],
 )
 @pytest.mark.parametrize(

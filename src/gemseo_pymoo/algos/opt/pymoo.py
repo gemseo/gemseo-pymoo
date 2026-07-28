@@ -37,10 +37,13 @@ from gemseo.algos.multiobjective_optimization_result import (
 )
 from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
 from gemseo.algos.opt.base_optimization_library import OptimizationAlgorithmDescription
-from gemseo.algos.opt.base_optimizer_settings import BaseOptimizerSettings
-from gemseo.algos.optimization_problem import OptimizationProblem  # noqa: TC002
+from gemseo.algos.optimization_problem import (
+    OptimizationProblem,  # ruff: ignore[typing-only-third-party-import]
+)
 from gemseo.algos.optimization_result import OptimizationResult
-from gemseo.algos.stop_criteria import TerminationCriterion  # noqa: TC002
+from gemseo.algos.stop_criteria import (
+    TerminationCriterion,  # ruff: ignore[typing-only-third-party-import]
+)
 from numpy import inf
 from numpy import prod as np_prod
 from numpy import size as np_size
@@ -52,23 +55,25 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.algorithms.soo.nonconvex.ga import GA
 from pymoo.core.crossover import Crossover
 from pymoo.core.mutation import Mutation
-from pymoo.core.operator import Operator  # noqa: TC002
+from pymoo.core.operator import Operator  # ruff: ignore[typing-only-third-party-import]
 from pymoo.core.sampling import Sampling
 from pymoo.core.selection import Selection
 from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 from pymoo.util.reference_direction import (
-    MultiLayerReferenceDirectionFactory,  # noqa: TC002
+    MultiLayerReferenceDirectionFactory,  # ruff: ignore[typing-only-third-party-import]
 )
-from pymoo.util.reference_direction import ReferenceDirectionFactory  # noqa: TC002
+from pymoo.util.reference_direction import (
+    ReferenceDirectionFactory,  # ruff: ignore[typing-only-third-party-import]
+)
 
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
-from gemseo_pymoo.algos.opt._settings.ga_settings import GASettings
-from gemseo_pymoo.algos.opt._settings.nsga2_settings import NSGA2Settings
-from gemseo_pymoo.algos.opt._settings.nsga3_settings import NSGA3Settings
-from gemseo_pymoo.algos.opt._settings.rnsga3_settings import RNSGA3Settings
-from gemseo_pymoo.algos.opt._settings.unsga3_settings import UNSGA3Settings
+from gemseo_pymoo.algos.opt._settings.ga_settings import PYMOO_GA_Settings
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import PYMOO_NSGA2_Settings
+from gemseo_pymoo.algos.opt._settings.nsga3_settings import PYMOO_NSGA3_Settings
+from gemseo_pymoo.algos.opt._settings.rnsga3_settings import PYMOO_RNSGA3_Settings
+from gemseo_pymoo.algos.opt._settings.unsga3_settings import PYMOO_UNSGA3_Settings
 from gemseo_pymoo.algos.opt.core.pymoo_problem import PymooProblem
 from gemseo_pymoo.algos.stop_criteria import DesignSpaceExploredException
 from gemseo_pymoo.algos.stop_criteria import HyperVolumeToleranceReached
@@ -194,7 +199,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
             positive_constraints=True,
             handle_multiobjective=False,
             website=f"{__DOC}soo/ga.html",
-            Settings=GASettings,
+            Settings=PYMOO_GA_Settings,
         ),
         "PYMOO_NSGA2": PymooAlgorithmDescription(
             algorithm_name="NSGA2",
@@ -209,7 +214,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
             positive_constraints=True,
             handle_multiobjective=True,
             website=f"{__DOC}moo/nsga2.html",
-            Settings=NSGA2Settings,
+            Settings=PYMOO_NSGA2_Settings,
         ),
         "PYMOO_NSGA3": PymooAlgorithmDescription(
             algorithm_name="NSGA3",
@@ -224,7 +229,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
             positive_constraints=True,
             handle_multiobjective=True,
             website=f"{__DOC}moo/nsga3.html",
-            Settings=NSGA3Settings,
+            Settings=PYMOO_NSGA3_Settings,
         ),
         "PYMOO_UNSGA3": PymooAlgorithmDescription(
             algorithm_name="UNSGA3",
@@ -236,7 +241,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
             positive_constraints=True,
             handle_multiobjective=True,
             website=f"{__DOC}moo/unsga3.html",
-            Settings=UNSGA3Settings,
+            Settings=PYMOO_UNSGA3_Settings,
         ),
         "PYMOO_RNSGA3": PymooAlgorithmDescription(
             algorithm_name="RNSGA3",
@@ -250,7 +255,7 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
             positive_constraints=True,
             handle_multiobjective=True,
             website=f"{__DOC}moo/rnsga3.html",
-            Settings=RNSGA3Settings,
+            Settings=PYMOO_RNSGA3_Settings,
         ),
     }
 
@@ -416,14 +421,14 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
         Raises:
             ValueError: If the algorithm's name is not valid.
         """
-        settings_ = self._settings.model_dump()
+        settings = self._filter_settings()
         # Instantiate the pymoo Problem.
         pymoo_problem_settings = {
-            self.N_PROCESSES: settings_.pop(self.N_PROCESSES, 1),
-            self.MAX_GEN: settings_.pop(self.MAX_GEN),
-            self.HV_TOL_REL: settings_.pop(self.HV_TOL_REL),
-            self.HV_TOL_ABS: settings_.pop(self.HV_TOL_ABS),
-            self.STOP_CRIT_N_HV: settings_.pop(self.STOP_CRIT_N_HV),
+            self.N_PROCESSES: settings.pop(self.N_PROCESSES, 1),
+            self.MAX_GEN: settings.pop(self.MAX_GEN),
+            self.HV_TOL_REL: settings.pop(self.HV_TOL_REL),
+            self.HV_TOL_ABS: settings.pop(self.HV_TOL_ABS),
+            self.STOP_CRIT_N_HV: settings.pop(self.STOP_CRIT_N_HV),
         }
         pymoo_problem = PymooProblem(
             problem,
@@ -445,9 +450,6 @@ class PymooOpt(BaseOptimizationLibrary[BasePymooSettings]):
                 problem.add_listener(self._check_design_space_exploration)
         else:
             self._ds_size = inf
-
-        # Filter settings to get only the ones of the global optimizer
-        settings = self._filter_settings(settings_, BaseOptimizerSettings)
 
         evol_operators = {}
         for operator_name, operator_class in self.EVOLUTIONARY_OPERATORS.items():

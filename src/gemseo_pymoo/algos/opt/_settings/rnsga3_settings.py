@@ -24,7 +24,7 @@ from pydantic import PositiveInt
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 
 
-class RNSGA3Settings(BasePymooSettings):
+class PYMOO_RNSGA3_Settings(BasePymooSettings):  # ruff: ignore[invalid-class-name]
     """The settings for the PYMOO RNSGA3 algorithm."""
 
     _TARGET_CLASS_NAME = "PYMOO_RNSGA3"

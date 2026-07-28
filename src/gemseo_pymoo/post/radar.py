@@ -27,7 +27,7 @@ from typing import ClassVar
 from pymoo.visualization.radar import Radar as PymooRadar
 
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
-from gemseo_pymoo.post.radar_settings import RadarPostSettings
+from gemseo_pymoo.post.radar_settings import Radar_Settings
 
 
 class Radar(MultiObjectiveDiagram):
@@ -38,9 +38,9 @@ class Radar(MultiObjectiveDiagram):
         pareto front.
     """
 
-    Settings: ClassVar[type[RadarPostSettings]] = RadarPostSettings
+    Settings: ClassVar[type[Radar_Settings]] = Radar_Settings
 
-    def _plot(self, settings: RadarPostSettings) -> None:
+    def _plot(self, settings: Radar_Settings) -> None:
         """Plot one radar diagram for each set of weights.
 
         A `scalarization function <https://pymoo.org/misc/decomposition.html>`_ is used

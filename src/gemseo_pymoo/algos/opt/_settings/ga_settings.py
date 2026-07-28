@@ -17,7 +17,7 @@
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 
 
-class GASettings(BasePymooSettings):
+class PYMOO_GA_Settings(BasePymooSettings):  # ruff: ignore[invalid-class-name]
     """The settings for the PYMOO GA algorithm."""
 
     _TARGET_CLASS_NAME = "PYMOO_GA"

@@ -39,7 +39,7 @@ if TYPE_CHECKING:
     from pydantic import ValidationInfo
 
 
-class ScatterParetoPostSettings(BasePlotPostSettings):
+class ScatterPareto_Settings(BasePlotPostSettings):  # ruff: ignore[invalid-class-name]
     """The settings for  the Scatter Pareto gemseo-pymoo post-processing class."""
 
     _TARGET_CLASS_NAME = "ScatterPareto"

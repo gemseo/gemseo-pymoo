@@ -27,7 +27,7 @@ from typing import ClassVar
 from pymoo.visualization.petal import Petal as PymooPetal
 
 from gemseo_pymoo.post.core.multi_objective_diagram import MultiObjectiveDiagram
-from gemseo_pymoo.post.petal_settings import PetalPostSettings
+from gemseo_pymoo.post.petal_settings import Petal_Settings
 
 
 class Petal(MultiObjectiveDiagram):
@@ -40,9 +40,9 @@ class Petal(MultiObjectiveDiagram):
 
     _TARGET_CLASS_NAME = "Petal"
 
-    Settings: ClassVar[type[PetalPostSettings]] = PetalPostSettings
+    Settings: ClassVar[type[Petal_Settings]] = Petal_Settings
 
-    def _plot(self, settings: PetalPostSettings) -> None:
+    def _plot(self, settings: Petal_Settings) -> None:
         """Plot one petal diagram for each set of weights.
 
         A `scalarization function <https://pymoo.org/misc/decomposition.html>`_ is used

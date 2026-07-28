@@ -27,10 +27,10 @@ from typing import ClassVar
 from gemseo.algos.pareto.pareto_front import ParetoFront
 from numpy import atleast_2d
 
-from gemseo_pymoo.post.compromise_settings import CompromisePostSettings
+from gemseo_pymoo.post.compromise_settings import Compromise_Settings
 from gemseo_pymoo.post.core.decomposition_application import _apply_decomposition
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterPareto_Settings
 
 
 class Compromise(ScatterPareto):
@@ -44,9 +44,9 @@ class Compromise(ScatterPareto):
 
     fig_name_prefix = "compromise"
 
-    Settings: ClassVar[type[CompromisePostSettings]] = CompromisePostSettings
+    Settings: ClassVar[type[Compromise_Settings]] = Compromise_Settings
 
-    def _plot(self, settings: CompromisePostSettings) -> None:
+    def _plot(self, settings: Compromise_Settings) -> None:
         """Scatter plot of the pareto front along with the compromise points.
 
         The compromise points are calculated using a
@@ -91,7 +91,7 @@ class Compromise(ScatterPareto):
         self.fig_name_prefix += f"_{settings.decomposition.__class__.__name__}"
 
         super()._plot(
-            ScatterParetoPostSettings(
+            ScatterPareto_Settings(
                 points=points,
                 points_labels=points_labels,
                 plot_extra=settings.plot_extra,

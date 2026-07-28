@@ -19,7 +19,7 @@ from gemseo_pymoo.algos.opt._base_scaled_pymoo_algorithms_settings import (
 )
 
 
-class UNSGA3Settings(BaseScaledPymooAlgorithmsSettings):
+class PYMOO_UNSGA3_Settings(BaseScaledPymooAlgorithmsSettings):  # ruff: ignore[invalid-class-name]
     """The settings for the PYMOO UNSGA3 algorithm."""
 
     _TARGET_CLASS_NAME = "PYMOO_UNSGA3"

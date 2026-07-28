@@ -27,9 +27,9 @@ from typing import ClassVar
 from gemseo.algos.pareto.pareto_front import ParetoFront
 from pymoo.mcdm.high_tradeoff import HighTradeoffPoints
 
-from gemseo_pymoo.post.high_tradeoff_settings import HighTradeOffPostSettings
+from gemseo_pymoo.post.high_tradeoff_settings import HighTradeOff_Settings
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
-from gemseo_pymoo.post.scatter_pareto_settings import ScatterParetoPostSettings
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterPareto_Settings
 
 
 class HighTradeOff(ScatterPareto):
@@ -50,9 +50,9 @@ class HighTradeOff(ScatterPareto):
         "zorder": 3,
     }
 
-    Settings: ClassVar[type[HighTradeOffPostSettings]] = HighTradeOffPostSettings
+    Settings: ClassVar[type[HighTradeOff_Settings]] = HighTradeOff_Settings
 
-    def _plot(self, settings: HighTradeOffPostSettings) -> None:
+    def _plot(self, settings: HighTradeOff_Settings) -> None:
         """Scatter plot of the pareto front along with the high trade-off points."""
         # Create Pareto object.
         pareto = ParetoFront.from_optimization_problem(self.optimization_problem)
@@ -69,7 +69,7 @@ class HighTradeOff(ScatterPareto):
         indexes_dm = decision_making.do(pareto.f_optima)
 
         super()._plot(
-            settings=ScatterParetoPostSettings(
+            settings=ScatterPareto_Settings(
                 points=pareto.f_optima[indexes_dm],
                 points_labels="High Trade-Offs",
                 plot_extra=settings.plot_extra,
