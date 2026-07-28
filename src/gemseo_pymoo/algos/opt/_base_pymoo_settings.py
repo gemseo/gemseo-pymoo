@@ -102,7 +102,7 @@ class BasePymooSettings(BaseOptimizerSettings):
         "If None, the algorithm's default is used.",
     )
 
-    seed: PositiveInt = Field(default=1, description="The random seed to be used.")
+    seed: NonNegativeInt = Field(default=1, description="The random seed to be used.")
 
     eliminate_duplicates: bool = Field(
         default=True,
