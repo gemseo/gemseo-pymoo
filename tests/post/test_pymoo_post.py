@@ -30,7 +30,6 @@ import pytest
 from gemseo.algos.opt.factory import OptimizationLibraryFactory
 from gemseo.post.factory import PostFactory
 from gemseo.problems.optimization.power_2 import Power2
-from gemseo.utils.testing.helpers import image_comparison
 from numpy import array
 from pydantic import ValidationError
 from pymoo.decomposition.aasf import AASF
@@ -40,12 +39,26 @@ from pymoo.decomposition.perp_dist import PerpendicularDistance
 from pymoo.decomposition.tchebicheff import Tchebicheff
 from pymoo.decomposition.weighted_sum import WeightedSum
 
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import PYMOO_NSGA2_Settings
+from gemseo_pymoo.post.compromise_settings import Compromise_Settings
+from gemseo_pymoo.post.high_tradeoff_settings import HighTradeOff_Settings
+from gemseo_pymoo.post.petal_settings import Petal_Settings
+from gemseo_pymoo.post.radar_settings import Radar_Settings
 from gemseo_pymoo.post.scatter_pareto import ScatterPareto
+from gemseo_pymoo.post.scatter_pareto_settings import ScatterPareto_Settings
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.viennet import Viennet
 
 if TYPE_CHECKING:
     from gemseo.algos.optimization_problem import OptimizationProblem
+
+_POST_SETTINGS_CLASSES = {
+    "Compromise": Compromise_Settings,
+    "HighTradeOff": HighTradeOff_Settings,
+    "Petal": Petal_Settings,
+    "Radar": Radar_Settings,
+    "ScatterPareto": ScatterPareto_Settings,
+}
 
 
 @pytest.fixture
@@ -57,7 +70,9 @@ def problem_1obj() -> OptimizationProblem:
     """
     power2 = Power2()
     power2.constraints = list(power2.constraints.get_inequality_constraints())
-    OptimizationLibraryFactory().execute(power2, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizationLibraryFactory().execute(
+        power2, settings=PYMOO_NSGA2_Settings(max_iter=700)
+    )
     return power2
 
 
@@ -69,7 +84,9 @@ def problem_2obj() -> OptimizationProblem:
         A :class:`.ChankongHaimes` instance.
     """
     problem = ChankongHaimes()
-    OptimizationLibraryFactory().execute(problem, algo_name="PYMOO_NSGA2", max_iter=700)
+    OptimizationLibraryFactory().execute(
+        problem, settings=PYMOO_NSGA2_Settings(max_iter=700)
+    )
     return problem
 
 
@@ -83,9 +100,7 @@ def problem_3obj() -> OptimizationProblem:
     problem = Viennet()
     OptimizationLibraryFactory().execute(
         problem,
-        algo_name="PYMOO_NSGA2",
-        max_iter=1000,
-        pop_size=50,
+        settings=PYMOO_NSGA2_Settings(max_iter=1000, pop_size=50),
     )
     return problem
 
@@ -108,50 +123,57 @@ def test_saving(tmp_wd, post_factory, problem_2obj):
         post_factory: Fixture returning a post-processing factory.
         problem_2obj: Fixture returning the optimization problem to be post-processed.
     """
-    settings = {
-        "decomposition": ASF(),
-        "weights": array([0.3, 0.7]),
-        "plot_arrow": True,
-    }
-    post = post_factory.execute(
-        problem_2obj,
-        post_name="Compromise",
+    settings = Compromise_Settings(
+        decomposition=ASF(),
+        weights=array([0.3, 0.7]),
+        plot_arrow=True,
         save=True,
         file_path="compromise1",
-        **settings,
     )
+    post = post_factory.execute(problem_2obj, settings=settings)
     assert len(post.output_file_paths) == 1
     for file in post.output_file_paths:
         assert Path(file).exists()
 
 
 @pytest.mark.parametrize(
-    ("diagram_name", "decomposition", "opts", "baseline_images"),
+    ("diagram_name", "decomposition", "opts"),
     [
-        ("Petal", WeightedSum(), {}, ["petal_viennet_weighted_sum"]),
-        ("Petal", Tchebicheff(), {}, ["petal_viennet_tchebi"]),
-        ("Radar", PBI(), {}, ["radar_viennet_pbi"]),
-        ("Radar", ASF(), {}, ["radar_viennet_asf"]),
-        ("ScatterPareto", "", {"plot_arrow": True}, ["scatter_pareto_viennet"]),
-        ("Compromise", AASF(beta=5), {"plot_arrow": True}, ["compromise_viennet_aasf"]),
-        (
+        pytest.param("Petal", WeightedSum(), {}, id="petal_viennet_weighted_sum"),
+        pytest.param("Petal", Tchebicheff(), {}, id="petal_viennet_tchebi"),
+        pytest.param("Radar", PBI(), {}, id="radar_viennet_pbi"),
+        pytest.param("Radar", ASF(), {}, id="radar_viennet_asf"),
+        pytest.param(
+            "ScatterPareto", "", {"plot_arrow": True}, id="scatter_pareto_viennet"
+        ),
+        pytest.param(
+            "Compromise",
+            AASF(beta=5),
+            {"plot_arrow": True},
+            id="compromise_viennet_aasf",
+        ),
+        pytest.param(
             "Compromise",
             None,
             {"plot_arrow": False},
-            ["compromise_viennet_weighted_sum"],
+            id="compromise_viennet_weighted_sum",
         ),
-        (
+        pytest.param(
             "Compromise",
             PerpendicularDistance(),
             {"plot_arrow": False},
-            ["compromise_viennet_perp_dist"],
+            id="compromise_viennet_perp_dist",
         ),
-        ("HighTradeOff", "", {"plot_extra": False}, ["high_tradeoff_viennet_no_extra"]),
+        pytest.param(
+            "HighTradeOff",
+            "",
+            {"plot_extra": False},
+            id="high_tradeoff_viennet_no_extra",
+        ),
     ],
 )
-@image_comparison(None, extensions=["png"], style="default")
 def test_post(
-    post_factory, problem_3obj, diagram_name, decomposition, opts, baseline_images
+    post_factory, problem_3obj, diagram_name, decomposition, opts, snapshot_matplotlib
 ):
     """Test images created by the post-processes.
 
@@ -163,11 +185,12 @@ def test_post(
         diagram_name: The name of the diagram.
         decomposition: The instance of the scalarization function.
         opts: The post-processing settings.
-        baseline_images: The reference images to be compared.
+        snapshot_matplotlib: Fixture comparing matplotlib figures against
+            reference snapshots.
     """
-    settings = dict(file_extension="png", save=False, **opts)
+    settings_kwargs = dict(file_extension="png", save=False, **opts)
     if diagram_name not in ["HighTradeOff", "ScatterPareto"]:
-        settings.update(
+        settings_kwargs.update(
             decomposition=decomposition,
             weights=array([[0.3, 0.5, 0.7], [0.5, 0.3, 0.7], [0.5, 0.7, 0.3]]),
         )
@@ -176,16 +199,17 @@ def test_post(
     if diagram_name == "Compromise" and isinstance(
         decomposition, PerpendicularDistance
     ):
-        settings.pop("weights")
+        settings_kwargs.pop("weights")
 
-    post = post_factory.execute(problem_3obj, post_name=diagram_name, **settings)
+    settings = _POST_SETTINGS_CLASSES[diagram_name](**settings_kwargs)
+    post = post_factory.execute(problem_3obj, settings=settings)
 
     # Cover Arrow3D and Annotation3D draw methods.
     if diagram_name == "Compromise" and opts["plot_arrow"]:
         fig_name = f"compromise_{decomposition.__class__.__name__}_1"
         post.figures[fig_name].draw(post.figures[fig_name].canvas.get_renderer())
 
-    post.figures  # noqa:B018
+    post.figures  # ruff: ignore[useless-expression]
 
 
 @pytest.mark.parametrize(
@@ -227,7 +251,7 @@ def test_exceptions_scatter(
 
     post = ScatterPareto(problem)
     with expectation:
-        post.execute(save=False, **settings)
+        post.execute(settings=ScatterPareto_Settings(save=False, **settings))
 
 
 @pytest.mark.parametrize(
@@ -271,7 +295,7 @@ def test_exceptions_compromise(post_factory, problem_1obj, settings, expectation
     """
     with expectation:
         post_factory.execute(
-            problem_1obj, post_name="Compromise", save=False, **settings
+            problem_1obj, settings=Compromise_Settings(save=False, **settings)
         )
 
 
@@ -332,4 +356,5 @@ def test_exceptions_diagrams(
         expectation: The expected exception to be raised.
     """
     with expectation:
-        post_factory.execute(problem_2obj, post_name=diagram, save=False, **settings)
+        settings_model = _POST_SETTINGS_CLASSES[diagram](save=False, **settings)
+        post_factory.execute(problem_2obj, settings=settings_model)

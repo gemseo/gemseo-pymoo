@@ -52,7 +52,7 @@ from gemseo_pymoo.algos.stop_criteria import MaxGenerationsReached
 if TYPE_CHECKING:
     from gemseo.algos.opt.base_optimization_library import BaseOptimizationLibrary
     from gemseo.algos.optimization_problem import OptimizationProblem
-    from gemseo.core.mdo_functions.mdo_function import MDOFunction
+    from gemseo.core.functions.array_function import ArrayFunction
 
 LOGGER = logging.getLogger(__name__)
 OPTLibraryOutputType = tuple[dict[str, float | ndarray], dict[str, ndarray]]
@@ -100,7 +100,7 @@ class PymooProblem(Problem):
     _parallel: CallableParallelExecution | None
     """The object handling the parallel execution."""
 
-    _ineq_constraints: tuple[MDOFunction]
+    _ineq_constraints: tuple[ArrayFunction]
     """The problem's inequality constraints."""
 
     _has_hv_ref_point_changed: bool
@@ -283,7 +283,7 @@ class PymooProblem(Problem):
             database.store(x_r_, outs)
 
         # The list of inputs of the tasks is the list of samples.
-        self._parallel.execute(design_variables, exec_callback=store_callback)
+        self._parallel.execute(design_variables, exec_callbacks=[store_callback])
 
         # We added empty entries by default to keep order in the database
         # but when the calculation point is failed, this is not consistent

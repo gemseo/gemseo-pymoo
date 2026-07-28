@@ -50,7 +50,7 @@ class HighTradeOff(ScatterPareto):
         "zorder": 3,
     }
 
-    Settings: ClassVar[type[HighTradeOff_Settings]] = HighTradeOff_Settings
+    settings_class: ClassVar[type[HighTradeOff_Settings]] = HighTradeOff_Settings
 
     def _plot(self, settings: HighTradeOff_Settings) -> None:
         """Scatter plot of the pareto front along with the high trade-off points."""

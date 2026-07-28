@@ -40,7 +40,7 @@ class Petal(MultiObjectiveDiagram):
 
     _TARGET_CLASS_NAME = "Petal"
 
-    Settings: ClassVar[type[Petal_Settings]] = Petal_Settings
+    settings_class: ClassVar[type[Petal_Settings]] = Petal_Settings
 
     def _plot(self, settings: Petal_Settings) -> None:
         """Plot one petal diagram for each set of weights.

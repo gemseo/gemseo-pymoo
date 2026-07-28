@@ -36,6 +36,7 @@ from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.operators.repair.rounding import RoundingRepair
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
+from gemseo_pymoo.algos.opt._settings.nsga2_settings import PYMOO_NSGA2_Settings
 from gemseo_pymoo.problems.analytical.knapsack import Knapsack
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.knapsack import create_random_knapsack_problem
@@ -178,7 +179,7 @@ def test_optimization(knapsack_max_items):
 
     options = dict(max_iter=800, max_gen=20, **integer_operators, **integer_options)
     res = OptimizationLibraryFactory().execute(
-        knapsack_max_items, algo_name="PYMOO_NSGA2", **options
+        knapsack_max_items, settings=PYMOO_NSGA2_Settings(**options)
     )
 
     assert_array_equal(x_opt, res.x_opt)
@@ -195,7 +196,7 @@ def test_mo_maximize(mo_knapsack):
 
     options = dict(max_iter=500, max_gen=20, **integer_operators, **integer_options)
     res = OptimizationLibraryFactory().execute(
-        mo_knapsack, algo_name="PYMOO_NSGA2", **options
+        mo_knapsack, settings=PYMOO_NSGA2_Settings(**options)
     )
 
     # Known solution (one of the anchor points).

@@ -48,7 +48,7 @@ from typing import TYPE_CHECKING
 
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
-from gemseo.core.mdo_functions.mdo_function import MDOFunction
+from gemseo.core.functions.array_function import ArrayFunction
 from numpy import array
 from numpy import zeros
 
@@ -93,37 +93,37 @@ class ChankongHaimes(OptimizationProblem):
         super().__init__(design_space)
 
         # Set objective function.
-        self.objective = MDOFunction(
+        self.objective = ArrayFunction(
             self.compute_objective,
             name="changkong_haimes",
-            f_type=MDOFunction.FunctionType.OBJ,
+            f_type=ArrayFunction.FunctionType.OBJ,
             jac=self.compute_objective_jacobian,
             expr="[2 + (x-2)**2 + (y-1)**2, 9*x - (y-1)**2]",
             input_names=["x", "y"],
             dim=2,
         )
 
-        ineq1 = MDOFunction(
+        ineq1 = ArrayFunction(
             self.compute_constraint_1,
             name="ineq1",
-            f_type=MDOFunction.ConstraintType.INEQ,
+            f_type=ArrayFunction.ConstraintType.INEQ,
             jac=self.compute_constraint_1_jacobian,
             expr="x**2 + y**2 - 225",
             input_names=["x", "y"],
             dim=1,
         )
-        self.add_constraint(ineq1, constraint_type=MDOFunction.ConstraintType.INEQ)
+        self.add_constraint(ineq1, constraint_type=ArrayFunction.ConstraintType.INEQ)
 
-        ineq2 = MDOFunction(
+        ineq2 = ArrayFunction(
             self.compute_constraint_2,
             name="ineq2",
-            f_type=MDOFunction.ConstraintType.INEQ,
+            f_type=ArrayFunction.ConstraintType.INEQ,
             jac=self.compute_constraint_2_jacobian,
             expr="x - 3*y + 10",
             input_names=["x", "y"],
             dim=1,
         )
-        self.add_constraint(ineq2, constraint_type=MDOFunction.ConstraintType.INEQ)
+        self.add_constraint(ineq2, constraint_type=ArrayFunction.ConstraintType.INEQ)
 
     @staticmethod
     def compute_objective(design_variables: ndarray) -> ndarray:

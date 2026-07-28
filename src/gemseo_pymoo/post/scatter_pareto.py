@@ -92,7 +92,7 @@ class ScatterPareto(BasePost[ScatterPareto_Settings]):
     }
     """The properties for the annotations."""
 
-    Settings: ClassVar[type[ScatterPareto_Settings]] = ScatterPareto_Settings
+    settings_class: ClassVar[type[ScatterPareto_Settings]] = ScatterPareto_Settings
 
     def _plot(self, settings: ScatterPareto_Settings) -> None:
         """Scatter plot of the pareto front along with the points of interest.

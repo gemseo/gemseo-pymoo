@@ -32,7 +32,7 @@ from gemseo.post.base_post import BasePost
 from matplotlib.gridspec import GridSpec
 from numpy import atleast_2d
 from prettytable import PrettyTable
-from pymoo.core.plot import Plot  # noqa: TC002
+from pymoo.core.plot import Plot  # ruff: ignore[typing-only-third-party-import]
 from pymoo.visualization.radar import Radar
 
 from gemseo_pymoo.post.base_weighted_pymoo_post_algorithms_settings import (

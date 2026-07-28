@@ -25,6 +25,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from gemseo.algos.pareto.pareto_front import ParetoFront
+from numpy import array
 from numpy import atleast_2d
 
 from gemseo_pymoo.post.compromise_settings import Compromise_Settings
@@ -44,7 +45,7 @@ class Compromise(ScatterPareto):
 
     fig_name_prefix = "compromise"
 
-    Settings: ClassVar[type[Compromise_Settings]] = Compromise_Settings
+    settings_class: ClassVar[type[Compromise_Settings]] = Compromise_Settings
 
     def _plot(self, settings: Compromise_Settings) -> None:
         """Scatter plot of the pareto front along with the compromise points.
@@ -63,7 +64,7 @@ class Compromise(ScatterPareto):
 
         # Default weights.
         if settings.weights is None:
-            settings.weights = [1.0 / n_obj] * n_obj
+            settings.weights = array([1.0 / n_obj] * n_obj)
 
         settings.weights = atleast_2d(settings.weights).astype(float)
         # Check weight's dimension.

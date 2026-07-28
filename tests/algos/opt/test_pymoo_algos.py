@@ -49,7 +49,11 @@ from pymoo.operators.mutation.pm import PolynomialMutation
 from pymoo.operators.repair.rounding import RoundingRepair
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
 
+from gemseo_pymoo.algos.opt._settings.ga_settings import PYMOO_GA_Settings
 from gemseo_pymoo.algos.opt._settings.nsga2_settings import PYMOO_NSGA2_Settings
+from gemseo_pymoo.algos.opt._settings.nsga3_settings import PYMOO_NSGA3_Settings
+from gemseo_pymoo.algos.opt._settings.rnsga3_settings import PYMOO_RNSGA3_Settings
+from gemseo_pymoo.algos.opt._settings.unsga3_settings import PYMOO_UNSGA3_Settings
 from gemseo_pymoo.problems.analytical.chankong_haimes import ChankongHaimes
 from gemseo_pymoo.problems.analytical.knapsack import MultiObjectiveKnapsack
 from gemseo_pymoo.problems.analytical.viennet import Viennet
@@ -64,6 +68,27 @@ integer_operators = {
     "crossover": SimulatedBinaryCrossover(repair=RoundingRepair()),
     "mutation": PolynomialMutation(prob=1.0, eta=3.0, repair=RoundingRepair()),
 }
+
+_ALGO_SETTINGS_CLASSES = {
+    "PYMOO_GA": PYMOO_GA_Settings,
+    "PYMOO_NSGA2": PYMOO_NSGA2_Settings,
+    "PYMOO_NSGA3": PYMOO_NSGA3_Settings,
+    "PYMOO_UNSGA3": PYMOO_UNSGA3_Settings,
+    "PYMOO_RNSGA3": PYMOO_RNSGA3_Settings,
+}
+
+
+def _create_settings(*, algo_name, **kwargs):
+    """Build the pydantic settings model corresponding to an algorithm name.
+
+    Args:
+        algo_name: The name of the optimization algorithm.
+        **kwargs: The settings values.
+
+    Returns:
+        The settings model instance.
+    """
+    return _ALGO_SETTINGS_CLASSES[algo_name](**kwargs)
 
 
 class DummyMutation:
@@ -210,7 +235,7 @@ def test_so(opt_factory, settings, problem_class, x_opt, f_opt):
     problem.constraints = list(problem.constraints.get_inequality_constraints())
 
     settings = dict(stop_crit_n_hv=999, **tolerances, **settings)
-    res = opt_factory.execute(problem, **settings)
+    res = opt_factory.execute(problem, settings=_create_settings(**settings))
 
     assert_allclose(x_opt, res.x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -256,7 +281,7 @@ def test_so_hypervolume(opt_factory, pow2_ineq, settings, caplog):
     x_opt, f_opt = pow2_ineq.solution
 
     settings = dict(max_iter=1000000, stop_crit_n_hv=8, **tolerances, **settings)
-    res = opt_factory.execute(pow2_ineq, **settings)
+    res = opt_factory.execute(pow2_ineq, settings=_create_settings(**settings))
 
     assert_allclose(x_opt, res.x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -282,10 +307,10 @@ def test_hv_ref_point_change(opt_factory, caplog):
     )
     problem = Viennet()
     algo_name = "PYMOO_NSGA2"
-    opt_lib = opt_factory.create(algo_name=algo_name)
+    opt_lib = opt_factory.create(algo_name)
 
     with caplog.at_level(logging.DEBUG, "gemseo_pymoo"):
-        opt_lib.execute(problem, settings_model=settings)
+        opt_lib.execute(problem, settings=settings)
 
     hv_update_count = caplog.text.count("Updating the hypervolume value for the")
     ref_point_change_count = caplog.text.count(
@@ -348,7 +373,7 @@ def test_so_integer(opt_factory, settings, problem_class, args, kwargs, x_opt, f
         **integer_settings,
         **settings,
     )
-    res = opt_factory.execute(problem, **settings)
+    res = opt_factory.execute(problem, settings=_create_settings(**settings))
 
     assert_allclose(x_opt, res.x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -383,7 +408,9 @@ def test_ref_directions(opt_factory, pow2_ineq, ref_dirs_settings, algo_name):
     settings = dict(
         max_iter=500, pop_size=20, stop_crit_n_hv=999, **tolerances, **ref_dirs_settings
     )
-    res = opt_factory.execute(pow2_ineq, algo_name=algo_name, **settings)
+    res = opt_factory.execute(
+        pow2_ineq, settings=_create_settings(algo_name=algo_name, **settings)
+    )
 
     assert_allclose(res.x_opt, x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -449,7 +476,7 @@ def test_mo(
         settings.update({"ref_points": np_hstack([reference_points] * n_obj)})
 
     settings = dict(max_iter=700, **tolerances, **settings)
-    res = opt_factory.execute(problem, **settings)
+    res = opt_factory.execute(problem, settings=_create_settings(**settings))
 
     assert_allclose(res.pareto_front.x_utopia_neighbors, x_utopia_neighbors, atol=atol)
 
@@ -482,7 +509,7 @@ def test_mo_integer(opt_factory, mo_knapsack):
     # Manually change the maximum number of generations allowed for Pymoo.
     lib.pymoo_n_gen = 20
 
-    res = lib.execute(mo_knapsack, **settings)
+    res = lib.execute(mo_knapsack, settings=PYMOO_NSGA2_Settings(**settings))
 
     # Known solution (one of the anchor points).
     anchor_x = array([0, 1, 0, 0, 0, 1, 0, 1, 1, 1])
@@ -514,7 +541,7 @@ def test_multiprocessing_constrained(opt_factory, pow2_ineq, normalize):
         "n_processes": 2,
         "normalize_design_space": normalize,
     }
-    res = opt_factory.execute(pow2_ineq, algo_name="PYMOO_NSGA2", **settings)
+    res = opt_factory.execute(pow2_ineq, settings=PYMOO_NSGA2_Settings(**settings))
 
     assert_allclose(res.x_opt, x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -530,7 +557,9 @@ def test_multiprocessing_unconstrained(opt_factory, pow2_unconstrained):
     x_opt, f_opt = pow2_unconstrained.solution
 
     settings = {"max_iter": 800, "pop_size": 50, "n_processes": 2, "stop_crit_n_x": 999}
-    res = opt_factory.execute(pow2_unconstrained, algo_name="PYMOO_NSGA2", **settings)
+    res = opt_factory.execute(
+        pow2_unconstrained, settings=PYMOO_NSGA2_Settings(**settings)
+    )
 
     assert_allclose(res.x_opt, x_opt, atol=1e-1)
     assert abs(f_opt - res.f_opt) < 1e-1
@@ -592,7 +621,7 @@ def test_execution_exceptions(opt_factory, problem, settings, expectation):
         expectation: The expected exception to be raised.
     """
     with expectation:
-        opt_factory.execute(problem, **settings)
+        opt_factory.execute(problem, settings=_create_settings(**settings))
 
 
 def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
@@ -612,7 +641,7 @@ def test_hypervolume_check_particularities(opt_factory, mo_knapsack, caplog):
     mo_knapsack.capacity_items = -1
 
     settings = dict(max_gen=6, pop_size=2, **integer_operators, **integer_settings)
-    opt_factory.execute(mo_knapsack, algo_name="PYMOO_NSGA2", **settings)
+    opt_factory.execute(mo_knapsack, settings=PYMOO_NSGA2_Settings(**settings))
 
     assert "Current hypervolume set to 0!" in caplog.text
     assert "Hypervolume stopping criterion is ignored!" in caplog.text
@@ -641,10 +670,11 @@ def test_log_integer_problem(opt_factory, mo_knapsack, caplog):
     }
     opt_factory.execute(
         mo_knapsack,
-        algo_name="PYMOO_NSGA2",
-        max_iter=1,
-        **operators,
-        **integer_settings,
+        settings=PYMOO_NSGA2_Settings(
+            max_iter=1,
+            **operators,
+            **integer_settings,
+        ),
     )
     assert (
         "gemseo_pymoo.algos.opt.pymoo",

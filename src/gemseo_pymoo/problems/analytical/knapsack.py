@@ -61,7 +61,7 @@ from typing import TYPE_CHECKING
 
 from gemseo.algos.design_space import DesignSpace
 from gemseo.algos.optimization_problem import OptimizationProblem
-from gemseo.core.mdo_functions.mdo_function import MDOFunction
+from gemseo.core.functions.array_function import ArrayFunction
 from numpy import atleast_1d
 from numpy import inf
 from numpy import ones
@@ -211,10 +211,10 @@ class Knapsack(OptimizationProblem):
 
         super().__init__(design_space)
 
-        self.objective = MDOFunction(
+        self.objective = ArrayFunction(
             self.compute_knapsack_value,
             name="knapsack",
-            f_type=MDOFunction.FunctionType.OBJ,
+            f_type=ArrayFunction.FunctionType.OBJ,
             expr="sum(values * x)",
             input_names=["x"],
             dim=1,
@@ -225,30 +225,30 @@ class Knapsack(OptimizationProblem):
 
         # Knapsack weight limit.
         if capacity_weight is not None:
-            ineq_weight = MDOFunction(
+            ineq_weight = ArrayFunction(
                 self._compute_weight_constraint,
                 name="weight_surpass",
-                f_type=MDOFunction.ConstraintType.INEQ,
+                f_type=ArrayFunction.ConstraintType.INEQ,
                 expr="sum(weights * x) - capacity_weight",
                 input_names=["x"],
                 dim=1,
             )
             self.add_constraint(
-                ineq_weight, constraint_type=MDOFunction.ConstraintType.INEQ
+                ineq_weight, constraint_type=ArrayFunction.ConstraintType.INEQ
             )
 
         # Knapsack number of items limit.
         if capacity_items is not None:
-            ineq_items = MDOFunction(
+            ineq_items = ArrayFunction(
                 self._compute_items_constraint,
                 name="items_surpass",
-                f_type=MDOFunction.ConstraintType.INEQ,
+                f_type=ArrayFunction.ConstraintType.INEQ,
                 expr="sum(x) - capacity_items",
                 input_names=["x"],
                 dim=1,
             )
             self.add_constraint(
-                ineq_items, constraint_type=MDOFunction.ConstraintType.INEQ
+                ineq_items, constraint_type=ArrayFunction.ConstraintType.INEQ
             )
 
     def _compute_weight_constraint(self, design_variables: ndarray) -> ndarray:
@@ -369,10 +369,10 @@ class MultiObjectiveKnapsack(Knapsack):
         self.minimize_objective = True
 
         # Set objective function.
-        self.objective = MDOFunction(
+        self.objective = ArrayFunction(
             self._compute_objective,
             name="knapsack",
-            f_type=MDOFunction.FunctionType.OBJ,
+            f_type=ArrayFunction.FunctionType.OBJ,
             expr="[-sum(values * x), sum(x)]",
             input_names=["x"],
             dim=2,

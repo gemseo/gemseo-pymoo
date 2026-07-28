@@ -17,7 +17,9 @@
 from __future__ import annotations
 
 from gemseo.post.base_post_settings import BasePostSettings
-from gemseo.utils.pydantic_ndarray import NDArrayPydantic  # noqa: TC002
+from gemseo.utils.pydantic_ndarray import (
+    NDArrayPydantic,  # ruff: ignore[typing-only-third-party-import]
+)
 from numpy import atleast_2d
 from numpy import ndarray
 

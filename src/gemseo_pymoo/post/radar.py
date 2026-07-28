@@ -38,7 +38,7 @@ class Radar(MultiObjectiveDiagram):
         pareto front.
     """
 
-    Settings: ClassVar[type[Radar_Settings]] = Radar_Settings
+    settings_class: ClassVar[type[Radar_Settings]] = Radar_Settings
 
     def _plot(self, settings: Radar_Settings) -> None:
         """Plot one radar diagram for each set of weights.

@@ -22,7 +22,7 @@ classifiers = [
 dynamic = ["version"]
 requires-python = ">=3.10, <3.14"
 dependencies = [
-    "gemseo[all] >=6,<7",
+    "gemseo[all]>=6,<7",
     "h5py",
     "matplotlib",
     "numpy",
@@ -36,6 +36,7 @@ dev = [
     "pytest >=7,<9",
     "pytest-cov >=5",
     "pytest-xdist >=3",
+    "syrupy-matplotlib",
 ]
 doc = [
     "black",
@@ -69,3 +70,6 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+
+[tool.uv.sources]
+gemseo = { git = "https://gitlab.com/gemseo/dev/gemseo.git", rev = "04763d8454981b09590ccdbdb4b46afcb64612d1" }

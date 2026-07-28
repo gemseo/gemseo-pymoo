@@ -17,6 +17,7 @@
 /site
 
 /htmlcov
+/figure-report
 
 /coverage.xml
 /.coverage*
