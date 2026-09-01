@@ -21,16 +21,17 @@ Changelog titles are:
 
 All notable changes of this project will be documented here.
 
-
   The format is based on
   [Keep a Changelog](https://keepachangelog.com/en/1.0.0)
   and this project adheres to
   [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## Version 5.0.1 (September 2026)
 
 ### Fixed
 
+- The ``Petal`` and ``Radar`` post-processings no longer lose their outer circle and axes lines
+  when used with pymoo 0.6.1.6 and above.
 - The Pymoo library now correctly overloads the ``BaseOptimizationLibrary._get_result()`` method, which allows it to
   return either an ``OptimizationResult`` or a ``MultiObjectiveOptimizationResult`` depending on the type of problem
   that was solved.
@@ -170,7 +171,7 @@ Update to GEMSEO 5.
 ### Fixed
 
 - The termination criterion `HyperVolumeToleranceReached` is now also
-    taken into account for single-objective problems.
+  taken into account for single-objective problems.
 
 ## Version 1.0.0 (July 2022)
 
