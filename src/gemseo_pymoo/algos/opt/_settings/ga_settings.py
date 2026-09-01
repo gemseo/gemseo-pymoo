@@ -14,6 +14,8 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """Settings for the PYMOO GA algorithm."""
 
+from __future__ import annotations
+
 from gemseo_pymoo.algos.opt._base_pymoo_settings import BasePymooSettings
 
 

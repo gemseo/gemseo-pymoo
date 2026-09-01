@@ -20,6 +20,8 @@
 #        :author: Gilberto RUIZ JIMENEZ
 """Tests for the pymoo post-processing settings."""
 
+from __future__ import annotations
+
 import pytest
 from numpy import array
 
