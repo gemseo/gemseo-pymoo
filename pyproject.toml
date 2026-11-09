@@ -27,7 +27,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
-    "pymoo >=0.6.1,<=0.6.1.5",
+    "pymoo >=0.6.1,<=0.6.2",
 ]
 
 [dependency-groups]
